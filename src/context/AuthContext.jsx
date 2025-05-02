@@ -7,15 +7,23 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    if (storedUser && storedUser !== "undefined") {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (err) {
+        console.error("Failed to parse stored user", err);
+        localStorage.removeItem("user");
+      }
     }
   }, []);
+  
 
   const login = (userData) => {
+    if (!userData) return;
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
   };
+  
 
   const logout = () => {
     setUser(null);
