@@ -11,6 +11,8 @@ import Resume_formatter from "./components/Resume_read/Resume_formatter";
 import RouteLayout from "./layout/RouteLayout";
 import ProtectedRoute from "./components/Guard/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const router = createBrowserRouter(
@@ -33,7 +35,10 @@ function App() {
 
   return (
     <AuthProvider>
-      <RouterProvider router={router} />
+      <>
+        <RouterProvider router={router} />
+        <ToastContainer position="top-right" autoClose={2000} />
+      </>
     </AuthProvider>
   );
 }

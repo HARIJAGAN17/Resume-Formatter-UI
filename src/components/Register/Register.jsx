@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./Register.css";
+import api from '../../Api/api';
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -13,7 +15,6 @@ function Register() {
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const { login } = useAuth();
   const navigate = useNavigate();
 
   const validate = () => {
@@ -33,16 +34,28 @@ function Register() {
     e.preventDefault();
     const validationErrors = validate();
     setErrors(validationErrors);
-
     if (Object.keys(validationErrors).length > 0) return;
 
     setLoading(true);
-
-    setTimeout(() => {
-      login({ username: formData.username });
+    try {
+      const response = await api.post("/register", {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        user_type: formData.userType,
+      });
+      console.log(response.data)
+      toast.success("Registered successfully!");
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    } catch (error) {
+      const msg =
+        error.response?.data?.detail || "Registration failed. Try again.";
+      toast.error(msg);
+    } finally {
       setLoading(false);
-      navigate("/resume");
-    }, 1000);
+    }
   };
 
   return (
@@ -106,7 +119,7 @@ function Register() {
               <option value="" disabled>
                 Choose Role
               </option>
-              <option value="normal">Normal User</option>
+              <option value="user">User</option>
               <option value="admin">Admin</option>
             </select>
             <i className="bx bxs-user"></i>
