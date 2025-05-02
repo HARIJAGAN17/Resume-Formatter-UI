@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Register.css";
 import api from '../../Api/api';
+import { useAuth } from "../../hooks/useAuth";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -13,9 +14,17 @@ function Register() {
     userType: "",
   });
 
+  const navigate = useNavigate(); 
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/resume');
+    }
+  }, [user, navigate]);
+
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
 
   const validate = () => {
     const errs = {};
@@ -44,7 +53,7 @@ function Register() {
         password: formData.password,
         user_type: formData.userType,
       });
-      console.log(response.data)
+      console.log(response)
       toast.success("Registered successfully!");
       setTimeout(() => {
         navigate("/login");

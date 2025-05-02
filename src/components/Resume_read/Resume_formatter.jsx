@@ -1,11 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 function ResumeFormatter() {
   const navigate = useNavigate();
+  const {logout} = useAuth();
 
   const handleLogout = () => {
-    localStorage.removeItem('access_token'); // Remove token
+    logout() // Remove token and user
     navigate('/login'); // Redirect to login
   };
 
