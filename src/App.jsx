@@ -16,19 +16,18 @@ import { ToastContainer } from "react-toastify";
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
+      <>
       <Route path="/" element={<RouteLayout />}>
         <Route index element={<Home />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
-        <Route
-          path="resume"
-          element={
-            <ProtectedRoute>
-              <Resume_formatter />
-            </ProtectedRoute>
-          }
-        />
       </Route>
+
+      <Route>
+      <Route path="resume" element={<ProtectedRoute> <Resume_formatter /> </ProtectedRoute>}/>
+      </Route>
+
+      </>
     )
   );
 
