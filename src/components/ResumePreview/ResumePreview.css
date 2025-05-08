@@ -1,7 +1,7 @@
 .resume-container {
     width: 900px;
     margin: 20px auto;
-    background: white;
+    background-color: #fff;
     border: 1px solid #ccc;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     font-family: "Segoe UI", sans-serif;
@@ -10,108 +10,77 @@
   }
   
   .resume-header {
-    background: black;
-    color: white;
-    padding: 20px;
-    position: relative;
+    width: 100%;
+    height: 140px;
+    background-color: black;
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: center;
+    padding: 0 20px;
   }
   
-  .ust-logo {
-    display: flex;
-    align-items: center;
+  .resume-logo {
+    height: 80px;
+    width: 80px;
+    background-color: white;
+    margin-right: 20px;
   }
   
-  .letter {
-    font-size: 24px;
-    font-weight: bold;
-    margin-right: 5px;
-  }
-  
-  .dot {
-    width: 10px;
-    height: 10px;
-    background: #006e74;
-    border-radius: 50%;
-    margin-right: 5px;
-  }
-  
-  .resume-name {
-    font-size: 24px;
+  .resume-header h2 {
+    color: white;
     margin: 0;
+    text-align: center;
+    flex-grow: 1;
   }
   
-  .resume-page {
+  .resume-top-page {
     display: flex;
     margin-top: 40px;
-    border-top: 1px solid #ccc;
-    padding-top: 20px;
-    page-break-inside: avoid;
   }
   
-  .left-column {
-    flex: 0.8;
+  .left-section {
+    width: 40%;
     background-color: #006e74;
-    border-right: 1px solid #eee;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 12px;
-    line-height: 1.4;
-    padding: 10px;
+    color: white;
+    padding: 20px;
+    font-size: 14px;
   }
   
-  .right-column {
-    flex: 1.2;
-    font-size: 14px;
-    padding: 10px;
+  .right-section {
+    width: 60%;
+    color: black;
+    padding: 20px;
   }
   
   .section {
     margin-bottom: 20px;
   }
   
-  .section h3 {
+  .section h3,
+  .section h4 {
     margin-bottom: 10px;
   }
   
-  .left-column h3 {
-    color: #fff;
+  .left-section h3{
+    color: white;
   }
-  
-  .left-column p {
-    margin: 6px 0;
-  }
-  
-  .left-column strong {
-    color: #fff;
-    font-weight: bold;
+  .right-section h3{
+    color: black;
   }
   
   ul {
     padding-left: 20px;
-    margin: 0;
   }
   
   li {
     margin-bottom: 5px;
   }
   
-  /* Specific styling for bullet lists inside left column */
-  .left-column ul {
-    list-style-type: disc;
-    padding-left: 20px;
-    margin: 0;
+  .second-page-start {
+    margin-top: 60px;
   }
   
-  .left-column li {
-    margin-bottom: 6px;
-    line-height: 1.4;
-  }
-  
-  /* New page spacing */
-  .new-page {
-    margin-top: 80px;
-    border-top: 2px solid #222;
+  .second-page-start h3 {
+    font-size: 20px;
   }
   

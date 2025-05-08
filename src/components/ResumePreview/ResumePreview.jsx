@@ -18,120 +18,111 @@ function ResumePreview() {
   } = resumeData;
 
   return (
-    <div className="resume-container">
-      {/* Top bar */}
-      <div className="resume-header">
-        <div className="ust-logo">
-          <span className="letter">U</span>
-          <span className="dot" />
-          <span className="letter">S</span>
-          <span className="letter">T</span>
-        </div>
-        <h1 className="resume-name">{name}</h1>
-      </div>
-
-      {/* First Page */}
-      <div className="resume-page">
-        <div className="left-column">
-          <div className="section">
-            <h3>Education:</h3>
-            <p>
-              {education.degree || "N/A"} - {education.university || "N/A"}
-            </p>
+    <div className="main-container">
+      <div className="resume-container">
+        {/* Header Section */}
+        <div className="resume-header">
+          <div className="resume-logo">
+            {/* Optionally, place logo or branding here */}
           </div>
-
-          <div className="section">
-            <h3>Technical Expertise:</h3>
-            {technicalExpertise && Object.keys(technicalExpertise).length > 0 ? (
-              <ul>
-                {Object.entries(technicalExpertise).map(([key, values]) => (
-                  <li key={key}>
-                    <strong>{key}:</strong> {Array.isArray(values) ? values.join(", ") : values}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No technical expertise listed.</p>
-            )}
-          </div>
-
-          <div className="section">
-            <h3>Certifications:</h3>
-            {Array.isArray(certifications) && certifications.length > 0 ? (
-              <ul>
-                {certifications.map((cert, idx) => (
-                  <li key={idx}>{cert}</li>
-                ))}
-              </ul>
-            ) : (
-              <p>No certifications listed.</p>
-            )}
-          </div>
+          <h2>{name}</h2>
         </div>
 
-        <div className="right-column">
-          <div className="section">
-            <h3>Summary</h3>
-            {summary && summary.length > 0 ? (
-              <ul>
-                {(Array.isArray(summary) ? summary : [summary]).map((point, idx) => (
-                  <li key={idx}>{point}</li>
-                ))}
-              </ul>
-            ) : (
-              <p>No summary available.</p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* New Page for Experience Header */}
-      <div className="resume-page new-page">
-        <div className="section">
-          <h3>Professional Experience</h3>
-        </div>
-      </div>
-
-      {/* Experience Entries */}
-      {Array.isArray(experience) && experience.length > 0 ? (
-        experience.map((job, idx) => (
-          <div className="resume-page" key={idx}>
+        {/* First Page - Top Section */}
+        <div className="resume-top-page">
+          <div className="left-section">
             <div className="section">
-              <h3>Role: {job.role || "Role not specified"}</h3>
-              <p className="company">
-                <strong>Company:</strong> {job.company || "N/A"}
-              </p>
-              {job.clientEngagement && (
-                <p>
-                  <strong>Client:</strong> {job.clientEngagement}
-                </p>
-              )}
-              {job.program && (
-                <p>
-                  <strong>Program:</strong> {job.program}
-                </p>
-              )}
+              <h3>Education:</h3>
               <p>
-                <strong>Date:</strong> {job.date || "N/A"}
+                {education.degree || "N/A"} - {education.university || "N/A"}
               </p>
-              <ul>
-                {Array.isArray(job.responsibilities) &&
-                job.responsibilities.length > 0 ? (
-                  job.responsibilities.map((item, id) => (
-                    <li key={id}>{item}</li>
-                  ))
-                ) : (
-                  <li>No responsibilities listed.</li>
-                )}
-              </ul>
+            </div>
+            <div className="section">
+              <h3>Technical Expertise:</h3>
+              {technicalExpertise &&
+              Object.keys(technicalExpertise).length > 0 ? (
+                <ul>
+                  {Object.entries(technicalExpertise).map(([key, values]) => (
+                    <li key={key}>
+                      <strong>{key}:</strong>{" "}
+                      {Array.isArray(values) ? values.join(", ") : values}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No technical expertise listed.</p>
+              )}
+            </div>
+
+            <div className="section">
+              <h3>Certifications:</h3>
+              {certifications && certifications.length > 0 ? (
+                <ul>
+                  {certifications.map((cert, idx) => (
+                    <li key={idx}>{cert}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No certifications listed.</p>
+              )}
             </div>
           </div>
-        ))
-      ) : (
-        <div className="resume-page">
-          <p>No experience listed.</p>
+
+          <div className="right-section">
+            <div className="section">
+              <h3>Profile Summary</h3>
+              {summary && summary.length > 0 ? (
+                <ul>
+                  {summary.map((point, idx) => (
+                    <li key={idx}>{point}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No summary available.</p>
+              )}
+            </div>
+          </div>
         </div>
-      )}
+
+        {/* Second Page - Professional Experience */}
+        {experience && experience.length > 0 && (
+          <div className="second-page-start">
+            <h3>Professional Experience</h3>
+            {experience.map((job, idx) => (
+              <div className="section" key={idx}>
+                <h4>Role: {job.role || "Role not specified"}</h4>
+                <p>
+                  <strong>Company:</strong> {job.company || "N/A"}
+                </p>
+                {job.clientEngagement && (
+                  <p>
+                    <strong>Client:</strong> {job.clientEngagement}
+                  </p>
+                )}
+                {job.program && (
+                  <p>
+                    <strong>Program:</strong> {job.program}
+                  </p>
+                )}
+                <p>
+                  <strong>Date:</strong> {job.date || "N/A"}
+                </p>
+                {job.responsibilities &&
+                Array.isArray(job.responsibilities) &&
+                job.responsibilities.length > 0 ? (
+                  <ul>
+                    {job.responsibilities.map((responsibility, id) => (
+                      <li key={id}>{responsibility}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No responsibilities listed.</p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
