@@ -42,14 +42,14 @@ function ResumePreview() {
 
           <div className="section">
             <h3>Technical Expertise:</h3>
-            {technicalExpertise &&
-            Object.keys(technicalExpertise).length > 0 ? (
-              Object.entries(technicalExpertise).map(([key, values]) => (
-                <p key={key}>
-                  <strong>{key}:</strong>{" "}
-                  {Array.isArray(values) ? values.join(", ") : "N/A"}
-                </p>
-              ))
+            {technicalExpertise && Object.keys(technicalExpertise).length > 0 ? (
+              <ul>
+                {Object.entries(technicalExpertise).map(([key, values]) => (
+                  <li key={key}>
+                    <strong>{key}:</strong> {Array.isArray(values) ? values.join(", ") : values}
+                  </li>
+                ))}
+              </ul>
             ) : (
               <p>No technical expertise listed.</p>
             )}
@@ -58,7 +58,11 @@ function ResumePreview() {
           <div className="section">
             <h3>Certifications:</h3>
             {Array.isArray(certifications) && certifications.length > 0 ? (
-              <p>{certifications.join(", ")}</p>
+              <ul>
+                {certifications.map((cert, idx) => (
+                  <li key={idx}>{cert}</li>
+                ))}
+              </ul>
             ) : (
               <p>No certifications listed.</p>
             )}
@@ -69,9 +73,11 @@ function ResumePreview() {
           <div className="section">
             <h3>Summary</h3>
             {summary && summary.length > 0 ? (
-              (Array.isArray(summary) ? summary : [summary]).map(
-                (point, idx) => <p key={idx}>{point}</p>
-              )
+              <ul>
+                {(Array.isArray(summary) ? summary : [summary]).map((point, idx) => (
+                  <li key={idx}>{point}</li>
+                ))}
+              </ul>
             ) : (
               <p>No summary available.</p>
             )}
@@ -79,12 +85,19 @@ function ResumePreview() {
         </div>
       </div>
 
-      {/* Experience Pages */}
+      {/* New Page for Experience Header */}
+      <div className="resume-page new-page">
+        <div className="section">
+          <h3>Professional Experience</h3>
+        </div>
+      </div>
+
+      {/* Experience Entries */}
       {Array.isArray(experience) && experience.length > 0 ? (
         experience.map((job, idx) => (
           <div className="resume-page" key={idx}>
             <div className="section">
-              <h3>{job.role || "Role not specified"}</h3>
+              <h3>Role: {job.role || "Role not specified"}</h3>
               <p className="company">
                 <strong>Company:</strong> {job.company || "N/A"}
               </p>
