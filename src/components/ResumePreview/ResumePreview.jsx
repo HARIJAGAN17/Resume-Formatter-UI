@@ -1,15 +1,123 @@
 import { useResume } from "../../hooks/useResume";
+import "./ResumePreview.css";
 
 function ResumePreview() {
   const { resumeData } = useResume();
 
+  if (!resumeData) {
+    return <div className="resume-container">No resume data available.</div>;
+  }
+
+  const {
+    name = "",
+    summary = [],
+    education = {},
+    technicalExpertise = {},
+    certifications = [],
+    experience = [],
+  } = resumeData;
+
   return (
-    <div className="main-containter">
-      <h2>Resume Preview</h2>
-      {resumeData ? (
-        <pre>{JSON.stringify(resumeData, null, 2)}</pre>
+    <div className="resume-container">
+      {/* Top bar */}
+      <div className="resume-header">
+        <div className="ust-logo">
+          <span className="letter">U</span>
+          <span className="dot" />
+          <span className="letter">S</span>
+          <span className="letter">T</span>
+        </div>
+        <h1 className="resume-name">{name}</h1>
+      </div>
+
+      {/* First Page */}
+      <div className="resume-page">
+        <div className="left-column">
+          <div className="section">
+            <h3>Education:</h3>
+            <p>
+              {education.degree || "N/A"} - {education.university || "N/A"}
+            </p>
+          </div>
+
+          <div className="section">
+            <h3>Technical Expertise:</h3>
+            {technicalExpertise &&
+            Object.keys(technicalExpertise).length > 0 ? (
+              Object.entries(technicalExpertise).map(([key, values]) => (
+                <p key={key}>
+                  <strong>{key}:</strong>{" "}
+                  {Array.isArray(values) ? values.join(", ") : "N/A"}
+                </p>
+              ))
+            ) : (
+              <p>No technical expertise listed.</p>
+            )}
+          </div>
+
+          <div className="section">
+            <h3>Certifications:</h3>
+            {Array.isArray(certifications) && certifications.length > 0 ? (
+              <p>{certifications.join(", ")}</p>
+            ) : (
+              <p>No certifications listed.</p>
+            )}
+          </div>
+        </div>
+
+        <div className="right-column">
+          <div className="section">
+            <h3>Summary</h3>
+            {summary && summary.length > 0 ? (
+              (Array.isArray(summary) ? summary : [summary]).map(
+                (point, idx) => <p key={idx}>{point}</p>
+              )
+            ) : (
+              <p>No summary available.</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Experience Pages */}
+      {Array.isArray(experience) && experience.length > 0 ? (
+        experience.map((job, idx) => (
+          <div className="resume-page" key={idx}>
+            <div className="section">
+              <h3>{job.role || "Role not specified"}</h3>
+              <p className="company">
+                <strong>Company:</strong> {job.company || "N/A"}
+              </p>
+              {job.clientEngagement && (
+                <p>
+                  <strong>Client:</strong> {job.clientEngagement}
+                </p>
+              )}
+              {job.program && (
+                <p>
+                  <strong>Program:</strong> {job.program}
+                </p>
+              )}
+              <p>
+                <strong>Date:</strong> {job.date || "N/A"}
+              </p>
+              <ul>
+                {Array.isArray(job.responsibilities) &&
+                job.responsibilities.length > 0 ? (
+                  job.responsibilities.map((item, id) => (
+                    <li key={id}>{item}</li>
+                  ))
+                ) : (
+                  <li>No responsibilities listed.</li>
+                )}
+              </ul>
+            </div>
+          </div>
+        ))
       ) : (
-        <p>No resume data available. Please upload a file.</p>
+        <div className="resume-page">
+          <p>No experience listed.</p>
+        </div>
       )}
     </div>
   );
