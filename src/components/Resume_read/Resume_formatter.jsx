@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
-import api from '../../Api/api';
-import './ResumeFormatter.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
+import api from "../../Api/api";
+import "./ResumeFormatter.css";
 
 function ResumeFormatter() {
   const navigate = useNavigate();
   const { logout } = useAuth();
   const [selectedFile, setSelectedFile] = useState(null);
-  const [resumeData, setResumeData] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   const handleFileChange = (event) => {
@@ -22,32 +22,34 @@ function ResumeFormatter() {
 
   const handleExtract = async () => {
     if (!selectedFile) {
-      alert('Please select a file first.');
+      alert("Please select a file first.");
       return;
     }
 
     const formData = new FormData();
-    formData.append('file', selectedFile);
+    formData.append("file", selectedFile);
     try {
-      const response = await api.post('/upload-resume', formData);
-      console.log('Response:', response.data);
-      setResumeData(response.data);
+      setIsLoading(true); // START loading
+      const response = await api.post("/upload-resume", formData);
+      console.log(response.data);
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error("Error uploading file:", error);
+    } finally {
+      setIsLoading(false); // END loading
     }
   };
 
   return (
     <div className="app-container">
-      <div className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+      <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
         <div className="sidebar-header">
-          <h2>Menu</h2>
+          <h2>Profile</h2>
         </div>
-        <div className="sidebar-body">
-          {/* Future items here */}
-        </div>
+        <div className="sidebar-body"></div>
         <div className="sidebar-footer">
-          <button onClick={handleLogout} className="logout-btn">Logout</button>
+          <button onClick={handleLogout} className="logout-btn">
+            Logout
+          </button>
         </div>
       </div>
 
@@ -56,32 +58,38 @@ function ResumeFormatter() {
           ☰
         </button>
 
-        <h2>Resume Parser</h2>
-
-        <div className="upload-section">
-          <input type="file" accept=".pdf,.docx" onChange={handleFileChange} />
-          <button onClick={handleExtract}>Extract</button>
+        <div className="upload-title">
+          <h2>welcome to </h2>
+          <div className="logo-grid">
+            <span className="letter">U</span>
+            <span className="dot" />
+            <span className="letter">S</span>
+            <span className="letter">T</span>
+          </div>
         </div>
 
-        {resumeData && (
-          <div className="resume-card">
-            <h3>Parsed Resume Data</h3>
-            <div className="resume-data">
-              {Object.entries(resumeData).map(([key, value]) => (
-                <div key={key}>
-                  <strong>{key}:</strong>{" "}
-                  <span>
-                    {Array.isArray(value)
-                      ? value.map((v, i) => <li key={i}>{JSON.stringify(v)}</li>)
-                      : typeof value === 'object'
-                      ? JSON.stringify(value)
-                      : value}
-                  </span>
-                </div>
-              ))}
+        <div className="upload-wrapper">
+          <h2 className="page-title">Upload Doc here</h2>
+
+          <div className="upload-border">
+            <div className="upload-section">
+              <input
+                type="file"
+                accept=".pdf,.docx"
+                onChange={handleFileChange}
+              />
+              <button onClick={handleExtract}>Extract</button>
             </div>
+            <p>upload either pdf/docx</p>
           </div>
-        )}
+
+          {isLoading && (
+            <div className="loading-spinner">
+              <div className="spinner" />
+              <span>Uploading and extracting...</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
