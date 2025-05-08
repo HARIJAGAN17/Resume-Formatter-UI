@@ -8,4 +8,4 @@ function ResumeLayout() {
     )
 }
 
-export default ResumeLayout
+export default ResumeLayout;

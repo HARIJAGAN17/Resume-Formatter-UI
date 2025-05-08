@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import api from "../../Api/api";
+import { useResume } from "../../hooks/useResume";
 import "./ResumeFormatter.css";
+
 
 function ResumeFormatter() {
   const navigate = useNavigate();
@@ -10,6 +12,7 @@ function ResumeFormatter() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const {setResumeData} = useResume();
 
   const handleLogout = () => {
     logout();
@@ -28,14 +31,17 @@ function ResumeFormatter() {
 
     const formData = new FormData();
     formData.append("file", selectedFile);
+
     try {
-      setIsLoading(true); // START loading
+      setIsLoading(true);
       const response = await api.post("/upload-resume", formData);
+      setResumeData(response.data);
       console.log(response.data);
+      navigate("preview"); // 👈 Relative navigation to /resume/preview
     } catch (error) {
       console.error("Error uploading file:", error);
     } finally {
-      setIsLoading(false); // END loading
+      setIsLoading(false);
     }
   };
 
@@ -59,7 +65,7 @@ function ResumeFormatter() {
         </button>
 
         <div className="upload-title">
-          <h2>welcome to </h2>
+          <h2>Welcome to</h2>
           <div className="logo-grid">
             <span className="letter">U</span>
             <span className="dot" />
@@ -80,7 +86,7 @@ function ResumeFormatter() {
               />
               <button onClick={handleExtract}>Extract</button>
             </div>
-            <p>upload either pdf/docx</p>
+            <p>Upload either PDF/DOCX</p>
           </div>
 
           {isLoading && (
