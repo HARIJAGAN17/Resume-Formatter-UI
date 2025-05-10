@@ -1,86 +1,108 @@
 .resume-container {
-    width: 900px;
-    margin: 20px auto;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    font-family: "Segoe UI", sans-serif;
-    color: #333;
-    padding: 20px;
-  }
-  
-  .resume-header {
-    width: 100%;
-    height: 140px;
-    background-color: black;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-  }
-  
-  .resume-logo {
-    height: 80px;
-    width: 80px;
-    background-color: white;
-    margin-right: 20px;
-  }
-  
-  .resume-header h2 {
-    color: white;
-    margin: 0;
-    text-align: center;
-    flex-grow: 1;
-  }
-  
-  .resume-top-page {
-    display: flex;
-    margin-top: 40px;
-  }
-  
-  .left-section {
-    width: 40%;
+  width: 900px;
+  margin: 20px auto;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", sans-serif;
+  color: #333;
+  padding: 20px;
+}
+
+.resume-header {
+  width: 100%;
+  height: 140px;
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.resume-logo {
+  height: 80px;
+  width: 80px;
+  background-color: white;
+  margin-right: 20px;
+}
+
+.resume-header h2 {
+  color: white;
+  text-align: center;
+  flex-grow: 1;
+  font-size: 45px;
+}
+
+.resume-top-page {
+  display: flex;
+  margin-top: 40px;
+}
+
+.left-section {
+  width: 40%;
+  background-color: #006e74;
+  color: white;
+  padding: 20px;
+  font-size: 14px;
+}
+
+.right-section {
+  width: 60%;
+  color: black;
+  padding: 20px;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.section h3,
+.section h4 {
+  margin-bottom: 10px;
+}
+
+.left-section h3 {
+  color: white;
+}
+.right-section h3 {
+  color: black;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+li {
+  margin-bottom: 5px;
+}
+
+.second-page-start {
+  margin-top: 60px;
+}
+
+.second-page-start h3 {
+  font-size: 20px;
+}
+
+.back-button button{
     background-color: #006e74;
     color: white;
-    padding: 20px;
-    font-size: 14px;
-  }
-  
-  .right-section {
-    width: 60%;
-    color: black;
-    padding: 20px;
-  }
-  
-  .section {
-    margin-bottom: 20px;
-  }
-  
-  .section h3,
-  .section h4 {
-    margin-bottom: 10px;
-  }
-  
-  .left-section h3{
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    border-style: none;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 10px;
+}
+.download-button button{
+    background-color: #006e74;
     color: white;
-  }
-  .right-section h3{
-    color: black;
-  }
-  
-  ul {
-    padding-left: 20px;
-  }
-  
-  li {
-    margin-bottom: 5px;
-  }
-  
-  .second-page-start {
-    margin-top: 60px;
-  }
-  
-  .second-page-start h3 {
-    font-size: 20px;
-  }
-  
+    position: absolute;
+    top: 5px;
+    right: 20px;
+    border-style: none;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 10px;
+}

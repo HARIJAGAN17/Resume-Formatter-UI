@@ -1,9 +1,11 @@
 import { useResume } from "../../hooks/useResume";
 import "./ResumePreview.css";
+import { useNavigate } from "react-router-dom";
 
 function ResumePreview() {
   const { resumeData } = useResume();
-
+  const navigate = useNavigate();
+    
   if (!resumeData) {
     return <div className="resume-container">No resume data available.</div>;
   }
@@ -17,8 +19,18 @@ function ResumePreview() {
     experience = [],
   } = resumeData;
 
+
   return (
     <div className="main-container">
+      <div id="no-print">
+      <div className="back-button">
+        <button onClick={()=>{navigate("/resume")}}>back</button>
+      </div>
+      <div className="download-button">
+      <button onClick={() => navigate("/resume/download")}>Download</button>
+      </div>
+      </div>
+      <div id="print-area">
       <div className="resume-container">
         {/* Header Section */}
         <div className="resume-header">
@@ -122,6 +134,7 @@ function ResumePreview() {
             ))}
           </div>
         )}
+      </div>
       </div>
     </div>
   );
