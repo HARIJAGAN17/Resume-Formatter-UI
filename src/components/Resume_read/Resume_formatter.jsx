@@ -86,7 +86,7 @@ function ResumeFormatter() {
               />
               <button onClick={handleExtract}>Extract</button>
             </div>
-            <p>Upload either PDF/DOCX</p>
+            <p>Upload a .pdf/.docx file</p>
           </div>
 
           {isLoading && (
