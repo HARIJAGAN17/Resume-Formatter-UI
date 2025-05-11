@@ -12,7 +12,7 @@
 .resume-header {
   width: 100%;
   height: 140px;
-  background-color: black;
+  background-color: #231F20;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -20,8 +20,8 @@
 }
 
 .resume-logo {
-  height: 80px;
-  width: 80px;
+  height: 100px;
+  width: 100px;
   background-color: white;
   margin-right: 20px;
 }
@@ -78,31 +78,57 @@ li {
 
 .second-page-start {
   margin-top: 60px;
+  padding: 20px;
 }
 
 .second-page-start h3 {
-  font-size: 20px;
+  font-size: 22px;
+  margin-bottom: 25px;
+  color: #1c2a3a;
+  padding-bottom: 5px;
 }
 
-.back-button button{
-    background-color: #006e74;
-    color: white;
-    position: absolute;
-    top: 5px;
-    left: 10px;
-    border-style: none;
-    border-radius: 3px;
-    cursor: pointer;
-    padding: 10px;
+.second-page-start .section {
+  margin-bottom: 30px;
+  padding-left: 10px;
 }
-.download-button button{
-    background-color: #006e74;
-    color: white;
-    position: absolute;
-    top: 5px;
-    right: 20px;
-    border-style: none;
-    border-radius: 3px;
-    cursor: pointer;
-    padding: 10px;
+
+.second-page-start .section p {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.second-page-start .section ul {
+  padding-left: 20px;
+  list-style-type: none;
+}
+
+.second-page-start .section ul li::before {
+  content: "• ";
+  color: #1c2a3a;
+  margin-right: 5px;
+}
+
+.back-button button {
+  background-color: #006e74;
+  color: white;
+  position: absolute;
+  top: 5px;
+  left: 10px;
+  border-style: none;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.download-button button {
+  background-color: #006e74;
+  color: white;
+  position: absolute;
+  top: 5px;
+  right: 20px;
+  border-style: none;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 10px;
 }
