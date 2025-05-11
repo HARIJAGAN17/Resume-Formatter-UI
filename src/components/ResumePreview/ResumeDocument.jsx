@@ -131,7 +131,7 @@ const ResumeDocument = ({ data }) => {
 
   return (
     <Document>
-      {/* Page 1: Header + Two-column layout */}
+      {/* Page 1 */}
       <Page size="A4" style={styles.page}>
         <View style={styles.headerBlock}>
           <View style={styles.logoContainer}>
@@ -146,60 +146,74 @@ const ResumeDocument = ({ data }) => {
           {/* Left Column */}
           <View style={styles.leftColumn}>
             {/* Education */}
-            <View style={styles.item}>
-              <Text style={styles.sectionTitle}>Education</Text>
-              <Text style={styles.text}>• {data.education.degree} from</Text>
-              <Text style={styles.text}>{data.education.university}</Text>
-            </View>
+            {data.education?.degree && data.education?.university && (
+              <View style={styles.item}>
+                <Text style={styles.sectionTitle}>Education:</Text>
+                <Text style={styles.text}>• {data.education.degree} from</Text>
+                <Text style={styles.text}>{data.education.university}</Text>
+              </View>
+            )}
 
             {/* Technical Expertise */}
-            <View style={styles.item}>
-              <Text style={styles.sectionTitle}>Technical Expertise</Text>
-              {Object.entries(data.technicalExpertise).map(([category, items], i) => (
-                <Text key={i} style={styles.text}>
-                  • {category} : {items.join(", ")}
-                </Text>
-              ))}
-            </View>
+            {data.technicalExpertise && Object.keys(data.technicalExpertise).length > 0 && (
+              <View style={styles.item}>
+                <Text style={styles.sectionTitle}>Technical Expertise:</Text>
+                {Object.entries(data.technicalExpertise).map(([category, items], i) => (
+                  <Text key={i} style={styles.text}>
+                    • {category}: {items.join(", ")}
+                  </Text>
+                ))}
+              </View>
+            )}
 
             {/* Certifications */}
-            <View style={styles.item}>
-              <Text style={styles.sectionTitle}>Certifications</Text>
-              {data.certifications.map((cert, i) => (
-                <Text key={i} style={styles.text}>• {cert}</Text>
-              ))}
-            </View>
+            {Array.isArray(data.certifications) && data.certifications.length > 0 && (
+              <View style={styles.item}>
+                <Text style={styles.sectionTitle}>Certifications:</Text>
+                {data.certifications.map((cert, i) => (
+                  <Text key={i} style={styles.text}>• {cert}</Text>
+                ))}
+              </View>
+            )}
           </View>
 
           {/* Right Column */}
           <View style={styles.rightColumn}>
-            <View style={styles.item}>
-              <Text style={styles.sectionTitleRight}>Profile Summary</Text>
-              {data.summary.map((line, i) => (
-                <Text key={i} style={styles.textRight}>• {line}</Text>
-              ))}
-            </View>
+            {Array.isArray(data.summary) && data.summary.length > 0 && (
+              <View style={styles.item}>
+                <Text style={styles.sectionTitleRight}>Profile Summary:</Text>
+                {data.summary.map((line, i) => (
+                  <Text key={i} style={styles.textRight}>• {line}</Text>
+                ))}
+              </View>
+            )}
           </View>
         </View>
       </Page>
 
-      {/* Page 2+: Professional Experience */}
-      <Page size="A4" style={styles.paddedPage}>
-        <Text style={styles.expSectionTitle}>Professional Experience</Text>
-        {data.experience.map((exp, index) => (
-          <View key={index} style={styles.expEntry}>
-            <Text style={styles.textRight}>• Company: {exp.company}</Text>
-            <Text style={styles.textRight}>• Date: {exp.date}</Text>
-            <Text style={styles.textRight}>• Role: {exp.role}</Text>
-            <Text style={styles.textRight}>• Client Engagement: {exp.clientEngagement}</Text>
-            <Text style={styles.textRight}>• Program: {exp.program}</Text>
-            <Text style={[styles.textRight, { marginTop: 5 }]}>RESPONSIBILITIES:</Text>
-            {exp.responsibilities.map((res, i) => (
-              <Text key={i} style={styles.responsibilityText}>• {res}</Text>
-            ))}
-          </View>
-        ))}
-      </Page>
+      {/* Page 2: Experience */}
+      {Array.isArray(data.experience) && data.experience.length > 0 && (
+        <Page size="A4" style={styles.paddedPage}>
+          <Text style={styles.expSectionTitle}>Professional Experience</Text>
+          {data.experience.map((exp, index) => (
+            <View key={index} style={styles.expEntry}>
+              <Text style={styles.textRight}>• Company: {exp.company}</Text>
+              <Text style={styles.textRight}>• Date: {exp.date}</Text>
+              <Text style={styles.textRight}>• Role: {exp.role}</Text>
+              <Text style={styles.textRight}>• Client Engagement: {exp.clientEngagement}</Text>
+              <Text style={styles.textRight}>• Program: {exp.program}</Text>
+              {Array.isArray(exp.responsibilities) && exp.responsibilities.length > 0 && (
+                <>
+                  <Text style={[styles.textRight, { marginTop: 5 }]}>RESPONSIBILITIES:</Text>
+                  {exp.responsibilities.map((res, i) => (
+                    <Text key={i} style={styles.responsibilityText}>• {res}</Text>
+                  ))}
+                </>
+              )}
+            </View>
+          ))}
+        </Page>
+      )}
     </Document>
   );
 };
