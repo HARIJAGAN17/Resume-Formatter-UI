@@ -5,6 +5,7 @@
   font-family: Arial, sans-serif;
   background-color: #211d1e;
   color: #ffffff;
+  overflow: hidden; /* Prevent page-level scroll */
 }
 
 .sidebar {
@@ -56,6 +57,9 @@
   padding: 30px;
   width: 100%;
   transition: margin-left 0.3s ease;
+  overflow-y: auto;         /* Enables scroll when content exceeds */
+  height: 100vh;            /* Fill full screen */
+  box-sizing: border-box;   /* Include padding in height */
 }
 
 @media (min-width: 768px) {
@@ -74,16 +78,17 @@
   margin-bottom: 20px;
 }
 
+/* Logo & Title */
 .upload-title {
   text-align: center;
   margin-bottom: 20px;
   animation: fadeIn 1s ease forwards;
   opacity: 0;
   display: flex;
-  flex-direction: column; /* Stack h2 and logo vertically */
-  align-items: center;     /* Center horizontally */
-  justify-content: center; /* Center vertically (if needed) */
-  gap: 10px;               /* Reduce or increase spacing here */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 @keyframes fadeIn {
@@ -128,39 +133,27 @@
 }
 
 @keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes popIn {
-  from {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
-
-/* Center Upload Section */
+/* Upload Section */
 .upload-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* Align from top */
-  min-height: 60vh;            /* Reduced height to lift it */
-  padding-top: 40px;           /* Optional spacing from top */
+  justify-content: flex-start;
+  flex: 1;
+  padding-top: 40px;
+  width: 100%;
 }
 
-.upload-border{
+.upload-border {
   background-color: rgb(50, 50, 45);
   border-radius: 5px;
   padding: 20px;
@@ -170,7 +163,8 @@
   align-items: center;
   gap: 10px;
 }
-.upload-border p{
+
+.upload-border p {
   color: grey;
 }
 

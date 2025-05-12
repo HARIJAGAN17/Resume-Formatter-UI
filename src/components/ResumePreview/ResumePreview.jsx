@@ -51,7 +51,7 @@ function ResumePreview() {
               <div className="section">
                 <h3>Education:</h3>
                 <p>
-                  {education.degree || "N/A"} - {education.university || "N/A"}
+                  {education.degree || "N/A"} from {education.university || "N/A"}
                 </p>
               </div>
 
