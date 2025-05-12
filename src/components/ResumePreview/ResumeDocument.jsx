@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Image,
 } from "@react-pdf/renderer";
-import ustLogo from '../../assets/ust-logo.jpg';
+import ustLogo from "../../assets/ust-logo.jpg";
 
 const styles = StyleSheet.create({
   page: {
@@ -155,26 +155,33 @@ const ResumeDocument = ({ data }) => {
             )}
 
             {/* Technical Expertise */}
-            {data.technicalExpertise && Object.keys(data.technicalExpertise).length > 0 && (
-              <View style={styles.item}>
-                <Text style={styles.sectionTitle}>Technical Expertise:</Text>
-                {Object.entries(data.technicalExpertise).map(([category, items], i) => (
-                  <Text key={i} style={styles.text}>
-                    • {category}: {items.join(", ")}
-                  </Text>
-                ))}
-              </View>
-            )}
+            {data.technicalExpertise &&
+              Object.keys(data.technicalExpertise).length > 0 && (
+                <View style={styles.item}>
+                  <Text style={styles.sectionTitle}>Technical Expertise:</Text>
+                  {Object.entries(data.technicalExpertise).map(
+                    ([category, items], i) => (
+                      <Text key={i} style={styles.text}>
+                        <Text style={{ fontWeight: "bold" }}>{category}:</Text>{" "}
+                        {items.join(", ")}
+                      </Text>
+                    )
+                  )}
+                </View>
+              )}
 
             {/* Certifications */}
-            {Array.isArray(data.certifications) && data.certifications.length > 0 && (
-              <View style={styles.item}>
-                <Text style={styles.sectionTitle}>Certifications:</Text>
-                {data.certifications.map((cert, i) => (
-                  <Text key={i} style={styles.text}>• {cert}</Text>
-                ))}
-              </View>
-            )}
+            {Array.isArray(data.certifications) &&
+              data.certifications.length > 0 && (
+                <View style={styles.item}>
+                  <Text style={styles.sectionTitle}>Certifications:</Text>
+                  {data.certifications.map((cert, i) => (
+                    <Text key={i} style={styles.text}>
+                      • {cert}
+                    </Text>
+                  ))}
+                </View>
+              )}
           </View>
 
           {/* Right Column */}
@@ -183,7 +190,9 @@ const ResumeDocument = ({ data }) => {
               <View style={styles.item}>
                 <Text style={styles.sectionTitleRight}>Profile Summary:</Text>
                 {data.summary.map((line, i) => (
-                  <Text key={i} style={styles.textRight}>• {line}</Text>
+                  <Text key={i} style={styles.textRight}>
+                    • {line}
+                  </Text>
                 ))}
               </View>
             )}
@@ -200,16 +209,23 @@ const ResumeDocument = ({ data }) => {
               <Text style={styles.textRight}>• Company: {exp.company}</Text>
               <Text style={styles.textRight}>• Date: {exp.date}</Text>
               <Text style={styles.textRight}>• Role: {exp.role}</Text>
-              <Text style={styles.textRight}>• Client Engagement: {exp.clientEngagement}</Text>
+              <Text style={styles.textRight}>
+                • Client Engagement: {exp.clientEngagement}
+              </Text>
               <Text style={styles.textRight}>• Program: {exp.program}</Text>
-              {Array.isArray(exp.responsibilities) && exp.responsibilities.length > 0 && (
-                <>
-                  <Text style={[styles.textRight, { marginTop: 5 }]}>RESPONSIBILITIES:</Text>
-                  {exp.responsibilities.map((res, i) => (
-                    <Text key={i} style={styles.responsibilityText}>• {res}</Text>
-                  ))}
-                </>
-              )}
+              {Array.isArray(exp.responsibilities) &&
+                exp.responsibilities.length > 0 && (
+                  <>
+                    <Text style={[styles.textRight, { marginTop: 5 }]}>
+                      RESPONSIBILITIES:
+                    </Text>
+                    {exp.responsibilities.map((res, i) => (
+                      <Text key={i} style={styles.responsibilityText}>
+                        • {res}
+                      </Text>
+                    ))}
+                  </>
+                )}
             </View>
           ))}
         </Page>
