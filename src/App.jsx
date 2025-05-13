@@ -15,7 +15,8 @@ import ProtectedRoute from "./components/Guard/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import { ResumeProvider } from "./context/ResumeContext";
 import { ToastContainer } from "react-toastify";
-import ResumeDownload from "./components/ResumePreview/ResumeDownload";
+// import ResumeDownload from "./components/ResumePreview/ResumeDownload";
+import ResumeDownloadPdf from "./components/ResumePreview/ResumeDownloadPdf";
 
 function App() {
   const router = createBrowserRouter(
@@ -37,7 +38,7 @@ function App() {
         >
           <Route index element={<ResumeFormatter />} />
           <Route path="preview" element={<ResumePreview />} />
-          <Route path="download" element={<ResumeDownload />} />
+          <Route path="download" element={<ResumeDownloadPdf />} />
         </Route>
       </>
     )

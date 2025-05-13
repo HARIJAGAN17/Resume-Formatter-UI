@@ -22,18 +22,31 @@ function ResumePreview() {
 
   return (
     <div className="main-container">
-      <div id="no-print">
-        <div className="back-button">
-          <button onClick={() => navigate("/resume")}>Back</button>
-        </div>
-        <div className="download-button">
-          <button onClick={() => navigate("/resume/download")}>Download</button>
+      {/* Action Buttons */}
+      <div id="no-print" className="button-bar">
+        <button className="action-button" onClick={() => navigate("/resume")}>
+          ← Back
+        </button>
+        <div className="download-buttons">
+          <button
+            className="action-button"
+            onClick={() => navigate("/resume/download")}
+          >
+            Download as PDF
+          </button>
+          <button
+            className="action-button"
+            onClick={() => navigate("/resume/download-docx")}
+          >
+            Download as DOCX
+          </button>
         </div>
       </div>
 
+      {/* Resume Content */}
       <div id="print-area">
         <div className="resume-container">
-          {/* Header Section */}
+          {/* Header */}
           <div className="resume-header">
             <div className="resume-logo">
               <img
@@ -45,7 +58,7 @@ function ResumePreview() {
             <h2>{name}</h2>
           </div>
 
-          {/* First Page */}
+          {/* First Page Content */}
           <div className="resume-top-page">
             <div className="left-section">
               <div className="section">
