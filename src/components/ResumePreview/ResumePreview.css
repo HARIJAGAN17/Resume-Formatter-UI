@@ -6,7 +6,6 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   font-family: "Segoe UI", sans-serif;
   color: #333;
-  padding: 20px;
 }
 
 .resume-header {
@@ -39,17 +38,19 @@
 }
 
 .left-section {
-  width: 40%;
+  width: 38%;
   background-color: #006e74;
   color: white;
   padding: 20px;
   font-size: 14px;
+  margin-left: 20px;
 }
 
 .right-section {
   width: 60%;
   color: black;
   padding: 20px;
+  margin-right: 10px;
 }
 
 .section {
