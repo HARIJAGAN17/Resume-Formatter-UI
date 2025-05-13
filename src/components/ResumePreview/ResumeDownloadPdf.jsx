@@ -2,9 +2,11 @@ import React, { useEffect } from "react";
 import { pdf } from "@react-pdf/renderer";
 import ResumeDocument from "./ResumeDocument";
 import { useResume } from "../../hooks/useResume";
+import { useNavigate } from "react-router-dom";
 
 const ResumeDownloadPdf = () => {
   const { resumeData } = useResume();
+  const navigate  = useNavigate();
 
   useEffect(() => {
     const generateAndDownload = async () => {
@@ -24,6 +26,8 @@ const ResumeDownloadPdf = () => {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
+
+      setTimeout(() => navigate(-1), 1500);
     };
 
     generateAndDownload();
