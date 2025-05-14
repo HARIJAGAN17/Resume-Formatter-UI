@@ -181,15 +181,26 @@ const createStyledSections = (data) => {
   });
 
   const experiencePage = [
-    new Paragraph({ text: "Professional Experience", heading: HeadingLevel.HEADING_1, spacing: { after: 300 }, thematicBreak: true }),
+    new Paragraph({
+      spacing: { before: 300, after: 300 },
+      children: [
+        new TextRun({
+          text: "Professional Experience",
+          bold: true,
+          color: "000000",
+          size: 32, // or 28-36 depending on your visual preference
+          font: "Arial",
+        }),
+      ],
+    }),    
     ...data.experience.flatMap((exp) => [
-      new Paragraph({ children: [new TextRun({ text: "▪ Company: ", bold: true }), new TextRun({ text: exp.company })] }),
-      new Paragraph({ children: [new TextRun({ text: "▪ Date: ", bold: true }), new TextRun({ text: exp.date })] }),
-      new Paragraph({ children: [new TextRun({ text: "▪ Role: ", bold: true }), new TextRun({ text: exp.role })] }),
-      new Paragraph({ children: [new TextRun({ text: "▪ Client Engagement: ", bold: true }), new TextRun({ text: exp.clientEngagement })] }),
-      new Paragraph({ children: [new TextRun({ text: "▪ Program: ", bold: true }), new TextRun({ text: exp.program })], spacing: { after: 100 } }),
-      new Paragraph({ text: "RESPONSIBILITIES:", bold: true, spacing: { after: 200 } }),
-      ...exp.responsibilities.map((resp) => new Paragraph({ children: [new TextRun({ text: "▪ ", bold: true }), new TextRun({ text: resp })], spacing: { after: 100 } })),
+      new Paragraph({ children: [new TextRun({ text: "▪ Company: " ,size:22}), new TextRun({ text: exp.company,size:20 })] }),
+      new Paragraph({ children: [new TextRun({ text: "▪ Date: ",size:22}), new TextRun({ text: exp.date ,size:20 })] }),
+      new Paragraph({ children: [new TextRun({ text: "▪ Role: ",size:22 }), new TextRun({ text: exp.role, size:20 })] }),
+      new Paragraph({ children: [new TextRun({ text: "▪ Client Engagement: ",size:22 }), new TextRun({ text: exp.clientEngagement,size:20 })] }),
+      new Paragraph({ children: [new TextRun({ text: "▪ Program: ",size:22}), new TextRun({ text: exp.program })], spacing: { after: 100 } }),
+      new Paragraph({ text: "RESPONSIBILITIES:",size:22, spacing: { after: 200 } }),
+      ...exp.responsibilities.map((resp) => new Paragraph({ children: [new TextRun({ text: "▪ ", bold: true }), new TextRun({ text: resp,size:20 })], spacing: { after: 100 } })),
       new Paragraph({ text: "" }),
     ]),
   ];
