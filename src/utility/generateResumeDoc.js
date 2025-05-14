@@ -210,7 +210,7 @@ const createStyledSections = (data) => {
         children: [
           new TableCell({ width: { size: 5, type: WidthType.PERCENTAGE }, children: [new Paragraph("")], borders: allNone }),
           new TableCell({
-            width: { size: 35, type: WidthType.PERCENTAGE },
+            width: { size: 40, type: WidthType.PERCENTAGE },
             shading: { fill: "166a6a" },
             children: leftContent,
             margins: { top: 200, bottom: 200, left: 200, right: 200 },
