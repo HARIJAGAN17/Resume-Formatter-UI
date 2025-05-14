@@ -36,7 +36,7 @@ function ResumeFormatter() {
       setIsLoading(true);
       const response = await api.post("/upload-resume", formData);
       setResumeData(response.data);
-      console.log(response.data);
+      // console.log(response.data);
       navigate("preview"); // 👈 Relative navigation to /resume/preview
     } catch (error) {
       console.error("Error uploading file:", error);

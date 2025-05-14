@@ -17,6 +17,7 @@ import { ResumeProvider } from "./context/ResumeContext";
 import { ToastContainer } from "react-toastify";
 // import ResumeDownload from "./components/ResumePreview/ResumeDownload";
 import ResumeDownloadPdf from "./components/ResumePreview/ResumeDownloadPdf";
+import ResumeDownloadDocx from "./components/ResumePreview/ResumeDownloadDocx";
 
 function App() {
   const router = createBrowserRouter(
@@ -39,6 +40,7 @@ function App() {
           <Route index element={<ResumeFormatter />} />
           <Route path="preview" element={<ResumePreview />} />
           <Route path="download" element={<ResumeDownloadPdf />} />
+          <Route path="/resume/download-docx" element={<ResumeDownloadDocx />} />
         </Route>
       </>
     )
