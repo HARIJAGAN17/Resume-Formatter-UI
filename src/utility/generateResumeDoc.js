@@ -34,9 +34,11 @@ const createStyledSections = (data) => {
     leftContent.push(
       new Paragraph({
         alignment: AlignmentType.JUSTIFIED,
+        spacing: { before: 100, after: 200, line: 300 },
+        indent: { left: 300, hanging: 200 },
         children: [
           new TextRun({
-            text: `${data.education.degree} from ${data.education.university}`,
+            text: `• ${data.education.degree} from ${data.education.university}`,
             color: "FFFFFF",
             font: "Arial",
             size: 20,
@@ -52,11 +54,11 @@ const createStyledSections = (data) => {
       leftContent.push(
         new Paragraph({
           alignment: AlignmentType.JUSTIFIED,
-          spacing: { line: 240 },
-          indent: { left: 180, hanging: 180, right: 180 },
+          spacing: { before: 100, after: 100, line: 300 },
+          indent: { left: 300, hanging: 200 },
           children: [
             new TextRun({
-              text: "\u2022 ",
+              text: "• ",
               bold: true,
               color: "FFFFFF",
               font: "Arial",
@@ -87,11 +89,11 @@ const createStyledSections = (data) => {
       leftContent.push(
         new Paragraph({
           alignment: AlignmentType.JUSTIFIED,
-          spacing: { line: 240 },
-          indent: { left: 180, hanging: 180, right: 180 },
+          spacing: { before: 100, after: 100, line: 300 },
+          indent: { left: 300, hanging: 200 },
           children: [
             new TextRun({
-              text: "\u2022 ",
+              text: "• ",
               bold: true,
               color: "FFFFFF",
               font: "Arial",
@@ -205,7 +207,7 @@ const createStyledSections = (data) => {
       new TableRow({
         children: [
           new TableCell({
-            width: { size: 5, type: WidthType.PERCENTAGE },
+            width: { size: 3, type: WidthType.PERCENTAGE },
             children: [new Paragraph("")],
             borders: allNone,
           }),
@@ -213,13 +215,13 @@ const createStyledSections = (data) => {
             width: { size: 40, type: WidthType.PERCENTAGE },
             shading: { fill: "166a6a" },
             children: leftContent,
-            margins: { top: 200, bottom: 200, left: 200, right: 200 },
+            margins: { top: 240, bottom: 240, left: 240, right: 240 },
             borders: allNone,
           }),
           new TableCell({
             width: { size: 60, type: WidthType.PERCENTAGE },
             children: rightContent,
-            margins: { top: 200, bottom: 200, left: 200, right: 200 },
+            margins: { top: 160, bottom: 240, left: 240, right: 240 },
             borders: allNone,
           }),
           new TableCell({
@@ -303,7 +305,16 @@ const createStyledSections = (data) => {
       properties: {
         page: { margin: { top: 0, bottom: 0, left: 0, right: 0 } },
       },
-      children: [headerTable, new Paragraph({})],
+      children: [
+        headerTable,
+        new Paragraph({
+          spacing: {
+            before: 500, // Adds 600 twips = ~0.42 inches
+            after: 0,
+          },
+          children: [],
+        }),
+      ],
     },
     {
       properties: {
