@@ -1,23 +1,26 @@
 import React, { useEffect } from "react";
 import { useResume } from "../../hooks/useResume";
-import {generateResumeDocx} from '../../utility/generateResumeDoc.js';
+import { generateResumeDocx } from "../../utility/generateResumeDoc.js";
+import { useNavigate } from "react-router-dom";
 
 function ResumeDownloadDocx() {
-    const { resumeData } = useResume();
-  
-    useEffect(() => {
-      if (resumeData) {
-        generateResumeDocx(resumeData); // Trigger the DOCX generation
-      }
-    }, [resumeData]);
-  
-    return (
-      <div>
-        <h2>Download Resume as DOCX</h2>
-        {!resumeData && <p>Loading resume data...</p>}
-      </div>
-    );
-  }
-  
-  export default ResumeDownloadDocx;
-  
+  const { resumeData } = useResume();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (resumeData) {
+      generateResumeDocx(resumeData).then(() => {
+        setTimeout(() => navigate(-1), 1500);
+      });
+    }
+  }, [resumeData, navigate]);
+
+  return (
+    <div>
+      <div>Preparing your docx download...</div>
+      {!resumeData && <p>Loading resume data...</p>}
+    </div>
+  );
+}
+
+export default ResumeDownloadDocx;

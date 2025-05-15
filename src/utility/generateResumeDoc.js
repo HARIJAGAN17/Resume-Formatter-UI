@@ -122,7 +122,7 @@ const createStyledSections = (data) => {
           indent: { left: 180, hanging: 180, right: 180 },
           children: [
             new TextRun({
-              text: "▪ ",
+              text: "• ",
               bold: true,
               spacing: { after: 200 },
               font: "Arial",
