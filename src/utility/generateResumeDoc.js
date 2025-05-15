@@ -21,6 +21,7 @@ export const generateResumeDocx = async (data) => {
   const doc = new Document({
     sections: createStyledSections(data),
   });
+  console.log(data);
   const buffer = await Packer.toBlob(doc);
   saveAs(buffer, `${data.name || "resume"}.docx`);
 };
@@ -252,52 +253,57 @@ const createStyledSections = (data) => {
     ...data.experience.flatMap((exp) => [
       new Paragraph({
         children: [
-          new TextRun({ text: "▪ Company: ", size: 22 }),
-          new TextRun({ text: exp.company, size: 20 }),
+          new TextRun({ text: "▪ Company: ", size: 22, font: "Arial",bold: true }),
+          new TextRun({ text: exp.company || "N/A", size: 20, font: "Arial" }),
         ],
       }),
       new Paragraph({
         children: [
-          new TextRun({ text: "▪ Date: ", size: 22 }),
-          new TextRun({ text: exp.date, size: 20 }),
+          new TextRun({ text: "▪ Date: ", size: 22, font: "Arial" ,bold: true}),
+          new TextRun({ text: exp.date || "N/A", size: 20, font: "Arial" }),
         ],
       }),
       new Paragraph({
         children: [
-          new TextRun({ text: "▪ Role: ", size: 22 }),
-          new TextRun({ text: exp.role, size: 20 }),
+          new TextRun({ text: "▪ Role: ", size: 22, font: "Arial" ,bold: true}),
+          new TextRun({ text: exp.role || "N/A", size: 20, font: "Arial" }),
         ],
       }),
       new Paragraph({
         children: [
-          new TextRun({ text: "▪ Client Engagement: ", size: 22 }),
-          new TextRun({ text: exp.clientEngagement, size: 20 }),
+          new TextRun({ text: "▪ Client Engagement: ", size: 22, font: "Arial" ,bold: true}),
+          new TextRun({ text: exp.clientEngagement || "N/A", size: 20, font: "Arial" }),
         ],
       }),
       new Paragraph({
         children: [
-          new TextRun({ text: "▪ Program: ", size: 22 }),
-          new TextRun({ text: exp.program }),
+          new TextRun({ text: "▪ Program: ", size: 22, font: "Arial" ,bold: true}),
+          new TextRun({ text: exp.program || "N/A", size: 20, font: "Arial" }),
         ],
         spacing: { after: 100 },
       }),
       new Paragraph({
-        text: "RESPONSIBILITIES:",
-        size: 22,
         spacing: { after: 200 },
+        children: [
+          new TextRun({
+            text: "RESPONSIBILITIES:",
+            bold: true,
+            size: 22,
+            font: "Arial",
+          }),
+        ],
       }),
-      ...exp.responsibilities.map(
-        (resp) =>
-          new Paragraph({
-            children: [
-              new TextRun({ text: "▪ ", bold: true }),
-              new TextRun({ text: resp, size: 20 }),
-            ],
-            spacing: { after: 100 },
-          })
-      ),
-      new Paragraph({ text: "" }),
-    ]),
+      ...(Array.isArray(exp.responsibilities) ? exp.responsibilities.map((resp) =>
+        new Paragraph({
+          spacing: { after: 100 },
+          children: [
+            new TextRun({ text: "▪ ", bold: true, font: "Arial" }),
+            new TextRun({ text: resp || "", size: 20, font: "Arial" }),
+          ],
+        })
+      ) : []),
+      new Paragraph({ children: [new TextRun({ text: "" })] }),
+    ])    
   ];
 
   return [
