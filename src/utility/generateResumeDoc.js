@@ -23,7 +23,7 @@ export const generateResumeDocx = async (data) => {
   });
   console.log(data);
   const buffer = await Packer.toBlob(doc);
-  saveAs(buffer, `${data.name || "resume"}.docx`);
+  saveAs(buffer, `${data.name ? data.name.replace(/\s+/g, '_') + '_resume' : 'resume'}.docx`);
 };
 
 const createStyledSections = (data) => {
