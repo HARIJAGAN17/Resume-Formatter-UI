@@ -100,6 +100,9 @@ const styles = StyleSheet.create({
     color: "#000000",
     marginBottom: 4,
   },
+  boldingText: {
+    fontWeight: "bold",
+  },
   expSectionTitle: {
     fontSize: 14,
     fontWeight: "bold",
@@ -211,26 +214,43 @@ const ResumeDocument = ({ data }) => {
           {data.experience.map((exp, index) => (
             <View key={index} style={styles.expEntry}>
               {exp.company && (
-                <Text style={styles.textRight}>• Company: {exp.company}</Text>
+                <Text style={styles.textRight}>
+                  <Text style={styles.boldingText}>• Company:</Text>{" "}
+                  {exp.company}
+                </Text>
               )}
               {exp.date && (
-                <Text style={styles.textRight}>• Date: {exp.date}</Text>
+                <Text style={styles.textRight}>
+                  <Text style={styles.boldingText}>• Date:</Text> {exp.date}
+                </Text>
               )}
               {exp.role && (
-                <Text style={styles.textRight}>• Role: {exp.role}</Text>
+                <Text style={styles.textRight}>
+                  <Text style={styles.boldingText}>• Role:</Text> {exp.role}
+                </Text>
               )}
               {exp.clientEngagement && (
                 <Text style={styles.textRight}>
-                  • Client Engagement: {exp.clientEngagement}
+                  <Text style={styles.boldingText}>• Client Engagement:</Text>{" "}
+                  {exp.clientEngagement}
                 </Text>
               )}
               {exp.program && (
-                <Text style={styles.textRight}>• Program: {exp.program}</Text>
+                <Text style={styles.textRight}>
+                  <Text style={styles.boldingText}>• Program:</Text>{" "}
+                  {exp.program}
+                </Text>
               )}
               {Array.isArray(exp.responsibilities) &&
                 exp.responsibilities.length > 0 && (
                   <>
-                    <Text style={[styles.textRight, { marginTop: 5 }]}>
+                    <Text
+                      style={[
+                        styles.textRight,
+                        styles.boldingText,
+                        { marginTop: 5 },
+                      ]}
+                    >
                       RESPONSIBILITIES:
                     </Text>
                     {exp.responsibilities.map((res, i) => (
