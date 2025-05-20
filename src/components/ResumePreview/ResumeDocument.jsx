@@ -138,7 +138,7 @@ const ResumeDocument = ({ data }) => {
             <Image style={styles.logoImage} src={ustLogo} />
           </View>
           <View style={styles.nameContainer}>
-            <Text style={styles.name}>{data.name}</Text>
+            {data.name && <Text style={styles.name}>{data.name}</Text>}
           </View>
         </View>
 
@@ -160,12 +160,16 @@ const ResumeDocument = ({ data }) => {
                 <View style={styles.item}>
                   <Text style={styles.sectionTitle}>Technical Expertise:</Text>
                   {Object.entries(data.technicalExpertise).map(
-                    ([category, items], i) => (
-                      <Text key={i} style={styles.text}>
-                        <Text style={{ fontWeight: "bold" }}>{category}:</Text>{" "}
-                        {items.join(", ")}
-                      </Text>
-                    )
+                    ([category, items], i) =>
+                      Array.isArray(items) &&
+                      items.length > 0 && (
+                        <Text key={i} style={styles.text}>
+                          <Text style={{ fontWeight: "bold" }}>
+                            • {category}:
+                          </Text>{" "}
+                          {items.join(", ")}
+                        </Text>
+                      )
                   )}
                 </View>
               )}
@@ -206,13 +210,23 @@ const ResumeDocument = ({ data }) => {
           <Text style={styles.expSectionTitle}>Professional Experience</Text>
           {data.experience.map((exp, index) => (
             <View key={index} style={styles.expEntry}>
-              <Text style={styles.textRight}>• Company: {exp.company}</Text>
-              <Text style={styles.textRight}>• Date: {exp.date}</Text>
-              <Text style={styles.textRight}>• Role: {exp.role}</Text>
-              <Text style={styles.textRight}>
-                • Client Engagement: {exp.clientEngagement}
-              </Text>
-              <Text style={styles.textRight}>• Program: {exp.program}</Text>
+              {exp.company && (
+                <Text style={styles.textRight}>• Company: {exp.company}</Text>
+              )}
+              {exp.date && (
+                <Text style={styles.textRight}>• Date: {exp.date}</Text>
+              )}
+              {exp.role && (
+                <Text style={styles.textRight}>• Role: {exp.role}</Text>
+              )}
+              {exp.clientEngagement && (
+                <Text style={styles.textRight}>
+                  • Client Engagement: {exp.clientEngagement}
+                </Text>
+              )}
+              {exp.program && (
+                <Text style={styles.textRight}>• Program: {exp.program}</Text>
+              )}
               {Array.isArray(exp.responsibilities) &&
                 exp.responsibilities.length > 0 && (
                   <>
