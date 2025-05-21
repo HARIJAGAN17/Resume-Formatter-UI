@@ -54,12 +54,13 @@
 .main-content {
   flex-grow: 1;
   margin-left: 0;
-  padding: 30px;
+  padding-left: 20px;
+  padding-top: 10px;
   width: 100%;
   transition: margin-left 0.3s ease;
-  overflow-y: auto;         /* Enables scroll when content exceeds */
-  height: 100vh;            /* Fill full screen */
-  box-sizing: border-box;   /* Include padding in height */
+  overflow-y: auto; /* Enables scroll when content exceeds */
+  height: 100vh; /* Fill full screen */
+  box-sizing: border-box; /* Include padding in height */
 }
 
 @media (min-width: 768px) {
@@ -117,9 +118,15 @@
   opacity: 0;
 }
 
-.logo-grid .letter:nth-child(1) { animation-delay: 0.1s; }
-.logo-grid .letter:nth-child(3) { animation-delay: 0.3s; }
-.logo-grid .letter:nth-child(4) { animation-delay: 0.5s; }
+.logo-grid .letter:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.logo-grid .letter:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.logo-grid .letter:nth-child(4) {
+  animation-delay: 0.5s;
+}
 
 .dot {
   width: 14px;
@@ -133,13 +140,25 @@
 }
 
 @keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes popIn {
-  from { transform: scale(0.5); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* Upload Section */
@@ -149,7 +168,6 @@
   align-items: center;
   justify-content: flex-start;
   flex: 1;
-  padding-top: 40px;
   width: 100%;
 }
 
@@ -222,6 +240,40 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* upload progress bar */
+
+/* Progress Bar */
+.progress-bar-wrapper {
+  width: 30%;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #00a19d;
+  transition: width 0.2s ease;
+}
+
+.progress-text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: 0;
+  left: 0;
+  line-height: 20px;
+  color: #ffffff;
+  font-size: 12px;
 }

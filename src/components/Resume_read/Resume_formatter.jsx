@@ -5,14 +5,14 @@ import api from "../../Api/api";
 import { useResume } from "../../hooks/useResume";
 import "./ResumeFormatter.css";
 
-
 function ResumeFormatter() {
   const navigate = useNavigate();
   const { logout } = useAuth();
   const [selectedFile, setSelectedFile] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const {setResumeData} = useResume();
+  const { setResumeData } = useResume();
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleLogout = () => {
     logout();
@@ -34,10 +34,24 @@ function ResumeFormatter() {
 
     try {
       setIsLoading(true);
+      setUploadProgress(0);
+
+      // Simulate slow progress
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 1;
+        setUploadProgress(progress);
+        if (progress >= 98) clearInterval(interval); // Stop near 100%
+      }, 30); // Adjust for speed (lower = faster)
+
       const response = await api.post("/upload-resume", formData);
-      setResumeData(response.data);
-      // console.log(response.data);
-      navigate("preview"); // 👈 Relative navigation to /resume/preview
+
+      clearInterval(interval);
+      setUploadProgress(100); // Instantly jump to 100 on success
+      setTimeout(() => {
+        setResumeData(response.data);
+        navigate("preview");
+      }, 500); // Short delay to let 100% show
     } catch (error) {
       console.error("Error uploading file:", error);
     } finally {
@@ -76,6 +90,16 @@ function ResumeFormatter() {
 
         <div className="upload-wrapper">
           <h2 className="page-title">Upload Doc here</h2>
+
+          {isLoading && (
+            <div className="progress-bar-wrapper">
+              <div
+                className="progress-bar"
+                style={{ width: `${uploadProgress}%` }}
+              />
+              <span className="progress-text">{uploadProgress}%</span>
+            </div>
+          )}
 
           <div className="upload-border">
             <div className="upload-section">
