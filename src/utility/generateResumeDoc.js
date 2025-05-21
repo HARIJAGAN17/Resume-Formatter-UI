@@ -352,7 +352,7 @@ const createStyledSections = (data) => {
                   spacing: { after: 100 },
                   indent: { left: 200 },
                   children: [
-                    new TextRun({ text: "▪ ", bold: true, font: "Arial" }),
+                    new TextRun({ text: "• ", bold: true, font: "Arial" }),
                     new TextRun({ text: resp, size: 20, font: "Arial" }),
                   ],
                 })

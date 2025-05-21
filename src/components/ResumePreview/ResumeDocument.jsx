@@ -108,7 +108,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
     color: "#1c2a3a",
-    textDecoration: "underline",
   },
   expEntry: {
     marginBottom: 20,
