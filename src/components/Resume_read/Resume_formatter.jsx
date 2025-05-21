@@ -3,16 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import api from "../../Api/api";
 import { useResume } from "../../hooks/useResume";
+import { User } from "lucide-react"; // ✅ Import icon
 import "./ResumeFormatter.css";
 
 function ResumeFormatter() {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const [selectedFile, setSelectedFile] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const { setResumeData } = useResume();
   const [uploadProgress, setUploadProgress] = useState(0);
+  const capitalize = (name) =>
+    name ? name.charAt(0).toUpperCase() + name.slice(1) : "";
 
   const handleLogout = () => {
     logout();
@@ -36,22 +39,21 @@ function ResumeFormatter() {
       setIsLoading(true);
       setUploadProgress(0);
 
-      // Simulate slow progress
       let progress = 0;
       const interval = setInterval(() => {
         progress += 1;
         setUploadProgress(progress);
-        if (progress >= 98) clearInterval(interval); // Stop near 100%
-      }, 30); // Adjust for speed (lower = faster)
+        if (progress >= 98) clearInterval(interval);
+      }, 30);
 
       const response = await api.post("/upload-resume", formData);
 
       clearInterval(interval);
-      setUploadProgress(100); // Instantly jump to 100 on success
+      setUploadProgress(100);
       setTimeout(() => {
         setResumeData(response.data);
         navigate("preview");
-      }, 500); // Short delay to let 100% show
+      }, 500);
     } catch (error) {
       console.error("Error uploading file:", error);
     } finally {
@@ -63,9 +65,25 @@ function ResumeFormatter() {
     <div className="app-container">
       <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
         <div className="sidebar-header">
-          <h2>Profile</h2>
+          <div className={`user-avatar ${sidebarOpen ? "animate-avatar" : ""}`}>
+            <User size={22} color="white" />
+          </div>
+          <div className="user-name">{capitalize(user?.username)}</div>
         </div>
-        <div className="sidebar-body"></div>
+
+        <div className="sidebar-body">
+          <div className="welcome-message">
+            <p>
+              Hi <strong>{capitalize(user?.username) || "there"}</strong>,
+              welcome to the
+            </p>
+            <p>
+              <strong>AI-powered Resume Converter</strong> 🌟
+            </p>
+            <p>Upload your resume and get structured data instantly!</p>
+          </div>
+        </div>
+
         <div className="sidebar-footer">
           <button onClick={handleLogout} className="logout-btn">
             Logout
@@ -79,7 +97,6 @@ function ResumeFormatter() {
         </button>
 
         <div className="upload-title">
-          <h2>Welcome to</h2>
           <div className="logo-grid">
             <span className="letter">U</span>
             <span className="dot" />
