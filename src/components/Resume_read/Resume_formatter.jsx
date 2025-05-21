@@ -72,15 +72,21 @@ function ResumeFormatter() {
         </div>
 
         <div className="sidebar-body">
-          <div className="welcome-message">
-            <p>
-              Hi <strong>{capitalize(user?.username) || "there"}</strong>,
-              welcome to the
-            </p>
-            <p>
-              <strong>AI-powered Resume Converter</strong> 🌟
-            </p>
-            <p>Upload your resume and get structured data instantly!</p>
+          <div className="glow-box-container">
+            {/* Glowing Border Elements */}
+            <div class="animated-border-box-glow"></div>
+            <div class="animated-border-box">
+              <div className="welcome-message">
+                <p>
+                  Hi <strong>{capitalize(user?.username) || "there"}</strong>,
+                  welcome to the
+                </p>
+                <p>
+                  <strong>AI-powered Resume Converter</strong> ✨
+                </p>
+                <p>Upload your resume and get structured data instantly!</p>
+              </div>
+            </div>
           </div>
         </div>
 
