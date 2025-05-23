@@ -14,7 +14,7 @@ function ResumePreview() {
   const {
     name = "",
     summary = [],
-    education = {},
+    education = [],
     technicalExpertise = {},
     certifications = [],
     experience = [],
@@ -61,16 +61,24 @@ function ResumePreview() {
           {/* First Page Content */}
           <div className="resume-top-page">
             <div className="left-section">
-              <div className="section">
-                <h3>Education:</h3>
-                <p>
-                  {education.degree || "N/A"} from {education.university || "N/A"}
-                </p>
-              </div>
+              {/* Updated Education Section */}
+              {Array.isArray(education) && education.length > 0 && (
+                <div className="section">
+                  <h3>Education:</h3>
+                  <ul>
+                    {education.map((edu, index) => (
+                      <li key={index}>
+                        {edu.degree || "N/A"} from {edu.university || "N/A"}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               <div className="section">
                 <h3>Technical Expertise:</h3>
-                {technicalExpertise && Object.keys(technicalExpertise).length > 0 ? (
+                {technicalExpertise &&
+                Object.keys(technicalExpertise).length > 0 ? (
                   <ul>
                     {Object.entries(technicalExpertise).map(([key, values]) => (
                       <li key={key}>
@@ -120,16 +128,29 @@ function ResumePreview() {
               <h3>Professional Experience</h3>
               {experience.map((job, idx) => (
                 <div className="section" key={idx}>
-                  <p><strong>• Company:</strong> {job.company || "N/A"}</p>
-                  <p><strong>• Date:</strong> {job.date || "N/A"}</p>
-                  <p><strong>• Role:</strong> {job.role || "N/A"}</p>
+                  <p>
+                    <strong>• Company:</strong> {job.company || "N/A"}
+                  </p>
+                  <p>
+                    <strong>• Date:</strong> {job.date || "N/A"}
+                  </p>
+                  <p>
+                    <strong>• Role:</strong> {job.role || "N/A"}
+                  </p>
                   {job.clientEngagement && (
-                    <p><strong>• Client Engagement:</strong> {job.clientEngagement}</p>
+                    <p>
+                      <strong>• Client Engagement:</strong>{" "}
+                      {job.clientEngagement}
+                    </p>
                   )}
                   {job.program && (
-                    <p><strong>• Program:</strong> {job.program}</p>
+                    <p>
+                      <strong>• Program:</strong> {job.program}
+                    </p>
                   )}
-                  <p><strong>RESPONSIBILITIES:</strong></p>
+                  <p>
+                    <strong>RESPONSIBILITIES:</strong>
+                  </p>
                   {job.responsibilities?.length > 0 ? (
                     <ul>
                       {job.responsibilities.map((res, i) => (

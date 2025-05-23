@@ -32,24 +32,29 @@ const createStyledSections = (data) => {
   const leftContent = [];
   const rightContent = [];
 
-  if (data.education && data.education.degree) {
+  if (Array.isArray(data.education) && data.education.length > 0) {
     leftContent.push(createSectionHeading("Education:", "FFFFFF"));
-    leftContent.push(
-      new Paragraph({
-        alignment: AlignmentType.JUSTIFIED,
-        spacing: { before: 100, after: 200, line: 300 },
-        indent: { left: 300, hanging: 200 },
-        children: [
-          new TextRun({
-            text: `• ${data.education.degree} from ${data.education.university}`,
-            color: "FFFFFF",
-            font: "Arial",
-            size: 20,
-          }),
-        ],
-      })
-    );
-  }
+  
+    data.education.forEach((edu) => {
+      if (edu.degree && edu.university) {
+        leftContent.push(
+          new Paragraph({
+            alignment: AlignmentType.JUSTIFIED,
+            spacing: { before: 100, after: 200, line: 300 },
+            indent: { left: 300, hanging: 200 },
+            children: [
+              new TextRun({
+                text: `• ${edu.degree} from ${edu.university}`,
+                color: "FFFFFF",
+                font: "Arial",
+                size: 20,
+              }),
+            ],
+          })
+        );
+      }
+    });
+  }  
 
   if (data.technicalExpertise) {
     leftContent.push(createSectionHeading("Technical Expertise:", "FFFFFF"));

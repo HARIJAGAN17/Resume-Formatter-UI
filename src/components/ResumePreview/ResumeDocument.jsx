@@ -148,13 +148,17 @@ const ResumeDocument = ({ data }) => {
           {/* Left Column */}
           <View style={styles.leftColumn}>
             {/* Education */}
-            {data.education?.degree && data.education?.university && (
-              <View style={styles.item}>
-                <Text style={styles.sectionTitle}>Education:</Text>
-                <Text style={styles.text}>• {data.education.degree} from</Text>
-                <Text style={styles.text}>{data.education.university}</Text>
-              </View>
-            )}
+            {Array.isArray(data.education) &&
+              data.education.length > 0 && (
+                <View style={styles.item}>
+                  <Text style={styles.sectionTitle}>Education:</Text>
+                  {data.education.map((edu, i) => (
+                    <Text key={i} style={styles.text}>
+                      • {edu.degree} from {edu.university}
+                    </Text>
+                  ))}
+                </View>
+              )}
 
             {/* Technical Expertise */}
             {data.technicalExpertise &&
