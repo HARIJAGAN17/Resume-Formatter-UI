@@ -443,3 +443,25 @@
   color: #f0f0f0;
   user-select: none;
 }
+
+.uploda-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+}
+
+.Cancel-button{
+  margin-bottom: 10px;
+  padding: 3px;
+}
+
+.Cancel-button button{
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border-style: 1px solid black;
+  color: white;
+  background-color: transparent;
+  cursor: pointer;
+}

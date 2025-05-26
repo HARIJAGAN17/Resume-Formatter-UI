@@ -1,19 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import api from "../../Api/api";
 import { useResume } from "../../hooks/useResume";
-import { User } from "lucide-react"; // ✅ Import icon
+import { User } from "lucide-react";
+import { toast } from "react-toastify";
 import "./ResumeFormatter.css";
 
 function ResumeFormatter() {
   const navigate = useNavigate();
   const { logout, user } = useAuth();
+  const { setResumeData } = useResume();
+
   const [selectedFile, setSelectedFile] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const { setResumeData } = useResume();
   const [uploadProgress, setUploadProgress] = useState(0);
+
+  const uploadIntervalRef = useRef(null);
+  const abortControllerRef = useRef(null);
+  const cancelledRef = useRef(false);
+  const fileInputRef = useRef(null);
+
   const capitalize = (name) =>
     name ? name.charAt(0).toUpperCase() + name.slice(1) : "";
 
@@ -26,9 +34,19 @@ function ResumeFormatter() {
     setSelectedFile(event.target.files[0]);
   };
 
+  const handleCancel = () => {
+    cancelledRef.current = true;
+    if (abortControllerRef.current) abortControllerRef.current.abort();
+    clearInterval(uploadIntervalRef.current);
+    setIsLoading(false);
+    setUploadProgress(0);
+    setSelectedFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = null;
+  };
+
   const handleExtract = async () => {
     if (!selectedFile) {
-      alert("Please select a file first.");
+      toast.warning("Please select a file first.");
       return;
     }
 
@@ -38,28 +56,51 @@ function ResumeFormatter() {
     try {
       setIsLoading(true);
       setUploadProgress(0);
+      cancelledRef.current = false;
 
       let progress = 0;
-      const interval = setInterval(() => {
+      uploadIntervalRef.current = setInterval(() => {
         progress += 1;
         setUploadProgress(progress);
-        if (progress >= 98) clearInterval(interval);
+        if (progress >= 98) clearInterval(uploadIntervalRef.current);
       }, 30);
 
-      const response = await api.post("/upload-resume", formData);
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
 
-      clearInterval(interval);
+      const response = await api.post("/upload-resume", formData, {
+        signal: controller.signal,
+      });
+
+      clearInterval(uploadIntervalRef.current);
       setUploadProgress(100);
+
       setTimeout(() => {
         setResumeData(response.data);
         navigate("preview");
       }, 500);
     } catch (error) {
-      console.error("Error uploading file:", error);
+      clearInterval(uploadIntervalRef.current);
+
+      if (error.name === "CanceledError" || error.name === "AbortError") {
+        if (cancelledRef.current) {
+          toast.info("Upload cancelled by user.");
+        } else {
+          toast.warn("Upload cancelled unexpectedly.");
+        }
+      } else {
+        console.error("Error uploading file:", error);
+        toast.error("Upload failed. Please try again.");
+      }
     } finally {
       setIsLoading(false);
+      abortControllerRef.current = null;
     }
   };
+
+  useEffect(() => {
+    return () => clearInterval(uploadIntervalRef.current);
+  }, []);
 
   return (
     <div className="app-container">
@@ -73,9 +114,8 @@ function ResumeFormatter() {
 
         <div className="sidebar-body">
           <div className="glow-box-container">
-            {/* Glowing Border Elements */}
-            <div class="animated-border-box-glow"></div>
-            <div class="animated-border-box">
+            <div className="animated-border-box-glow"></div>
+            <div className="animated-border-box">
               <div className="welcome-message">
                 <p>
                   Hi <strong>{capitalize(user?.username) || "there"}</strong>,
@@ -91,9 +131,7 @@ function ResumeFormatter() {
         </div>
 
         <div className="sidebar-footer">
-          <button onClick={handleLogout} className="logout-btn">
-            Logout
-          </button>
+          <button onClick={handleLogout} className="logout-btn">Logout</button>
         </div>
       </div>
 
@@ -125,13 +163,25 @@ function ResumeFormatter() {
           )}
 
           <div className="upload-border">
-            <div className="upload-section">
-              <input
-                type="file"
-                accept=".pdf,.docx"
-                onChange={handleFileChange}
-              />
-              <button onClick={handleExtract}>Extract</button>
+            <div className="uploda-container">
+              <div className="upload-section">
+                <input
+                  type="file"
+                  accept=".pdf,.docx"
+                  onChange={handleFileChange}
+                  disabled={isLoading}
+                  ref={fileInputRef}
+                />
+                <button onClick={handleExtract} disabled={isLoading}>
+                  Extract
+                </button>
+              </div>
+
+              {isLoading && (
+                <div className="Cancel-button">
+                  <button onClick={handleCancel}>X</button>
+                </div>
+              )}
             </div>
             <p>Upload a .pdf/.docx file</p>
           </div>
