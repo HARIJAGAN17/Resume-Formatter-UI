@@ -12,7 +12,7 @@ import ResumePreview from "./components/ResumePreview/ResumePreview";
 import RouteLayout from "./layout/RouteLayout";
 import ResumeLayout from "./layout/ResumeLayout";
 import ProtectedRoute from "./components/Guard/ProtectedRoute";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from './context/AuthProvider';
 import { ResumeProvider } from "./context/ResumeContext";
 import { ToastContainer } from "react-toastify";
 // import ResumeDownload from "./components/ResumePreview/ResumeDownload";

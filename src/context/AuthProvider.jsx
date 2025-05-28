@@ -1,9 +1,8 @@
-import { createContext, useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
+import { AuthContext } from "./AuthContext";
 import { setupAutoLogout } from "../utility/authWatcher";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
-
-export const AuthContext = createContext();
 
 export function AuthProvider({ children, navigate }) {
   const [user, setUser] = useState(null);
@@ -34,7 +33,7 @@ export function AuthProvider({ children, navigate }) {
   const handleTokenExpire = () => {
     toast.info("Session expired. You have been logged out.");
     logout();
-    if (navigate) navigate("/login"); // ⬅️ Navigate after logout
+    if (navigate) navigate("/login");
   };
 
   const login = (userData) => {
