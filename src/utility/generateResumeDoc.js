@@ -1,3 +1,4 @@
+// generateResumeDocx.ts
 import {
   Document,
   Packer,
@@ -20,7 +21,6 @@ export const generateResumeDocx = async (data) => {
   const doc = new Document({
     sections: createStyledSections(data),
   });
-  console.log(data);
   const buffer = await Packer.toBlob(doc);
   saveAs(
     buffer,
@@ -28,52 +28,27 @@ export const generateResumeDocx = async (data) => {
   );
 };
 
+const allNone = {
+  top: BorderStyle.NONE,
+  bottom: BorderStyle.NONE,
+  left: BorderStyle.NONE,
+  right: BorderStyle.NONE,
+};
+
 const createStyledSections = (data) => {
   const leftContent = [];
-  const rightContent = [];
-
-  if (Array.isArray(data.education) && data.education.length > 0) {
-    leftContent.push(createSectionHeading("Education:", "FFFFFF"));
-  
-    data.education.forEach((edu) => {
-      if (edu.degree && edu.university) {
-        leftContent.push(
-          new Paragraph({
-            alignment: AlignmentType.JUSTIFIED,
-            spacing: { before: 100, after: 200, line: 300 },
-            indent: { left: 300, hanging: 200 },
-            children: [
-              new TextRun({
-                text: `• ${edu.degree} from ${edu.university}`,
-                color: "FFFFFF",
-                font: "Arial",
-                size: 20,
-              }),
-            ],
-          })
-        );
-      }
-    });
-  }  
 
   if (data.technicalExpertise) {
     leftContent.push(createSectionHeading("Technical Expertise:", "FFFFFF"));
     Object.entries(data.technicalExpertise).forEach(([category, items]) => {
       leftContent.push(
         new Paragraph({
-          alignment: AlignmentType.JUSTIFIED,
+          alignment: AlignmentType.LEFT,
           spacing: { before: 100, after: 100, line: 300 },
-          indent: { left: 300, hanging: 200 },
+          indent: { left: 200 },
           children: [
             new TextRun({
-              text: "• ",
-              bold: true,
-              color: "FFFFFF",
-              font: "Arial",
-              size: 20,
-            }),
-            new TextRun({
-              text: `${category}: `,
+              text: `• ${category}: `,
               bold: true,
               color: "FFFFFF",
               font: "Arial",
@@ -96,19 +71,12 @@ const createStyledSections = (data) => {
     data.certifications.forEach((cert) => {
       leftContent.push(
         new Paragraph({
-          alignment: AlignmentType.JUSTIFIED,
+          alignment: AlignmentType.LEFT,
           spacing: { before: 100, after: 100, line: 300 },
-          indent: { left: 300, hanging: 200 },
+          indent: { left: 200 },
           children: [
             new TextRun({
-              text: "• ",
-              bold: true,
-              color: "FFFFFF",
-              font: "Arial",
-              size: 20,
-            }),
-            new TextRun({
-              text: `${cert}`,
+              text: `• ${cert}`,
               color: "FFFFFF",
               font: "Arial",
               size: 20,
@@ -119,19 +87,20 @@ const createStyledSections = (data) => {
     });
   }
 
+  const rightContent = [];
+
   if (Array.isArray(data.summary) && data.summary.length > 0) {
     rightContent.push(createSectionHeading("Professional Summary:", "000000"));
     data.summary.forEach((item) => {
       rightContent.push(
         new Paragraph({
-          alignment: AlignmentType.JUSTIFIED,
-          spacing: { line: 300 },
-          indent: { left: 180, hanging: 180, right: 180 },
+          alignment: AlignmentType.LEFT,
+          spacing: { after: 150 },
+          indent: { left: 180, hanging: 180 },
           children: [
             new TextRun({
               text: "• ",
               bold: true,
-              spacing: { after: 200 },
               font: "Arial",
               size: 20,
             }),
@@ -142,23 +111,141 @@ const createStyledSections = (data) => {
     });
   }
 
-  const ustLogoBase64 = UstLogoBase64Code;
-  const base64String = ustLogoBase64.split(",")[1];
-  const base64ToUint8Array = (base64) => {
-    const binaryString = atob(base64);
-    const bytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-    return bytes;
-  };
-  const imageBytes = base64ToUint8Array(base64String);
+  const headerTable = createHeader(data.name);
+  const contentTable = createMainTable(leftContent, rightContent);
 
-  const headerTable = new Table({
+  const experienceAndEducation = createExperienceAndEducation(data);
+
+  return [
+    {
+      properties: {
+        page: { margin: { top: 0, bottom: 0, left: 0, right: 0 } },
+      },
+      children: [headerTable, new Paragraph({ spacing: { before: 400 } })],
+    },
+    {
+      properties: {
+        type: SectionType.CONTINUOUS,
+        page: { margin: { top: 0, bottom: 0, left: 0, right: 0 } },
+      },
+      children: [contentTable],
+    },
+    {
+      children: experienceAndEducation,
+    },
+  ];
+};
+
+const createExperienceAndEducation = (data) => {
+  const content = [];
+
+  content.push(
+    new Paragraph({
+      spacing: { before: 300, after: 300 },
+      children: [
+        new TextRun({
+          text: "Professional Experience",
+          bold: true,
+          color: "000000",
+          size: 32,
+          font: "Arial",
+        }),
+      ],
+    })
+  );
+
+  data.experience.forEach((exp) => {
+    if (exp.company) {
+      content.push(createLabeledTextParagraph("Company", exp.company));
+    }
+    if (exp.date) {
+      content.push(createLabeledTextParagraph("Date", exp.date));
+    }
+    if (exp.role) {
+      content.push(createLabeledTextParagraph("Role", exp.role));
+    }
+    if (exp.clientEngagement) {
+      content.push(
+        createLabeledTextParagraph("Client Engagement", exp.clientEngagement)
+      );
+    }
+    if (exp.program) {
+      content.push(createLabeledTextParagraph("Program", exp.program));
+    }
+
+    if (
+      Array.isArray(exp.responsibilities) &&
+      exp.responsibilities.length > 0
+    ) {
+      content.push(
+        new Paragraph({
+          spacing: { after: 150 },
+          indent: { left: 150 },
+          children: [
+            new TextRun({
+              text: "RESPONSIBILITIES:",
+              bold: true,
+              size: 22,
+              font: "Arial",
+            }),
+          ],
+        })
+      );
+      exp.responsibilities.forEach((resp) => {
+        content.push(
+          new Paragraph({
+            spacing: { after: 100 },
+            indent: { left: 200 },
+            children: [
+              new TextRun({ text: "• ", bold: true, font: "Arial" }),
+              new TextRun({ text: resp, size: 20, font: "Arial" }),
+            ],
+          })
+        );
+      });
+    }
+
+    content.push(new Paragraph({ children: [] }));
+  });
+
+  if (Array.isArray(data.education) && data.education.length > 0) {
+    content.push(createSectionHeading("Education", "000000"));
+    data.education.forEach((edu) => {
+      if (edu.degree && edu.university) {
+        content.push(
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            spacing: { before: 100, after: 200 },
+            indent: { left: 300 },
+            children: [
+              new TextRun({
+                text: `• ${edu.degree} from ${edu.university}`,
+                color: "000000",
+                font: "Arial",
+                size: 20,
+              }),
+            ],
+          })
+        );
+      }
+    });
+  }
+
+  return content;
+};
+
+const createHeader = (name) => {
+  const base64String = UstLogoBase64Code.split(",")[1];
+  const binary = atob(base64String);
+  const imageBytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    imageBytes[i] = binary.charCodeAt(i);
+  }
+
+  return new Table({
     rows: [
       new TableRow({
         children: [
-          // Logo Cell
           new TableCell({
             width: { size: 20, type: WidthType.PERCENTAGE },
             shading: { fill: "241E20" },
@@ -167,7 +254,6 @@ const createStyledSections = (data) => {
             children: [
               new Paragraph({
                 alignment: AlignmentType.LEFT,
-                spacing: { before: 0, after: 0 },
                 indent: { left: 700 },
                 children: [
                   new ImageRun({
@@ -178,8 +264,6 @@ const createStyledSections = (data) => {
               }),
             ],
           }),
-
-          // Name Cell
           new TableCell({
             width: { size: 80, type: WidthType.PERCENTAGE },
             shading: { fill: "241E20" },
@@ -191,7 +275,7 @@ const createStyledSections = (data) => {
                 indent: { left: 900 },
                 children: [
                   new TextRun({
-                    text: data.name || "YOUR NAME",
+                    text: name || "YOUR NAME",
                     bold: true,
                     color: "FFFFFF",
                     size: 60,
@@ -208,8 +292,10 @@ const createStyledSections = (data) => {
     width: { size: 100, type: WidthType.PERCENTAGE },
     borders: allNone,
   });
+};
 
-  const contentTable = new Table({
+const createMainTable = (leftContent, rightContent) =>
+  new Table({
     rows: [
       new TableRow({
         children: [
@@ -243,158 +329,6 @@ const createStyledSections = (data) => {
     borders: allNone,
   });
 
-  const experiencePage = [
-    new Paragraph({
-      spacing: { before: 300, after: 300 },
-      children: [
-        new TextRun({
-          text: "Professional Experience",
-          bold: true,
-          color: "000000",
-          size: 32,
-          font: "Arial",
-        }),
-      ],
-    }),
-    ...data.experience.flatMap((exp) => [
-      ...(exp.company
-        ? [
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: "• Company: ",
-                  size: 22,
-                  font: "Arial",
-                  bold: true,
-                }),
-                new TextRun({ text: exp.company, size: 20, font: "Arial" }),
-              ],
-            }),
-          ]
-        : []),
-      ...(exp.date
-        ? [
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: "• Date: ",
-                  size: 22,
-                  font: "Arial",
-                  bold: true,
-                }),
-                new TextRun({ text: exp.date, size: 20, font: "Arial" }),
-              ],
-            }),
-          ]
-        : []),
-      ...(exp.role
-        ? [
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: "• Role: ",
-                  size: 22,
-                  font: "Arial",
-                  bold: true,
-                }),
-                new TextRun({ text: exp.role, size: 20, font: "Arial" }),
-              ],
-            }),
-          ]
-        : []),
-      ...(exp.clientEngagement
-        ? [
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: "• Client Engagement: ",
-                  size: 22,
-                  font: "Arial",
-                  bold: true,
-                }),
-                new TextRun({
-                  text: exp.clientEngagement,
-                  size: 20,
-                  font: "Arial",
-                }),
-              ],
-            }),
-          ]
-        : []),
-      ...(exp.program
-        ? [
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: "• Program: ",
-                  size: 22,
-                  font: "Arial",
-                  bold: true,
-                }),
-                new TextRun({ text: exp.program, size: 20, font: "Arial" }),
-              ],
-              spacing: { after: 100 },
-            }),
-          ]
-        : []),
-      ...(Array.isArray(exp.responsibilities) && exp.responsibilities.length > 0
-        ? [
-            new Paragraph({
-              spacing: { after: 200 },
-              children: [
-                new TextRun({
-                  text: "RESPONSIBILITIES:",
-                  bold: true,
-                  size: 22,
-                  font: "Arial",
-                }),
-              ],
-              indent: { left: 150 },
-            }),
-            ...exp.responsibilities.map(
-              (resp) =>
-                new Paragraph({
-                  spacing: { after: 100 },
-                  indent: { left: 200 },
-                  children: [
-                    new TextRun({ text: "• ", bold: true, font: "Arial" }),
-                    new TextRun({ text: resp, size: 20, font: "Arial" }),
-                  ],
-                })
-            ),
-          ]
-        : []),
-      new Paragraph({ children: [new TextRun({ text: "" })] }),
-    ]),
-  ];
-
-  return [
-    {
-      properties: {
-        page: { margin: { top: 0, bottom: 0, left: 0, right: 0 } },
-      },
-      children: [
-        headerTable,
-        new Paragraph({
-          spacing: {
-            before: 500, // Adds 600 twips = ~0.42 inches
-            after: 0,
-          },
-          children: [],
-        }),
-      ],
-    },
-    {
-      properties: {
-        type: SectionType.CONTINUOUS,
-        page: { margin: { top: 0, bottom: 0, left: 0, right: 0 } },
-      },
-      children: [contentTable],
-    },
-    { children: experiencePage },
-  ];
-};
-
 const createSectionHeading = (title, color = "000000") =>
   new Paragraph({
     spacing: { after: 150, before: 300 },
@@ -409,9 +343,15 @@ const createSectionHeading = (title, color = "000000") =>
     ],
   });
 
-const allNone = {
-  top: BorderStyle.NONE,
-  bottom: BorderStyle.NONE,
-  left: BorderStyle.NONE,
-  right: BorderStyle.NONE,
-};
+const createLabeledTextParagraph = (label, value) =>
+  new Paragraph({
+    children: [
+      new TextRun({
+        text: `• ${label}: `,
+        size: 22,
+        font: "Arial",
+        bold: true,
+      }),
+      new TextRun({ text: value, size: 20, font: "Arial" }),
+    ],
+  });

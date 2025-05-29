@@ -147,19 +147,6 @@ const ResumeDocument = ({ data }) => {
         <View style={styles.twoColumnSection}>
           {/* Left Column */}
           <View style={styles.leftColumn}>
-            {/* Education */}
-            {Array.isArray(data.education) &&
-              data.education.length > 0 && (
-                <View style={styles.item}>
-                  <Text style={styles.sectionTitle}>Education:</Text>
-                  {data.education.map((edu, i) => (
-                    <Text key={i} style={styles.text}>
-                      • {edu.degree} from {edu.university}
-                    </Text>
-                  ))}
-                </View>
-              )}
-
             {/* Technical Expertise */}
             {data.technicalExpertise &&
               Object.keys(data.technicalExpertise).length > 0 && (
@@ -211,62 +198,84 @@ const ResumeDocument = ({ data }) => {
       </Page>
 
       {/* Page 2: Experience */}
-      {Array.isArray(data.experience) && data.experience.length > 0 && (
+      {(Array.isArray(data.experience) && data.experience.length > 0) ||
+      (Array.isArray(data.education) && data.education.length > 0) ? (
         <Page size="A4" style={styles.paddedPage}>
-          <Text style={styles.expSectionTitle}>Professional Experience</Text>
-          {data.experience.map((exp, index) => (
-            <View key={index} style={styles.expEntry}>
-              {exp.company && (
-                <Text style={styles.textRight}>
-                  <Text style={styles.boldingText}>• Company:</Text>{" "}
-                  {exp.company}
-                </Text>
-              )}
-              {exp.date && (
-                <Text style={styles.textRight}>
-                  <Text style={styles.boldingText}>• Date:</Text> {exp.date}
-                </Text>
-              )}
-              {exp.role && (
-                <Text style={styles.textRight}>
-                  <Text style={styles.boldingText}>• Role:</Text> {exp.role}
-                </Text>
-              )}
-              {exp.clientEngagement && (
-                <Text style={styles.textRight}>
-                  <Text style={styles.boldingText}>• Client Engagement:</Text>{" "}
-                  {exp.clientEngagement}
-                </Text>
-              )}
-              {exp.program && (
-                <Text style={styles.textRight}>
-                  <Text style={styles.boldingText}>• Program:</Text>{" "}
-                  {exp.program}
-                </Text>
-              )}
-              {Array.isArray(exp.responsibilities) &&
-                exp.responsibilities.length > 0 && (
-                  <>
-                    <Text
-                      style={[
-                        styles.textRight,
-                        styles.boldingText,
-                        { marginTop: 5 },
-                      ]}
-                    >
-                      RESPONSIBILITIES:
+          {/* Professional Experience */}
+          {Array.isArray(data.experience) && data.experience.length > 0 && (
+            <View>
+              <Text style={styles.expSectionTitle}>
+                Professional Experience
+              </Text>
+              {data.experience.map((exp, index) => (
+                <View key={index} style={styles.expEntry}>
+                  {exp.company && (
+                    <Text style={styles.textRight}>
+                      <Text style={styles.boldingText}>• Company:</Text>{" "}
+                      {exp.company}
                     </Text>
-                    {exp.responsibilities.map((res, i) => (
-                      <Text key={i} style={styles.responsibilityText}>
-                        • {res}
-                      </Text>
-                    ))}
-                  </>
-                )}
+                  )}
+                  {exp.date && (
+                    <Text style={styles.textRight}>
+                      <Text style={styles.boldingText}>• Date:</Text> {exp.date}
+                    </Text>
+                  )}
+                  {exp.role && (
+                    <Text style={styles.textRight}>
+                      <Text style={styles.boldingText}>• Role:</Text> {exp.role}
+                    </Text>
+                  )}
+                  {exp.clientEngagement && (
+                    <Text style={styles.textRight}>
+                      <Text style={styles.boldingText}>
+                        • Client Engagement:
+                      </Text>{" "}
+                      {exp.clientEngagement}
+                    </Text>
+                  )}
+                  {exp.program && (
+                    <Text style={styles.textRight}>
+                      <Text style={styles.boldingText}>• Program:</Text>{" "}
+                      {exp.program}
+                    </Text>
+                  )}
+                  {Array.isArray(exp.responsibilities) &&
+                    exp.responsibilities.length > 0 && (
+                      <>
+                        <Text
+                          style={[
+                            styles.textRight,
+                            styles.boldingText,
+                            { marginTop: 5 },
+                          ]}
+                        >
+                          RESPONSIBILITIES:
+                        </Text>
+                        {exp.responsibilities.map((res, i) => (
+                          <Text key={i} style={styles.responsibilityText}>
+                            • {res}
+                          </Text>
+                        ))}
+                      </>
+                    )}
+                </View>
+              ))}
             </View>
-          ))}
+          )}
+
+          {/* Education */}
+          {Array.isArray(data.education) && data.education.length > 0 && (
+            <View style={{ marginTop: 20 }}>
+              <Text style={styles.expSectionTitle}>Education</Text>
+              {data.education.map((edu, i) => (
+                <Text key={i} style={styles.textRight}>
+                  • {edu.degree} from {edu.university}
+                </Text>
+              ))}
+            </View>
+          )}
         </Page>
-      )}
+      ) : null}
     </Document>
   );
 };

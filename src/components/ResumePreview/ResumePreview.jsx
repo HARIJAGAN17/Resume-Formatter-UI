@@ -62,19 +62,6 @@ function ResumePreview() {
           <div className="resume-top-page">
             <div className="left-section">
               {/* Updated Education Section */}
-              {Array.isArray(education) && education.length > 0 && (
-                <div className="section">
-                  <h3>Education:</h3>
-                  <ul>
-                    {education.map((edu, index) => (
-                      <li key={index}>
-                        {edu.degree || "N/A"} from {edu.university || "N/A"}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
               <div className="section">
                 <h3>Technical Expertise:</h3>
                 {technicalExpertise &&
@@ -162,6 +149,18 @@ function ResumePreview() {
                   )}
                 </div>
               ))}
+              {Array.isArray(education) && education.length > 0 && (
+                <div className="section">
+                  <h3>Education</h3>
+                  <ul>
+                    {education.map((edu, index) => (
+                      <li key={index}>
+                        {edu.degree || "N/A"} from {edu.university || "N/A"}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
         </div>
