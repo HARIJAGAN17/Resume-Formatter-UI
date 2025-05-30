@@ -63,7 +63,7 @@ function ResumeFormatter() {
         progress += 1;
         setUploadProgress(progress);
         if (progress >= 98) clearInterval(uploadIntervalRef.current);
-      }, 30);
+      }, 220);
 
       const controller = new AbortController();
       abortControllerRef.current = controller;
