@@ -6,8 +6,14 @@ import {
   View,
   StyleSheet,
   Image,
+  Link,
 } from "@react-pdf/renderer";
 import ustLogo from "../../assets/ust-logo.jpg";
+
+const fixUrl = (url) => {
+  if (!url) return "";
+  return url.startsWith("http") ? url : `https://${url}`;
+};
 
 const styles = StyleSheet.create({
   page: {
@@ -272,6 +278,47 @@ const ResumeDocument = ({ data }) => {
                   • {edu.degree} from {edu.university}
                 </Text>
               ))}
+            </View>
+          )}
+
+          {/* Contact Information */}
+          {data.contact && (
+            <View style={{ marginTop: 20 }}>
+              <Text style={styles.expSectionTitle}>Contact Information</Text>
+              {data.contact.email && (
+                <Text style={styles.textRight}>
+                  • <Text style={styles.boldingText}>Email:</Text>{" "}
+                  {data.contact.email}
+                </Text>
+              )}
+              {data.contact.phone && (
+                <Text style={styles.textRight}>
+                  • <Text style={styles.boldingText}>Phone:</Text>{" "}
+                  {data.contact.phone}
+                </Text>
+              )}
+              {data.contact.linkedin && (
+                <Text style={styles.textRight}>
+                  • <Text style={styles.boldingText}>LinkedIn:</Text>{" "}
+                  <Link src={fixUrl(data.contact.linkedin)}>
+                    {data.contact.linkedin}
+                  </Link>
+                </Text>
+              )}
+              {data.contact.github && (
+                <Text style={styles.textRight}>
+                  • <Text style={styles.boldingText}>GitHub:</Text>{" "}
+                  <Link src={fixUrl(data.contact.github)}>{data.contact.github}</Link>
+                </Text>
+              )}
+              {data.contact.portfolio && (
+                <Text style={styles.textRight}>
+                  • <Text style={styles.boldingText}>Portfolio:</Text>{" "}
+                  <Link src={data.contact.portfolio}>
+                    {data.contact.portfolio}
+                  </Link>
+                </Text>
+              )}
             </View>
           )}
         </Page>
