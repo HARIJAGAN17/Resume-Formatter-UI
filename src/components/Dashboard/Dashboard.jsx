@@ -99,7 +99,7 @@ export default function Dashboard() {
               className="primary-button"
               onClick={() => setShowCreateDialog(true)}
             >
-              <i class="fa-solid fa-plus"></i> New Project
+              <i className="fa-solid fa-plus"></i> New Project
             </button>
             <CreateProjectDialog
               open={showCreateDialog}
@@ -114,7 +114,7 @@ export default function Dashboard() {
           <div className="stat-card">
             <div className="stat-card-title-row">
               <h3>Total Projects</h3>
-              <i class="fa-solid fa-file"></i>
+              <i className="fa-solid fa-file"></i>
             </div>
             <p className="stat-value">{projects.length}</p>
             <span className="stat-caption">
@@ -140,7 +140,7 @@ export default function Dashboard() {
           <div className="stat-card">
             <div className="stat-card-title-row">
               <h3>This Month</h3>
-              <i class="fa-solid fa-clock"></i>
+              <i className="fa-solid fa-clock"></i>
             </div>
             <p className="stat-value">{thisMonthProjects.length}</p>
             <span className="stat-caption">New projects created</span>
