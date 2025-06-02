@@ -1,52 +1,18 @@
-/* dashboard.css */
-
-/* Theme and Base */
-:root {
-  --background: #f5f7fa;
-  --card-bg: #ffffff;
-  --text-color: #1f2937;
-  --muted: #6b7280;
-  --primary: #3b82f6;
-  --primary-hover: #1f2937;
-  --border: #e5e7eb;
-  --radius: 8px;
-  --shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+.background-dashboard {
+  background-color: #f5f7fa;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #1f2937;
-    --card-bg: #111827;
-    --text-color: #f9fafb;
-    --muted: #9ca3af;
-    --primary: #60a5fa;
-    --primary-hover: #3b82f6;
-    --border: #374151;
-    --shadow: 0 2px 10px rgba(255, 255, 255, 0.03);
-  }
-}
-
-body {
-  margin: 0;
-  background: var(--background);
-  font-family: "Segoe UI", sans-serif;
-  color: var(--text-color);
-}
-
-/* Container */
 .dashboard {
   padding: 0.5rem;
   max-width: 1200px;
   margin: auto;
 }
 
-/* Header */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 2rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid #e5e7eb;
   padding-bottom: 1rem;
 }
 
@@ -58,27 +24,25 @@ body {
 
 .dashboard-subtitle {
   margin-top: 0.25rem;
-  color: var(--muted);
+  color: #6b7280;
   font-size: 0.9rem;
 }
 
-/* Button */
 .primary-button {
   background: #1f2937;
   color: white;
   border: none;
   padding: 0.6rem 1.2rem;
   font-size: 0.9rem;
-  border-radius: var(--radius);
+  border-radius: 8px;
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .primary-button:hover {
-  background: var(--primary-hover);
+  background: #1f2937;
 }
 
-/* Stat Grid */
 .stat-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -87,16 +51,16 @@ body {
 }
 
 .stat-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   padding: 1rem;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
 }
 
 .stat-card h3 {
   margin: 0;
-  color: var(--muted);
+  color: #6b7280;
   font-size: 0.95rem;
 }
 
@@ -108,7 +72,7 @@ body {
 
 .stat-caption {
   font-size: 0.75rem;
-  color: var(--muted);
+  color: #6b7280;
 }
 
 .stat-card-title-row {
@@ -117,11 +81,11 @@ body {
   align-items: center;
   margin-bottom: 0.7rem;
 }
+
 .stat-card-title-row i {
   color: grey;
 }
 
-/* Project Header */
 .projects-header {
   display: flex;
   justify-content: space-between;
@@ -138,6 +102,7 @@ body {
   display: flex;
   gap: 0.3rem;
 }
+
 .filter {
   background: #f3f4f6;
   border: none;
@@ -158,7 +123,6 @@ body {
   color: white;
 }
 
-/* Projects Grid */
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -166,7 +130,6 @@ body {
   gap: 1.5rem;
   margin-top: 1.5rem;
 }
-
 
 .project-card {
   background: white;
@@ -202,7 +165,7 @@ body {
 .project-title {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--text-color);
+  color: #1f2937;
   flex-grow: 1;
   overflow-wrap: break-word;
   margin: 0;
