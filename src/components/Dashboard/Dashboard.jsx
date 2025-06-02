@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import CreateProjectDialog from "../Dashboard-components/CreateProjectDialog";
 import "./dashboard.css";
 
-const mockProjects = [
+const initialProjects = [
   {
     id: "1",
     name: "Senior Frontend Developer",
@@ -37,21 +37,10 @@ const mockProjects = [
     createdAt: "2024-01-20",
     threshold: 70,
   },
-  {
-    id: "4",
-    name: "Full stack",
-    description: "Creating a robust web developer",
-    jobTitle: "Full stack developer",
-    resumeCount: 11,
-    avgScore: 80,
-    status: "completed",
-    createdAt: "2024-01-20",
-    threshold: 70,
-  },
 ];
 
 export default function Dashboard() {
-  const [projects] = useState(mockProjects);
+  const [projects, setProjects] = useState(initialProjects);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [filterStatus, setFilterStatus] = useState("all");
 
@@ -69,8 +58,16 @@ export default function Dashboard() {
       : 0;
 
   const handleCreateProject = (data) => {
-    console.log("Project Created:", data);
-    // logic to save project
+    const newProject = {
+      ...data,
+      id: Date.now().toString(), // simple unique ID
+      createdAt: new Date().toISOString().split("T")[0], // YYYY-MM-DD
+      resumeCount: 0,
+      avgScore: 0,
+      status:'active',
+    };
+    setProjects((prev) => [newProject, ...prev]);
+    setShowCreateDialog(false);
   };
 
   return (
@@ -171,13 +168,17 @@ export default function Dashboard() {
               <div className="score-bar-label">
                 <span>Score vs Threshold</span>
                 <span>
-                  {p.avgScore}% / {p.threshold}%
+                  {p.avgScore}% / {p.threshold || 100}%
                 </span>
               </div>
               <div className="score-bar">
                 <div
                   className="score-bar-fill"
-                  style={{ width: `${(p.avgScore / p.threshold) * 100}%` }}
+                  style={{
+                    width: `${
+                      p.threshold ? (p.avgScore / p.threshold) * 100 : 0
+                    }%`,
+                  }}
                 />
               </div>
             </div>
