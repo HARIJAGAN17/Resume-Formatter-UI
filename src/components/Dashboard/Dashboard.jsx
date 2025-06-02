@@ -39,11 +39,11 @@ const mockProjects = [
   },
   {
     id: "4",
-    name: "UX Designer",
-    description: "Creative UX designer for mobile apps",
-    jobTitle: "UX Designer",
-    resumeCount: 12,
-    avgScore: 72,
+    name: "Full stack",
+    description: "Creating a roubust web developer",
+    jobTitle: "Full stack developer",
+    resumeCount: 11,
+    avgScore: 80,
     status: "completed",
     createdAt: "2024-01-20",
     threshold: 70,
@@ -53,6 +53,12 @@ const mockProjects = [
 export default function Dashboard() {
   const [projects] = useState(mockProjects);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [filterStatus, setFilterStatus] = useState("all");
+
+  const filteredProjects =
+    filterStatus === "all"
+      ? projects
+      : projects.filter((p) => p.status === filterStatus);
 
   const totalResumes = projects.reduce((sum, p) => sum + p.resumeCount, 0);
   const avgScore =
@@ -122,15 +128,21 @@ export default function Dashboard() {
       <div className="projects-header">
         <h2>Recent Projects</h2>
         <div className="filters">
-          <button className="filter active">All</button>
-          <button className="filter">Active</button>
-          <button className="filter">Completed</button>
+          {["all", "active", "completed"].map((status) => (
+            <button
+              key={status}
+              className={`filter ${filterStatus === status ? "active" : ""}`}
+              onClick={() => setFilterStatus(status)}
+            >
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </button>
+          ))}
         </div>
       </div>
 
       {/* Projects List */}
       <div className="projects-grid">
-        {projects.map((p) => (
+        {filteredProjects.map((p) => (
           <div className="project-card" key={p.id}>
             <div className="project-header">
               <div>

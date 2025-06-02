@@ -29,7 +29,7 @@
 body {
   margin: 0;
   background: var(--background);
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   color: var(--text-color);
 }
 
@@ -126,23 +126,26 @@ body {
 
 .filters {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.3rem;
+}
+.filter {
+  background: #f3f4f6;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
 }
 
-.filter {
-  padding: 0.35rem 0.75rem;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-color);
-  cursor: pointer;
-  font-size: 0.85rem;
+.filter:hover {
+  background: #e5e7eb;
 }
 
 .filter.active {
-  background: var(--primary);
+  background: #2563eb;
   color: white;
-  border-color: var(--primary);
 }
 
 /* Projects Grid */
