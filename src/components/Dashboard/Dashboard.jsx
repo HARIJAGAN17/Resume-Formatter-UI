@@ -44,6 +44,18 @@ export default function Dashboard() {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [filterStatus, setFilterStatus] = useState("all");
 
+  //   current month project
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+
+  const thisMonthProjects = projects.filter((project) => {
+    const createdDate = new Date(project.createdAt);
+    return (
+      createdDate.getMonth() === currentMonth &&
+      createdDate.getFullYear() === currentYear
+    );
+  });
+
   const filteredProjects =
     filterStatus === "all"
       ? projects
@@ -64,9 +76,10 @@ export default function Dashboard() {
       createdAt: new Date().toISOString().split("T")[0], // YYYY-MM-DD
       resumeCount: 0,
       avgScore: 0,
-      status:'active',
+      status: "active",
     };
     setProjects((prev) => [newProject, ...prev]);
+    console.log(newProject);
     setShowCreateDialog(false);
   };
 
@@ -116,7 +129,7 @@ export default function Dashboard() {
         </div>
         <div className="stat-card">
           <h3>This Month</h3>
-          <p className="stat-value">3</p>
+          <p className="stat-value">{thisMonthProjects.length}</p>
           <span className="stat-caption">New projects created</span>
         </div>
       </div>
