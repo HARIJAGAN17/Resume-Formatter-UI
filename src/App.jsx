@@ -18,6 +18,7 @@ import { ToastContainer } from "react-toastify";
 // import ResumeDownload from "./components/ResumePreview/ResumeDownload";
 import ResumeDownloadPdf from "./components/ResumePreview/ResumeDownloadPdf";
 import ResumeDownloadDocx from "./components/ResumePreview/ResumeDownloadDocx";
+import Dashboard from "./components/Dashboard/Dashboard";
 
 function App() {
   const router = createBrowserRouter(
@@ -28,6 +29,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
         </Route>
+        <Route path="dashboard" element={<Dashboard/>} />
 
         <Route
           path="resume"
