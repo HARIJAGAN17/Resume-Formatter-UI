@@ -132,14 +132,43 @@ export default function Dashboard() {
       <div className="projects-grid">
         {projects.map((p) => (
           <div className="project-card" key={p.id}>
-            <h3>{p.name}</h3>
-            <p className="job-title">{p.jobTitle}</p>
-            <p>{p.description}</p>
-            <div className="project-meta">
-              <span>{p.resumeCount} Resumes</span>
-              <span>Score: {p.avgScore}%</span>
-              <span>Status: {p.status}</span>
+            <div className="project-header">
+              <div>
+                <h3 className="project-title">{p.name}</h3>
+                <p className="project-description">{p.description}</p>
+              </div>
             </div>
+
+            <div className="job-title-row">
+              <span>Job Title:</span>
+              <strong>{p.jobTitle}</strong>
+            </div>
+
+            <div className="project-meta">
+              <span>
+                <i className="fas fa-user"></i> {p.resumeCount} Resumes
+              </span>
+              <span>
+                <i class="fa-solid fa-arrow-trend-up"></i> {p.avgScore}% avg
+              </span>
+            </div>
+
+            <div className="score-bar-wrapper">
+              <div className="score-bar-label">
+                <span>Score vs Threshold</span>
+                <span>
+                  {p.avgScore}% / {p.threshold}%
+                </span>
+              </div>
+              <div className="score-bar">
+                <div
+                  className="score-bar-fill"
+                  style={{ width: `${(p.avgScore / p.threshold) * 100}%` }}
+                />
+              </div>
+            </div>
+
+            <div className="project-date">Created: {p.createdAt}</div>
           </div>
         ))}
       </div>
