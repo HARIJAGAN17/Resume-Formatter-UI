@@ -40,7 +40,7 @@ const mockProjects = [
   {
     id: "4",
     name: "Full stack",
-    description: "Creating a roubust web developer",
+    description: "Creating a robust web developer",
     jobTitle: "Full stack developer",
     resumeCount: 11,
     avgScore: 80,
@@ -67,14 +67,15 @@ export default function Dashboard() {
           projects.reduce((sum, p) => sum + p.avgScore, 0) / projects.length
         )
       : 0;
+
   const handleCreateProject = (data) => {
     console.log("Project Created:", data);
-    // handle saving project logic here
+    // logic to save project
   };
 
   return (
     <div className="dashboard">
-      {/* Header Section */}
+      {/* Header */}
       <div className="dashboard-header">
         <div>
           <h1 className="dashboard-title">HR Resume Analysis Platform</h1>
@@ -89,7 +90,6 @@ export default function Dashboard() {
           >
             New Project
           </button>
-
           <CreateProjectDialog
             open={showCreateDialog}
             onOpenChange={setShowCreateDialog}
@@ -98,7 +98,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Stat Cards */}
+      {/* Stats */}
       <div className="stat-card-grid">
         <div className="stat-card">
           <h3>Total Projects</h3>
@@ -124,7 +124,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Filter + Recent Projects Header */}
+      {/* Filter Header */}
       <div className="projects-header">
         <h2>Recent Projects</h2>
         <div className="filters">
@@ -140,16 +140,18 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Projects List */}
+      {/* Projects Grid */}
       <div className="projects-grid">
         {filteredProjects.map((p) => (
           <div className="project-card" key={p.id}>
             <div className="project-header">
-              <div>
+              <div className="projectTitleContainer">
                 <h3 className="project-title">{p.name}</h3>
-                <p className="project-description">{p.description}</p>
+                <span className={`status-badge ${p.status}`}>{p.status}</span>
               </div>
             </div>
+
+            <p className="project-description">{p.description}</p>
 
             <div className="job-title-row">
               <span>Job Title:</span>
@@ -161,7 +163,7 @@ export default function Dashboard() {
                 <i className="fas fa-user"></i> {p.resumeCount} Resumes
               </span>
               <span>
-                <i class="fa-solid fa-arrow-trend-up"></i> {p.avgScore}% avg
+                <i className="fa-solid fa-arrow-trend-up"></i> {p.avgScore}% avg
               </span>
             </div>
 
