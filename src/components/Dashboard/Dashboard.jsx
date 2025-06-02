@@ -11,7 +11,7 @@ const initialProjects = [
     jobTitle: "Senior Frontend Developer",
     resumeCount: 24,
     avgScore: 78,
-    status: "active",
+    status: "completed",
     createdAt: "2024-01-15",
     threshold: 80,
   },
