@@ -98,7 +98,7 @@ export default function Dashboard() {
             className="primary-button"
             onClick={() => setShowCreateDialog(true)}
           >
-            New Project
+            <i class="fa-solid fa-plus"></i> New Project
           </button>
           <CreateProjectDialog
             open={showCreateDialog}
@@ -111,24 +111,36 @@ export default function Dashboard() {
       {/* Stats */}
       <div className="stat-card-grid">
         <div className="stat-card">
-          <h3>Total Projects</h3>
+          <div className="stat-card-title-row">
+            <h3>Total Projects</h3>
+            <i class="fa-solid fa-file"></i>
+          </div>
           <p className="stat-value">{projects.length}</p>
           <span className="stat-caption">
             {projects.filter((p) => p.status === "active").length} active
           </span>
         </div>
         <div className="stat-card">
-          <h3>Total Resumes</h3>
+          <div className="stat-card-title-row">
+            <h3>Total Resumes</h3>
+            <i className="fa-solid fa-user-plus"></i>
+          </div>
           <p className="stat-value">{totalResumes}</p>
           <span className="stat-caption">Across all projects</span>
         </div>
         <div className="stat-card">
-          <h3>Average Score</h3>
+          <div className="stat-card-title-row">
+            <h3>Average Score</h3>
+            <i className="fa-solid fa-arrow-trend-up"></i>
+          </div>
           <p className="stat-value">{avgScore}%</p>
           <span className="stat-caption">Overall compatibility</span>
         </div>
         <div className="stat-card">
-          <h3>This Month</h3>
+          <div className="stat-card-title-row">
+            <h3>This Month</h3>
+            <i class="fa-solid fa-clock"></i>
+          </div>
           <p className="stat-value">{thisMonthProjects.length}</p>
           <span className="stat-caption">New projects created</span>
         </div>
