@@ -1,50 +1,58 @@
 // components/Dashboard.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CreateProjectDialog from "../Dashboard-components/CreateProjectDialog";
+import api from "../../Api/api";
 import "./dashboard.css";
 
-const initialProjects = [
-  {
-    id: "1",
-    name: "Senior Frontend Developer",
-    description: "Looking for experienced React developers",
-    jobTitle: "Senior Frontend Developer",
-    resumeCount: 24,
-    avgScore: 78,
-    status: "completed",
-    createdAt: "2024-01-15",
-    threshold: 80,
-  },
-  {
-    id: "2",
-    name: "Product Manager Q1",
-    description: "Product management role for new initiatives",
-    jobTitle: "Product Manager",
-    resumeCount: 18,
-    avgScore: 85,
-    status: "completed",
-    createdAt: "2024-01-10",
-    threshold: 75,
-  },
-  {
-    id: "3",
-    name: "UX Designer",
-    description: "Creative UX designer for mobile apps",
-    jobTitle: "UX Designer",
-    resumeCount: 12,
-    avgScore: 72,
-    status: "active",
-    createdAt: "2024-01-20",
-    threshold: 70,
-  },
-];
-
 export default function Dashboard() {
-  const [projects, setProjects] = useState(initialProjects);
+  const [projects, setProjects] = useState([]);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [filterStatus, setFilterStatus] = useState("all");
 
-  //   current month project
+  // Normalize project object (API → UI)
+  const normalizeProject = (p) => ({
+    id: p.id,
+    name: p.name,
+    description: p.description,
+    jobTitle: p.job_title,
+    resumeCount: p.resume_count,
+    avgScore: p.avg_score,
+    threshold: p.threshold,
+    createdAt: p.created_at,
+    status: p.status?.toLowerCase() || "active",
+  });
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await api.get("/projects");
+        setProjects(res.data.map(normalizeProject));
+      } catch (err) {
+        console.error("Failed to fetch projects:", err);
+      }
+    };
+    fetchProjects();
+  }, []);
+
+  const handleCreateProject = async (data) => {
+    try {
+      const res = await api.post("/projects", {
+        name: data.name,
+        description: data.description,
+        job_title: data.jobTitle,
+        resume_count: 0,
+        avg_score: 0,
+        threshold: data.threshold || 0,
+      });
+      const newProject = normalizeProject(res.data);
+      setProjects((prev) => [newProject, ...prev]);
+      setShowCreateDialog(false);
+    } catch (err) {
+      console.error("Failed to create project:", err);
+      alert("Error creating project.");
+    }
+  };
+
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
 
@@ -69,24 +77,9 @@ export default function Dashboard() {
         )
       : 0;
 
-  const handleCreateProject = (data) => {
-    const newProject = {
-      ...data,
-      id: Date.now().toString(), // simple unique ID
-      createdAt: new Date().toISOString().split("T")[0], // YYYY-MM-DD
-      resumeCount: 0,
-      avgScore: 0,
-      status: "active",
-    };
-    setProjects((prev) => [newProject, ...prev]);
-    console.log(newProject);
-    setShowCreateDialog(false);
-  };
-
   return (
     <div className="background-dashboard">
       <div className="dashboard">
-        {/* Header */}
         <div className="dashboard-header">
           <div>
             <h1 className="dashboard-title">HR Resume Analysis Platform</h1>
@@ -109,7 +102,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Stats */}
         <div className="stat-card-grid">
           <div className="stat-card">
             <div className="stat-card-title-row">
@@ -147,7 +139,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Filter Header */}
         <div className="projects-header">
           <h2>Recent Projects</h2>
           <div className="filters">
@@ -163,7 +154,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Projects Grid */}
         <div className="projects-grid">
           {filteredProjects.map((p) => (
             <div className="project-card" key={p.id}>
