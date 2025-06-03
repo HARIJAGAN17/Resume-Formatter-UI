@@ -9,6 +9,8 @@ export default function ProjectDetailPage() {
   const navigate = useNavigate();
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [processingIndex, setProcessingIndex] = useState(null);
+  const [analysisResults, setAnalysisResults] = useState([]);
 
   const handleFileChange = (e) => {
     const filesArray = Array.from(e.target.files);
@@ -20,6 +22,43 @@ export default function ProjectDetailPage() {
     if (ext === "pdf") return "fa-file-pdf";
     if (ext === "docx" || ext === "doc") return "fa-file-word";
     return "fa-file"; // fallback icon
+  };
+
+  const handleExtract = async (file, idx) => {
+    if (!file || !project?.description) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("job_description", project.description);
+
+    setProcessingIndex(idx);
+
+    try {
+      const response = await api.post("/analyze-resume", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const result = response.data;
+
+      const newEntry = {
+        name: file.name,
+        size: `${(file.size / 1024).toFixed(2)} KB`,
+        score: result.job_score || "N/A",
+        uploaded: new Date().toLocaleDateString("en-GB"),
+      };
+
+      setAnalysisResults((prev) => [...prev, newEntry]);
+    } catch (error) {
+      if (error.response) {
+        console.error("Error:", error.response.data.detail);
+      } else {
+        console.error("Request failed:", error.message);
+      }
+    } finally {
+      setProcessingIndex(null);
+    }
   };
 
   useEffect(() => {
@@ -38,29 +77,21 @@ export default function ProjectDetailPage() {
 
   return (
     <div className="app-container">
-      {/* Sidebar */}
       <div className={`project-sidebar`}>
         <div className="sidebar-header">
-          <div
-            className="sidebar-backButton"
-            onClick={() => {
-              navigate(-1);
-            }}
-          >
+          <div className="sidebar-backButton" onClick={() => navigate(-1)}>
             <i className="fa-solid fa-arrow-left-long"></i>
           </div>
           <div className="user-avatar">
             <i className="fa-solid fa-user"></i>
           </div>
         </div>
-        <div className="sidebar-body">{/* Future sidebar content */}</div>
+        <div className="sidebar-body" />
       </div>
 
-      {/* Main Content */}
       <div className="main-content">
         <h1 className="page-title">
-          {" "}
-          <i class="fa-solid fa-file"></i> {project.name}
+          <i className="fa-solid fa-file"></i> {project.name}
         </h1>
         <div className="underline" />
 
@@ -90,10 +121,8 @@ export default function ProjectDetailPage() {
           </div>
         </div>
 
-        {/* Upload Section */}
         <h2 className="upload-header">Resume Management</h2>
         <div className="upload-box">
-          {/* Invisible File Input */}
           <input
             type="file"
             id="resume-upload"
@@ -103,7 +132,6 @@ export default function ProjectDetailPage() {
             accept=".pdf,.doc,.docx"
           />
 
-          {/* Clickable Upload Area */}
           {uploadedFiles.length === 0 ? (
             <label htmlFor="resume-upload" className="upload-label">
               <i className="fa-solid fa-cloud-arrow-up fa-2x upload-icon"></i>
@@ -123,13 +151,13 @@ export default function ProjectDetailPage() {
                       className={`fa-solid ${getFileIconClass(
                         file.name
                       )} file-icon`}
-                    ></i>
+                    />
                     <span className="file-name">{file.name}</span>
 
                     <button
                       className="remove-button"
                       onClick={(e) => {
-                        e.stopPropagation(); // prevent label/file input from triggering
+                        e.stopPropagation();
                         setUploadedFiles((prevFiles) =>
                           prevFiles.filter((_, i) => i !== idx)
                         );
@@ -142,45 +170,33 @@ export default function ProjectDetailPage() {
                       className="extract-button"
                       onClick={(e) => {
                         e.stopPropagation();
-                        alert(`Extract ${file.name}`);
+                        handleExtract(file, idx);
                       }}
                     >
-                      Extract
+                      {processingIndex === idx ? "Extracting..." : "Extract"}
                     </button>
+
+                    {processingIndex === idx && (
+                      <div className="extract-progress">
+                        <div className="spinner"></div>
+                        <div className="progress-bar">
+                          <div className="progress-bar-fill" />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
 
-              {/* Separate upload trigger label */}
               <label htmlFor="resume-upload" className="add-more-label">
-                <i className="fa-solid fa-plus"></i> Add More Files
+                <i className="fa-solid fa-plus"></i> Change file
               </label>
             </>
           )}
         </div>
 
-        {/* Resume Cards Section */}
         <div className="resume-list">
-          {[
-            {
-              name: "John Doe - Senior Developer.pdf",
-              size: "239.26 KB",
-              score: "85%",
-              uploaded: "20/01/2024",
-            },
-            {
-              name: "Jane Smith - UX Designer.pdf",
-              size: "201.12 KB",
-              score: "92%",
-              uploaded: "20/01/2024",
-            },
-            {
-              name: "Michael Lee - Data Analyst.pdf",
-              size: "188.76 KB",
-              score: "78%",
-              uploaded: "20/01/2024",
-            },
-          ].map((resume, idx) => (
+          {analysisResults.map((resume, idx) => (
             <div className="resume-card" key={idx}>
               <div className="resume-left">
                 <i className="fa-solid fa-file-lines resume-icon"></i>
