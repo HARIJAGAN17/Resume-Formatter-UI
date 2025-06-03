@@ -1,36 +1,46 @@
-// components/ProjectDetail.jsx
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 import api from "../../Api/api";
 import "./projectDetail.css";
 
-export default function ProjectDetail() {
+export default function ProjectDetailPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [project, setProject] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchProject() {
-      const res = await api.get(`/projects/${id}`);
-      setProject(res.data);
-    }
+    const fetchProject = async () => {
+      try {
+        const res = await api.get(`/projects/${id}`);
+        setProject(res.data);
+      } catch (error) {
+        console.error("Failed to fetch project:", error);
+      }
+    };
     fetchProject();
   }, [id]);
 
-  if (!project) return <p>Loading...</p>;
+  if (!project) return <div>Loading...</div>;
 
   return (
-    <div className="project-detail-container">
+    <div className="app-container">
       {/* Sidebar */}
-      <aside className="sidebar">
-        <button className="back-btn" onClick={() => navigate("/")}>
-          ← Back
-        </button>
-      </aside>
+      <div className={`project-sidebar`}>
+        <div className="sidebar-header">
+          <div className="sidebar-backButton" onClick={()=>{navigate(-1)}}> 
+            <i className="fa-solid fa-arrow-left-long"></i>
+          </div>
+          <div className="user-avatar">
+            <i className="fa-solid fa-user"></i>
+          </div>
+        </div>
+        <div className="sidebar-body">{/* Future sidebar content */}</div>
+      </div>
 
-      {/* Main Section */}
-      <main className="main-content">
-        <h1 className="job-title-heading">{project.name}</h1>
+      {/* Main Content */}
+      <div className="main-content">
+
+        <h1 className="page-title">{project.name}</h1>
         <div className="underline" />
 
         <div className="stat-card-grid">
@@ -41,42 +51,34 @@ export default function ProjectDetail() {
             </div>
             <p className="stat-value">{project.resume_count}</p>
           </div>
+
           <div className="stat-card">
             <div className="stat-card-title-row">
               <h3>Approved</h3>
-              <i className="fa-solid fa-check"></i>
+              <i className="fa-solid fa-thumbs-up"></i>
             </div>
             <p className="stat-value">0</p>
           </div>
+
           <div className="stat-card">
             <div className="stat-card-title-row">
               <h3>Rejected</h3>
-              <i className="fa-solid fa-xmark"></i>
+              <i className="fa-solid fa-thumbs-down"></i>
             </div>
             <p className="stat-value">0</p>
           </div>
         </div>
 
-        <h2 className="resume-upload-title">Resume Management</h2>
+        {/* Upload Section */}
+        <h2 className="upload-header">Resume Management</h2>
         <div className="upload-box">
-          <input
-            type="file"
-            accept=".pdf,.doc,.docx"
-            multiple
-            hidden
-            id="resume-upload"
-          />
-          <label htmlFor="resume-upload" className="upload-area">
-            <i className="lucide lucide-upload h-12 w-12"></i>
-            <p className="text-lg mb-2">
-              Drag & drop resume files here, or click to select
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Supports PDF, DOC, and DOCX files
-            </p>
-          </label>
+          <input type="file" multiple />
+          <p className="upload-title">
+            Drag & drop resume files here, or click to select
+          </p>
+          <p className="upload-subtitle">Supports PDF, DOC, and DOCX files</p>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
