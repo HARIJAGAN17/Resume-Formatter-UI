@@ -3,11 +3,13 @@ import React, { useEffect, useState } from "react";
 import CreateProjectDialog from "../Dashboard-components/CreateProjectDialog";
 import api from "../../Api/api";
 import "./dashboard.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [projects, setProjects] = useState([]);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [filterStatus, setFilterStatus] = useState("all");
+  const navigate = useNavigate();
 
   // Normalize project object (API → UI)
   const normalizeProject = (p) => ({
@@ -70,12 +72,6 @@ export default function Dashboard() {
       : projects.filter((p) => p.status === filterStatus);
 
   const totalResumes = projects.reduce((sum, p) => sum + p.resumeCount, 0);
-  const avgScore =
-    projects.length > 0
-      ? Math.round(
-          projects.reduce((sum, p) => sum + p.avgScore, 0) / projects.length
-        )
-      : 0;
 
   return (
     <div className="background-dashboard">
@@ -123,14 +119,6 @@ export default function Dashboard() {
           </div>
           <div className="stat-card">
             <div className="stat-card-title-row">
-              <h3>Average Score</h3>
-              <i className="fa-solid fa-arrow-trend-up"></i>
-            </div>
-            <p className="stat-value">{avgScore}%</p>
-            <span className="stat-caption">Overall compatibility</span>
-          </div>
-          <div className="stat-card">
-            <div className="stat-card-title-row">
               <h3>This Month</h3>
               <i className="fa-solid fa-clock"></i>
             </div>
@@ -156,7 +144,11 @@ export default function Dashboard() {
 
         <div className="projects-grid">
           {filteredProjects.map((p) => (
-            <div className="project-card" key={p.id}>
+            <div
+              className="project-card"
+              key={p.id}
+              onClick={() => navigate(`/project/${p.id}`)}
+            >
               <div className="project-header">
                 <div className="projectTitleContainer">
                   <h3 className="project-title">{p.name}</h3>
