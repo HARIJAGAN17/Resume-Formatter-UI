@@ -122,38 +122,41 @@ export default function ProjectDetailPage() {
         </div>
 
         <h2 className="upload-header">Resume Management</h2>
-        <div className="upload-box">
-          <input
-            type="file"
-            id="resume-upload"
-            multiple
-            style={{ display: "none" }}
-            onChange={handleFileChange}
-            accept=".pdf,.doc,.docx"
-          />
+        <div className="uploading-section-container">
+          <div
+            className="upload-box"
+            onClick={() => document.getElementById("resume-upload").click()}
+          >
+            <input
+              type="file"
+              id="resume-upload"
+              multiple
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+              accept=".pdf,.doc,.docx"
+            />
+            <i className="fa-solid fa-cloud-arrow-up fa-2x upload-icon"></i>
+            <p className="upload-title">
+              Drag & drop resume files here, or click to select
+            </p>
+            <p className="upload-subtitle">Supports PDF, DOC, and DOCX files</p>
+          </div>
 
-          {uploadedFiles.length === 0 ? (
-            <label htmlFor="resume-upload" className="upload-label">
-              <i className="fa-solid fa-cloud-arrow-up fa-2x upload-icon"></i>
-              <p className="upload-title">
-                Drag & drop resume files here, or click to select
-              </p>
-              <p className="upload-subtitle">
-                Supports PDF, DOC, and DOCX files
-              </p>
-            </label>
-          ) : (
-            <>
-              <div className="uploaded-files-list">
-                {uploadedFiles.map((file, idx) => (
-                  <div className="uploaded-file-item" key={idx}>
+          {/* File List - Shown BELOW the upload box */}
+          {uploadedFiles.length > 0 && (
+            <div className="uploaded-files-list">
+              <h4 className="selected-title">Selected Files</h4>
+              {uploadedFiles.map((file, idx) => (
+                <div className="uploaded-file-row" key={idx}>
+                  <div className="file-info">
                     <i
                       className={`fa-solid ${getFileIconClass(
                         file.name
                       )} file-icon`}
                     />
                     <span className="file-name">{file.name}</span>
-
+                  </div>
+                  <div className="file-actions">
                     <button
                       className="remove-button"
                       onClick={(e) => {
@@ -165,33 +168,30 @@ export default function ProjectDetailPage() {
                     >
                       Remove
                     </button>
-
-                    <button
-                      className="extract-button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleExtract(file, idx);
-                      }}
-                    >
-                      {processingIndex === idx ? "Extracting..." : "Extract"}
-                    </button>
-
-                    {processingIndex === idx && (
-                      <div className="extract-progress">
-                        <div className="spinner"></div>
-                        <div className="progress-bar">
-                          <div className="progress-bar-fill" />
+                    <div className="analyze-wrapper">
+                      <button
+                        className="analyze-button"
+                        disabled={processingIndex === idx}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleExtract(file, idx);
+                        }}
+                      >
+                        Analyze
+                        {processingIndex === idx && (
+                          <span className="spinner-inline ml-8"></span>
+                        )}
+                      </button>
+                      {processingIndex === idx && (
+                        <div className="progress-bar-container below-button">
+                          <div className="progress-bar-fill animate"></div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
-                ))}
-              </div>
-
-              <label htmlFor="resume-upload" className="add-more-label">
-                <i className="fa-solid fa-plus"></i> Change file
-              </label>
-            </>
+                </div>
+              ))}
+            </div>
           )}
         </div>
 
