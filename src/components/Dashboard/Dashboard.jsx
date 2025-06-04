@@ -1,10 +1,11 @@
 // components/Dashboard.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import CreateProjectDialog from "../Dashboard-components/CreateProjectDialog";
 import api from "../../Api/api";
 import "./dashboard.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { ResumeContext } from "../../context/ResumeContext";
 
 export default function Dashboard() {
   const [projects, setProjects] = useState([]);
@@ -12,6 +13,9 @@ export default function Dashboard() {
   const [filterStatus, setFilterStatus] = useState("all");
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const { totalResumesPerProject, setTotalResumesPerProject } =
+    useContext(ResumeContext);
+  const [OverallResumeCount, setOverallResumeCount] = useState(0);
 
   const handleLogout = () => {
     logout();
@@ -33,8 +37,12 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
+        const user = JSON.parse(localStorage.getItem("user"));
         const res = await api.get("/projects");
-        setProjects(res.data.map(normalizeProject));
+        const userProjects = res.data
+          .filter((p) => p.user_id === user.user_id) // ✅ filter by user_id
+          .map(normalizeProject);
+        setProjects(userProjects);
       } catch (err) {
         console.error("Failed to fetch projects:", err);
       }
@@ -42,9 +50,37 @@ export default function Dashboard() {
     fetchProjects();
   }, []);
 
+  useEffect(() => {
+    const fetchAllData = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const resResumes = await api.get("/parsed-history");
+        const userResumes = resResumes.data.filter(
+          (resume) => resume.user_id === user.user_id
+        );
+
+        setOverallResumeCount(userResumes.length);
+
+        // Calculate resume count per project for the current user
+        const counts = {};
+        userResumes.forEach((resume) => {
+          const pid = resume.project_id;
+          counts[pid] = (counts[pid] || 0) + 1;
+        });
+        setTotalResumesPerProject(counts);
+      } catch (error) {
+        console.error("Failed to fetch projects or resumes:", error);
+      }
+    };
+
+    fetchAllData();
+  }, [setTotalResumesPerProject]);
+
   const handleCreateProject = async (data) => {
     try {
+      const user = JSON.parse(localStorage.getItem("user"));
       const res = await api.post("/projects", {
+        user_id: user.user_id,
         name: data.name,
         description: data.description,
         job_title: data.jobTitle,
@@ -76,8 +112,6 @@ export default function Dashboard() {
     filterStatus === "all"
       ? projects
       : projects.filter((p) => p.status === filterStatus);
-
-  const totalResumes = projects.reduce((sum, p) => sum + p.resumeCount, 0);
 
   return (
     <div className="background-dashboard">
@@ -125,7 +159,7 @@ export default function Dashboard() {
               <h3>Total Resumes</h3>
               <i className="fa-solid fa-user-plus"></i>
             </div>
-            <p className="stat-value">{totalResumes}</p>
+            <p className="stat-value">{OverallResumeCount}</p>
             <span className="stat-caption">Across all projects</span>
           </div>
           <div className="stat-card">
@@ -176,7 +210,8 @@ export default function Dashboard() {
 
               <div className="project-meta">
                 <span>
-                  <i className="fas fa-user"></i> {p.resumeCount} Resumes
+                  <i className="fas fa-user"></i>{" "}
+                  {totalResumesPerProject[p.id] || 0} Resumes
                 </span>
               </div>
 
@@ -192,9 +227,7 @@ export default function Dashboard() {
                   <div
                     className="score-bar-fill"
                     style={{
-                      width: `${
-                        p.threshold ? (p.avgScore / p.threshold) * 100 : 0
-                      }%`,
+                      width: `${p.threshold ? (p.threshold / 100) * 100 : 0}%`,
                     }}
                   />
                 </div>

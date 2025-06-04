@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../Api/api";
 import "./projectDetail.css";
+import { ResumeContext } from "../../context/ResumeContext";
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
   const [project, setProject] = useState(null);
   const navigate = useNavigate();
+  const { setTotalResumesPerProject } = useContext(ResumeContext);
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [processingIndex, setProcessingIndex] = useState(null);
@@ -43,6 +45,10 @@ export default function ProjectDetailPage() {
         raw: resume.resume_details, // to preserve for posting if needed again
       }));
       setAnalysisResults(mapped);
+      setTotalResumesPerProject((prev) => ({
+        ...prev,
+        [id]: mapped.length,
+      }));
     } catch (err) {
       console.error("Failed to fetch parsed history:", err);
     }
