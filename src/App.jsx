@@ -12,7 +12,7 @@ import ResumePreview from "./components/ResumePreview/ResumePreview";
 import RouteLayout from "./layout/RouteLayout";
 import ResumeLayout from "./layout/ResumeLayout";
 import ProtectedRoute from "./components/Guard/ProtectedRoute";
-import { AuthProvider } from './context/AuthProvider';
+import { AuthProvider } from "./context/AuthProvider";
 import { ResumeProvider } from "./context/ResumeContext";
 import { ToastContainer } from "react-toastify";
 // import ResumeDownload from "./components/ResumePreview/ResumeDownload";
@@ -30,8 +30,6 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
         </Route>
-        <Route path="dashboard" element={<Dashboard/>} />
-        <Route path="/project/:id" element={<ProjectDetail/>} />
 
         <Route
           path="resume"
@@ -41,10 +39,8 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<ResumeFormatter />} />
-          <Route path="preview" element={<ResumePreview />} />
-          <Route path="download" element={<ResumeDownloadPdf />} />
-          <Route path="/resume/download-docx" element={<ResumeDownloadDocx />} />
+          <Route index element={<Dashboard />} />
+          <Route path="project/:id" element={<ProjectDetail />} />{" "}
         </Route>
       </>
     )

@@ -240,3 +240,22 @@
   font-size: 0.8rem;
   color: #888;
 }
+
+.Header-buttons{
+  display: flex;
+  gap: 20px;
+}
+.logout-button{
+  background-color: white;
+  color: grey;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.logout-button:hover{
+  background-color: #1f2937;
+  color: white;
+}

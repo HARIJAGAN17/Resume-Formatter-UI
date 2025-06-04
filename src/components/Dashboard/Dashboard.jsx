@@ -4,13 +4,19 @@ import CreateProjectDialog from "../Dashboard-components/CreateProjectDialog";
 import api from "../../Api/api";
 import "./dashboard.css";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Dashboard() {
   const [projects, setProjects] = useState([]);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [filterStatus, setFilterStatus] = useState("all");
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
   // Normalize project object (API → UI)
   const normalizeProject = (p) => ({
     id: p.id,
@@ -84,12 +90,17 @@ export default function Dashboard() {
             </p>
           </div>
           <div>
-            <button
-              className="primary-button"
-              onClick={() => setShowCreateDialog(true)}
-            >
-              <i className="fa-solid fa-plus"></i> New Project
-            </button>
+            <div className="Header-buttons">
+              <button
+                className="primary-button"
+                onClick={() => setShowCreateDialog(true)}
+              >
+                <i className="fa-solid fa-plus"></i> New Project
+              </button>
+              <button className="logout-button" onClick={handleLogout}>
+                Logout
+              </button>
+            </div>
             <CreateProjectDialog
               open={showCreateDialog}
               onOpenChange={setShowCreateDialog}
@@ -147,7 +158,7 @@ export default function Dashboard() {
             <div
               className="project-card"
               key={p.id}
-              onClick={() => navigate(`/project/${p.id}`)}
+              onClick={() => navigate(`/resume/project/${p.id}`)} // absolute path
             >
               <div className="project-header">
                 <div className="projectTitleContainer">
@@ -173,7 +184,8 @@ export default function Dashboard() {
                 <div className="score-bar-label">
                   <span>Score vs Threshold</span>
                   <span>
-                    <i className="fa-solid fa-arrow-trend-up"></i> {p.threshold || 100}%/100
+                    <i className="fa-solid fa-arrow-trend-up"></i>{" "}
+                    {p.threshold || 100}%/100
                   </span>
                 </div>
                 <div className="score-bar">
