@@ -1,129 +1,127 @@
-/* Navbar with solid #077A7D background */
+/* Navbar with solid background to match login/register */
 .navbar {
-    background: #077A7D;
-    padding: 1rem 2rem;
-    color: #f1f1f1;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    position: sticky;
-    top: 0;
-    z-index: 999;
-  }
-  
-  /* Container layout */
-  .navbar-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: auto;
-    width: 100%;
-    position: relative;
-  }
-  
-  .navbar-menu {
-    list-style: none;
-    display: flex;
-    gap: 2rem;
-    margin: 0;
-    padding: 0;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  
-  
-  /* Home icon styling */
-  .navbar-left .navbar-icon {
-    font-size: 1.5rem;
-    color: #f2e0b6;
-    cursor: pointer;
-  }
-  
+  background: #1f2937; /* dark slate/blue */
+  padding: 1rem 2rem;
+  color: #ffffff; /* changed to white */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
 
-  
-  .navbar-menu li {
-    cursor: pointer;
+/* Container layout */
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: auto;
+  width: 100%;
+  position: relative;
+}
+
+.navbar-menu {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Home icon styling */
+.navbar-left .navbar-icon {
+  font-size: 1.5rem;
+  color: #ffffff; /* white */
+  cursor: pointer;
+}
+
+.navbar-menu li {
+  cursor: pointer;
+}
+
+.nav-link {
+  color: #ffffff; /* white */
+  text-decoration: none;
+  position: relative;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background-color: #ffffff; /* white */
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Button section */
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-right .btn {
+  margin-left: 10px;
+  padding: 0.4rem 1.2rem;
+  border-radius: 20px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Login button: transparent with white border */
+.login-btn {
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+}
+
+.login-btn:hover {
+  background-color: #ffffff;
+  color: #1f2937;
+}
+
+/* Signup button: white background with dark text */
+.signup-btn {
+  background-color: #ffffff;
+  color: #1f2937;
+  border: none;
+}
+
+.signup-btn:hover {
+  background-color: #e6e6e6; /* slightly darker white/gray */
+  color: #1f2937;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  .nav-link {
-    color: #ffffff;
-    text-decoration: none;
-    position: relative;
-    font-weight: 500;
-    transition: color 0.3s ease;
-  }
-  
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -4px;
-    width: 0;
-    height: 2px;
-    background-color: #f2e0b6;
-    transition: width 0.3s ease;
-  }
-  
-  .nav-link:hover::after {
+
+  .navbar-menu {
+    margin-top: 1rem;
+    flex-direction: column;
+    gap: 1rem;
     width: 100%;
   }
-  
-  /* Button section */
+
   .navbar-right {
-    display: flex;
-    align-items: center;
+    margin-top: 1rem;
+    width: 100%;
+    justify-content: flex-end;
   }
-  
-  .navbar-right .btn {
-    margin-left: 10px;
-    padding: 0.4rem 1.2rem;
-    border-radius: 20px;
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .login-btn {
-    background-color: transparent;
-    color: white;
-    border: 1px solid #F5EEDD;
-  }
-  
-  .login-btn:hover {
-    background-color: #f2e0b6;
-    color: black;
-  }
-  
-  .signup-btn {
-    background-color: #F5EEDD;
-    color: black;
-    border: none;
-  }
-  
-  .signup-btn:hover {
-    background-color: #f2e0b6;
-    color: black  ;
-  }
-  
-  /* Responsive design */
-  @media (max-width: 768px) {
-    .navbar-container {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .navbar-menu {
-      margin-top: 1rem;
-      flex-direction: column;
-      gap: 1rem;
-      width: 100%;
-    }
-  
-    .navbar-right {
-      margin-top: 1rem;
-      width: 100%;
-      justify-content: flex-end;
-    }
-  }
-  
+}
