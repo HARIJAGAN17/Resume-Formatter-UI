@@ -3,18 +3,26 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../../Api/api";
 import "./projectDetail.css";
 import { ResumeContext } from "../../context/ResumeContext";
+import { useResume } from "../../hooks/useResume";
+import ResumeDownload from "../ResumePreview/ResumeDownload";
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
   const [project, setProject] = useState(null);
   const navigate = useNavigate();
   const { setTotalResumesPerProject } = useContext(ResumeContext);
+  const { setResumeData } = useResume();
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [processingIndex, setProcessingIndex] = useState(null);
   const [analysisResults, setAnalysisResults] = useState([]);
 
+  const [previewModalOpen, setPreviewModalOpen] = useState(false);
+  const [selectedResume, setSelectedResume] = useState(null);
+  const [activeTab, setActiveTab] = useState("standard"); // default tab
+
   const totalResumes = analysisResults.length;
+
   const approvedCount = analysisResults.filter(
     (r) => r.status === "approved"
   ).length;
@@ -59,6 +67,13 @@ export default function ProjectDetailPage() {
     if (ext === "pdf") return "fa-file-pdf";
     if (ext === "docx" || ext === "doc") return "fa-file-word";
     return "fa-file"; // fallback icon
+  };
+
+  const handlePreviewClick = (resume) => {
+    setSelectedResume(resume);
+    console.log(resume.formattedDetails);
+    setResumeData(resume.formatted_details); // ✅ Set resume data for context
+    setPreviewModalOpen(true);
   };
 
   const handleExtract = async (file, idx) => {
@@ -345,7 +360,15 @@ export default function ProjectDetailPage() {
                     </>
                   )}
 
-                  <button className="preview-button">
+                  <button
+                    className="preview-button"
+                    onClick={() => {
+                      setSelectedResume(resume);
+                      setActiveTab("standard");
+                      setPreviewModalOpen(true);
+                      handlePreviewClick(resume);
+                    }}
+                  >
                     <i className="fa-solid fa-eye"></i> Preview
                   </button>
                 </div>
@@ -354,6 +377,57 @@ export default function ProjectDetailPage() {
           })}
         </div>
       </div>
+
+      {previewModalOpen && (
+        <div className="preview-modal-overlay">
+          <div className="preview-modal-box">
+            <div className="modal-header">
+              <button
+                className="close-button"
+                onClick={() => setPreviewModalOpen(false)}
+              >
+                &times;
+              </button>
+            </div>
+
+            <div className="tab-buttons">
+              <button
+                className={activeTab === "standard" ? "active" : ""}
+                onClick={() => setActiveTab("standard")}
+              >
+                Standard
+              </button>
+              <button
+                className={activeTab === "formatted" ? "active" : ""}
+                onClick={() => setActiveTab("formatted")}
+              >
+                Formatted
+              </button>
+              <button
+                className={activeTab === "analysis" ? "active" : ""}
+                onClick={() => setActiveTab("analysis")}
+              >
+                Analysis
+              </button>
+            </div>
+
+            <div className="tab-content">
+              {activeTab === "standard" && (
+                <pre>
+                  {JSON.stringify(selectedResume?.resume_details, null, 2)}
+                </pre>
+              )}
+              {activeTab === "formatted" && <ResumeDownload />}
+
+              {activeTab === "analysis" && (
+                <pre>
+                  {JSON.stringify(selectedResume?.summary_analysis, null, 2)}
+                </pre>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
