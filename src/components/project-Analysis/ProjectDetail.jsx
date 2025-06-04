@@ -12,6 +12,14 @@ export default function ProjectDetailPage() {
   const [processingIndex, setProcessingIndex] = useState(null);
   const [analysisResults, setAnalysisResults] = useState([]);
 
+  const totalResumes = analysisResults.length;
+  const approvedCount = analysisResults.filter(
+    (r) => r.status === "approved"
+  ).length;
+  const rejectedCount = analysisResults.filter(
+    (r) => r.status === "rejected"
+  ).length;
+
   const handleFileChange = (e) => {
     const filesArray = Array.from(e.target.files);
     setUploadedFiles(filesArray);
@@ -159,7 +167,7 @@ export default function ProjectDetailPage() {
               <h3>Total Resumes</h3>
               <i className="fa-solid fa-user-plus"></i>
             </div>
-            <p className="stat-value">{project.resume_count}</p>
+            <p className="stat-value">{totalResumes}</p>
           </div>
 
           <div className="stat-card">
@@ -167,7 +175,7 @@ export default function ProjectDetailPage() {
               <h3>Approved</h3>
               <i className="fa-solid fa-thumbs-up"></i>
             </div>
-            <p className="stat-value">0</p>
+            <p className="stat-value">{approvedCount}</p>
           </div>
 
           <div className="stat-card">
@@ -175,7 +183,7 @@ export default function ProjectDetailPage() {
               <h3>Rejected</h3>
               <i className="fa-solid fa-thumbs-down"></i>
             </div>
-            <p className="stat-value">0</p>
+            <p className="stat-value">{rejectedCount}</p>
           </div>
         </div>
 
@@ -215,17 +223,6 @@ export default function ProjectDetailPage() {
                     <span className="file-name">{file.name}</span>
                   </div>
                   <div className="file-actions">
-                    <button
-                      className="remove-button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setUploadedFiles((prevFiles) =>
-                          prevFiles.filter((_, i) => i !== idx)
-                        );
-                      }}
-                    >
-                      Remove
-                    </button>
                     <div className="analyze-wrapper">
                       <button
                         className="analyze-button"
@@ -246,6 +243,17 @@ export default function ProjectDetailPage() {
                         </div>
                       )}
                     </div>
+                    <button
+                      className="remove-button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setUploadedFiles((prevFiles) =>
+                          prevFiles.filter((_, i) => i !== idx)
+                        );
+                      }}
+                    >
+                      Remove
+                    </button>
                   </div>
                 </div>
               ))}
