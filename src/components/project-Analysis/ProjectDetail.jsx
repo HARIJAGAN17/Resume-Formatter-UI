@@ -17,6 +17,29 @@ export default function ProjectDetailPage() {
     setUploadedFiles(filesArray);
   };
 
+  const fetchParsedResumes = async () => {
+    try {
+      const res = await api.get(`/parsed-history/${id}`);
+      const mapped = res.data.map((resume) => ({
+        name: resume.resume_name,
+        size: `${resume.file_size} KB`,
+        score: `${resume.resume_score}%`,
+        uploaded: new Date(resume.last_analyzed_timestamp).toLocaleDateString(
+          "en-GB"
+        ),
+        status: resume.approval_status,
+        resume_details: resume.resume_details,
+        formatted_details: resume.formatted_details,
+        summary_analysis: resume.summary_analysis,
+        last_analyzed_timestamp: resume.last_analyzed_timestamp,
+        raw: resume.resume_details, // to preserve for posting if needed again
+      }));
+      setAnalysisResults(mapped);
+    } catch (err) {
+      console.error("Failed to fetch parsed history:", err);
+    }
+  };
+
   const getFileIconClass = (fileName) => {
     const ext = fileName.split(".").pop().toLowerCase();
     if (ext === "pdf") return "fa-file-pdf";
@@ -35,50 +58,77 @@ export default function ProjectDetailPage() {
 
     try {
       const response = await api.post("/analyze-resume", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       const result = response.data;
 
-      function determineStatus(scoreStr) {
-        const score = parseFloat(scoreStr?.replace("%", ""));
-        if (score >= 80) return "approved";
-        if (score < 60) return "rejected";
-        return null; // pending
-      }
+      const score = parseFloat(result.job_score?.replace("%", "") || "0");
 
-      const newEntry = {
+      const status = score >= 80 ? "approved" : score < 60 ? "rejected" : null;
+
+      const analyzedEntry = {
         name: file.name,
         size: `${(file.size / 1024).toFixed(2)} KB`,
         score: result.job_score || "N/A",
         uploaded: new Date().toLocaleDateString("en-GB"),
-        status: determineStatus(result.job_score),
+        status,
+        resume_details: result, // assume it contains `resume_details` and `formatted_details`
+        formatted_details: result.formatted_details || {},
+        summary_analysis: result.summary || [],
+        raw: result,
+        last_analyzed_timestamp: new Date().toISOString(),
       };
 
-      setAnalysisResults((prev) => [...prev, newEntry]);
-    } catch (error) {
-      if (error.response) {
-        console.error("Error:", error.response.data.detail);
-      } else {
-        console.error("Request failed:", error.message);
+      setAnalysisResults((prev) => [...prev, analyzedEntry]);
+
+      // If auto-approved or rejected, send POST immediately
+      if (status) {
+        await postResumeToBackend(analyzedEntry, status);
       }
+    } catch (error) {
+      console.error("Error:", error.response?.data?.detail || error.message);
     } finally {
       setProcessingIndex(null);
     }
   };
 
+  const postResumeToBackend = async (resume, status) => {
+    const payload = {
+      resume_name: resume.name,
+      resume_details: resume.resume_details || {},
+      formatted_details: resume.formatted_details || {},
+      resume_score: parseFloat(resume.score),
+      file_size: parseFloat(resume.size),
+      summary_analysis: resume.summary_analysis || [],
+      last_analyzed_timestamp: resume.last_analyzed_timestamp,
+      approval_status: status,
+      project_id: parseInt(id),
+      user_id: 1, // Replace with real logged-in user ID if available
+    };
+
+    try {
+      console.log("Sending payload:", payload);
+      await api.post("/parsed-history", payload);
+    } catch (err) {
+      console.error(
+        "Failed to POST parsed resume:",
+        err?.response?.data || err
+      );
+    }
+  };
+
   useEffect(() => {
-    const fetchProject = async () => {
+    const fetchData = async () => {
       try {
-        const res = await api.get(`/projects/${id}`);
-        setProject(res.data);
+        const [projectRes] = await Promise.all([api.get(`/projects/${id}`)]);
+        setProject(projectRes.data);
+        await fetchParsedResumes(); // Fetch previously analyzed resumes
       } catch (error) {
-        console.error("Failed to fetch project:", error);
+        console.error("Failed to fetch data:", error);
       }
     };
-    fetchProject();
+    fetchData();
   }, [id]);
 
   if (!project) return <div>Loading...</div>;
@@ -243,13 +293,14 @@ export default function ProjectDetailPage() {
                     <>
                       <button
                         className="preview-button"
-                        onClick={() => {
+                        onClick={async () => {
                           const updated = { ...resume, status: "approved" };
                           setAnalysisResults((prev) => {
                             const copy = [...prev];
                             copy[idx] = updated;
                             return copy;
                           });
+                          await postResumeToBackend(updated, "approved");
                         }}
                       >
                         Approve
@@ -257,19 +308,21 @@ export default function ProjectDetailPage() {
                       <button
                         className="preview-button"
                         style={{ backgroundColor: "#ef4444" }}
-                        onClick={() => {
+                        onClick={async () => {
                           const updated = { ...resume, status: "rejected" };
                           setAnalysisResults((prev) => {
                             const copy = [...prev];
                             copy[idx] = updated;
                             return copy;
                           });
+                          await postResumeToBackend(updated, "rejected");
                         }}
                       >
                         Reject
                       </button>
                     </>
                   )}
+
                   <button className="preview-button">
                     <i className="fa-solid fa-eye"></i> Preview
                   </button>
