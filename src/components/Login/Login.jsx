@@ -1,24 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import api from "../../Api/api";
-import "./Login.css";
 import qs from "qs";
-import { useAuth } from "../../hooks/useAuth";
 import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../../hooks/useAuth";
+import "./Login.css";
 
 function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { user, login } = useAuth(); // Use AuthContext to access user and login
+  const { user, login } = useAuth();
 
-  // Redirect if the user is already logged in
   useEffect(() => {
-    if (user) {
-      navigate("/resume"); // Redirect if user is logged in
-    }
+    if (user) navigate("/resume");
   }, [user, navigate]);
 
   const handleChange = (e) => {
@@ -55,46 +51,44 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
-      <div className="wrapper">
+    <div className="login-page">
+      <div className="login-box">
         <form onSubmit={handleSubmit}>
-          <h1>
-            Login{" "}
-            {loading && (
-              <div className="spinner-border text-light" role="status">
-                <span className="sr-only">Loading...</span>
-              </div>
-            )}
+          <h1 className="login-heading">
+            Login
+            {loading && <span className="login-spinner" />}
           </h1>
-          <div className="input-box">
+
+          <div className="login-form-group">
             <input
               type="text"
               name="username"
-              value={formData.username}
+              className="login-input"
               placeholder="Username"
+              value={formData.username}
               onChange={handleChange}
               required
             />
-            <i className="bx bxs-user"></i>
           </div>
-          <div className="input-box">
+
+          <div className="login-form-group">
             <input
               type="password"
               name="password"
-              value={formData.password}
+              className="login-input"
               placeholder="Password"
+              value={formData.password}
               onChange={handleChange}
               required
             />
-            <i className="bx bxs-lock-alt"></i>
           </div>
-          <button type="submit" className="btn">
+
+          <button type="submit" className="login-button">
             Login
           </button>
-          <div className="register-link">
-            <p>
-              Don't have an account? <Link to="/register">Register</Link>
-            </p>
+
+          <div className="login-register">
+            Don't have an account? <Link to="/register">Register</Link>
           </div>
         </form>
       </div>

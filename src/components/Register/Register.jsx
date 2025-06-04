@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Register.css";
-import api from '../../Api/api';
+import api from "../../Api/api";
 import { useAuth } from "../../hooks/useAuth";
 
 function Register() {
@@ -11,32 +11,28 @@ function Register() {
     username: "",
     email: "",
     password: "",
-    userType: "",
   });
-
-  const navigate = useNavigate(); 
-  const { user } = useAuth();
-
-  useEffect(() => {
-    if (user) {
-      navigate('/resume');
-    }
-  }, [user, navigate]);
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) navigate("/resume");
+  }, [user, navigate]);
 
   const validate = () => {
     const errs = {};
     if (!formData.username.trim()) errs.username = "Invalid Username";
     if (!/\S+@\S+\.\S+/.test(formData.email)) errs.email = "Invalid Email";
-    if (!formData.userType) errs.userType = "Choose the role";
     return errs;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
   };
 
   const handleSubmit = async (e) => {
@@ -47,17 +43,14 @@ function Register() {
 
     setLoading(true);
     try {
-      const response = await api.post("/register", {
+      await api.post("/register", {
         username: formData.username,
         email: formData.email,
         password: formData.password,
-        user_type: formData.userType,
+        user_type: "user",
       });
-      console.log(response)
       toast.success("Registered successfully!");
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
+      setTimeout(() => navigate("/login"), 2000);
     } catch (error) {
       const msg =
         error.response?.data?.detail || "Registration failed. Try again.";
@@ -68,19 +61,15 @@ function Register() {
   };
 
   return (
-    <div className="register-container">
-      <div className="wrapper">
+    <div className="register-page">
+      <div className="register-box">
         <form onSubmit={handleSubmit}>
-          <h1>
-            Register{" "}
-            {loading && (
-              <div className="spinner-border text-light" role="status">
-                <span className="sr-only">Loading...</span>
-              </div>
-            )}
+          <h1 className="register-heading">
+            Register
+            {loading && <span className="register-spinner" />}
           </h1>
 
-          <div className="input-box">
+          <div className="register-form-group">
             <input
               type="text"
               name="username"
@@ -88,12 +77,14 @@ function Register() {
               value={formData.username}
               onChange={handleChange}
               required
+              className="register-input"
             />
-            <i className="bx bxs-user"></i>
-            {errors.username && <span>{errors.username}</span>}
+            {errors.username && (
+              <span className="error-text">{errors.username}</span>
+            )}
           </div>
 
-          <div className="input-box">
+          <div className="register-form-group">
             <input
               type="email"
               name="email"
@@ -101,12 +92,12 @@ function Register() {
               value={formData.email}
               onChange={handleChange}
               required
+              className="register-input"
             />
-            <i className="bx bxs-envelope"></i>
-            {errors.email && <span>{errors.email}</span>}
+            {errors.email && <span className="error-text">{errors.email}</span>}
           </div>
 
-          <div className="input-box">
+          <div className="register-form-group">
             <input
               type="password"
               name="password"
@@ -114,35 +105,16 @@ function Register() {
               value={formData.password}
               onChange={handleChange}
               required
+              className="register-input"
             />
-            <i className="bx bxs-lock-alt"></i>
           </div>
 
-          <div className="role-select-box">
-            <select
-              name="userType"
-              value={formData.userType}
-              onChange={handleChange}
-              required
-            >
-              <option value="" disabled>
-                Choose Role
-              </option>
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
-            <i className="bx bxs-user"></i>
-            {errors.userType && <span>{errors.userType}</span>}
-          </div>
-
-          <button type="submit" className="btn">
+          <button type="submit" className="register-button">
             Register
           </button>
 
-          <div className="register-link">
-            <p>
-              Already have an account? <Link to="/login">Login</Link>
-            </p>
+          <div className="register-footer">
+            Already have an account? <Link to="/login">Login</Link>
           </div>
         </form>
       </div>
