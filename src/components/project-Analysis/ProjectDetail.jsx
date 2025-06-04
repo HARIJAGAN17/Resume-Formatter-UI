@@ -65,15 +65,21 @@ export default function ProjectDetailPage() {
     setProcessingIndex(idx);
 
     try {
+      // Analyze the resume
       const response = await api.post("/analyze-resume", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
       const result = response.data;
-
       const score = parseFloat(result.job_score?.replace("%", "") || "0");
-
       const status = score >= 80 ? "approved" : score < 60 ? "rejected" : null;
+
+      // Get formatted details separately
+      const uploadForm = new FormData();
+      uploadForm.append("file", file);
+      const formattedRes = await api.post("/upload-resume", uploadForm, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      const formattedDetails = formattedRes.data;
 
       const analyzedEntry = {
         name: file.name,
@@ -81,8 +87,8 @@ export default function ProjectDetailPage() {
         score: result.job_score || "N/A",
         uploaded: new Date().toLocaleDateString("en-GB"),
         status,
-        resume_details: result, // assume it contains `resume_details` and `formatted_details`
-        formatted_details: result.formatted_details || {},
+        resume_details: result,
+        formatted_details: formattedDetails,
         summary_analysis: result.summary || [],
         raw: result,
         last_analyzed_timestamp: new Date().toISOString(),
@@ -90,12 +96,14 @@ export default function ProjectDetailPage() {
 
       setAnalysisResults((prev) => [...prev, analyzedEntry]);
 
-      // If auto-approved or rejected, send POST immediately
       if (status) {
         await postResumeToBackend(analyzedEntry, status);
       }
     } catch (error) {
-      console.error("Error:", error.response?.data?.detail || error.message);
+      console.error(
+        "Error analyzing or uploading resume:",
+        error?.response?.data || error.message
+      );
     } finally {
       setProcessingIndex(null);
     }

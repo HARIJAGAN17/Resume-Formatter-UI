@@ -167,17 +167,13 @@ export default function Dashboard() {
                 <span>
                   <i className="fas fa-user"></i> {p.resumeCount} Resumes
                 </span>
-                <span>
-                  <i className="fa-solid fa-arrow-trend-up"></i> {p.avgScore}%
-                  avg
-                </span>
               </div>
 
               <div className="score-bar-wrapper">
                 <div className="score-bar-label">
                   <span>Score vs Threshold</span>
                   <span>
-                    {p.avgScore}% / {p.threshold || 100}%
+                    <i className="fa-solid fa-arrow-trend-up"></i> {p.threshold || 100}%/100
                   </span>
                 </div>
                 <div className="score-bar">
