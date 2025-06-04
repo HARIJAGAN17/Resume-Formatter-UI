@@ -333,6 +333,10 @@
   font-weight: 600;
   color: #28a745;
 }
+.resume-right{
+  display: flex;
+  gap: 20px;
+}
 
 .preview-button {
   padding: 6px 16px;
