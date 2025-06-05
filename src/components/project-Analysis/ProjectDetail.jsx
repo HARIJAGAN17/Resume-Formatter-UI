@@ -16,13 +16,14 @@ export default function ProjectDetailPage() {
   const { setResumeData } = useResume();
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [processingIndex, setProcessingIndex] = useState(null);
   const [analysisResults, setAnalysisResults] = useState([]);
 
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [selectedResume, setSelectedResume] = useState(null);
   const [activeTab, setActiveTab] = useState("standard"); // default tab
   const [activeSection, setActiveSection] = useState("resumes"); // maincontent area changes
+  const [isBulkUpload, setIsBulkUpload] = useState(false); // bulk upload check
+
 
   const totalResumes = analysisResults.length;
 
@@ -65,8 +66,9 @@ export default function ProjectDetailPage() {
   };
 
   const handleFileChange = (e) => {
-    const filesArray = Array.from(e.target.files);
-    setUploadedFiles(filesArray);
+    const files = Array.from(e.target.files);
+    setUploadedFiles(files);
+    setIsBulkUpload(files.length > 1);
   };
 
   const fetchParsedResumes = async () => {
@@ -110,14 +112,12 @@ export default function ProjectDetailPage() {
     setPreviewModalOpen(true);
   };
 
-  const handleExtract = async (file, idx) => {
+  const handleExtract = async (file) => {
     if (!file || !project?.job_description) return;
 
     const formData = new FormData();
     formData.append("file", file);
     formData.append("job_description", project.job_description);
-
-    setProcessingIndex(idx);
 
     try {
       // Analyze the resume
@@ -173,8 +173,6 @@ export default function ProjectDetailPage() {
         "Error analyzing or uploading resume:",
         error?.response?.data || error.message
       );
-    } finally {
-      setProcessingIndex(null);
     }
   };
 
@@ -235,7 +233,6 @@ export default function ProjectDetailPage() {
           approvedCount={approvedCount}
           rejectedCount={rejectedCount}
           uploadedFiles={uploadedFiles}
-          processingIndex={processingIndex}
           handleFileChange={handleFileChange}
           getFileIconClass={getFileIconClass}
           handleExtract={handleExtract}
@@ -247,6 +244,8 @@ export default function ProjectDetailPage() {
           setActiveTab={setActiveTab}
           setPreviewModalOpen={setPreviewModalOpen}
           handlePreviewClick={handlePreviewClick}
+          isBulkUpload= {isBulkUpload}
+          setIsBulkUpload={setIsBulkUpload}
         />
       )}
 

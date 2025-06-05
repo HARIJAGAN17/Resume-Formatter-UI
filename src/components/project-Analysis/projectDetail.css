@@ -501,3 +501,38 @@
   margin-top: 5px;
   color: grey;
 }
+
+/* maincontent added */
+.bulk-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.analyze-progress-wrapper {
+  margin-top: 12px;
+}
+
+.analyze-progress-text {
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.analyze-progress-track {
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.analyze-progress-fill {
+  height: 100%;
+  background-color: #28a745; /* green color */
+  transition: width 0.3s ease;
+}
