@@ -456,10 +456,47 @@ export default function ProjectDetailPage() {
               )}
               {activeTab === "formatted" && <ResumeDownload />}
 
-              {activeTab === "analysis" && (
-                <pre>
-                  {JSON.stringify(selectedResume?.summary_analysis, null, 2)}
-                </pre>
+              {activeTab === "analysis" && selectedResume?.resume_details && (
+                <div className="analysis-section">
+                  <h3>Compatibility Score:</h3>
+                  <div className="score-list">
+                    <div className="score-row">
+                      <span>Technical Skills</span>
+                      <span>
+                        {selectedResume.resume_details.compatibility_score
+                          ?.technical_skills || "N/A"}
+                      </span>
+                    </div>
+                    <div className="score-row">
+                      <span>Experience Level</span>
+                      <span>
+                        {selectedResume.resume_details.compatibility_score
+                          ?.experience_level || "N/A"}
+                      </span>
+                    </div>
+                    <div className="score-row">
+                      <span>Education</span>
+                      <span>
+                        {selectedResume.resume_details.compatibility_score
+                          ?.education || "N/A"}
+                      </span>
+                    </div>
+                    <div className="score-row">
+                      <span>Keywords Match</span>
+                      <span>
+                        {selectedResume.resume_details.compatibility_score
+                          ?.keywords_match || "N/A"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <h3>Key Strengths:</h3>
+                  <ul className="summary-list">
+                    {selectedResume.resume_details.summary?.map((point, i) => (
+                      <li key={i}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
               )}
             </div>
           </div>
