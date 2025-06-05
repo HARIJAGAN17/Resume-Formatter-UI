@@ -7,6 +7,7 @@ import { useResume } from "../../hooks/useResume";
 import ProjectSidebar from "../project-analysis-components/ProjectSidebar";
 import ProjectMainContent from "../project-analysis-components/ProjectMainContent";
 import PreviewModal from "../project-analysis-components/PreviewModal";
+import AnalysisSection from "../project-analysis-components/AnalysisSection";
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
@@ -21,6 +22,7 @@ export default function ProjectDetailPage() {
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [selectedResume, setSelectedResume] = useState(null);
   const [activeTab, setActiveTab] = useState("standard"); // default tab
+  const [activeSection, setActiveSection] = useState("resumes"); // maincontent area changes
 
   const totalResumes = analysisResults.length;
 
@@ -222,27 +224,59 @@ export default function ProjectDetailPage() {
         status={status}
         toggleStatus={toggleStatus}
         loading={loading}
+        activeSection={activeSection}
+        setActiveSection={setActiveSection}
       />
 
-      <ProjectMainContent
-        project={project}
-        totalResumes={totalResumes}
-        approvedCount={approvedCount}
-        rejectedCount={rejectedCount}
-        uploadedFiles={uploadedFiles}
-        processingIndex={processingIndex}
-        handleFileChange={handleFileChange}
-        getFileIconClass={getFileIconClass}
-        handleExtract={handleExtract}
-        setUploadedFiles={setUploadedFiles}
-        analysisResults={analysisResults}
-        setAnalysisResults={setAnalysisResults}
-        postResumeToBackend={postResumeToBackend}
-        setSelectedResume={setSelectedResume}
-        setActiveTab={setActiveTab}
-        setPreviewModalOpen={setPreviewModalOpen}
-        handlePreviewClick={handlePreviewClick}
-      />
+      {activeSection === "resumes" && (
+        <ProjectMainContent
+          project={project}
+          totalResumes={totalResumes}
+          approvedCount={approvedCount}
+          rejectedCount={rejectedCount}
+          uploadedFiles={uploadedFiles}
+          processingIndex={processingIndex}
+          handleFileChange={handleFileChange}
+          getFileIconClass={getFileIconClass}
+          handleExtract={handleExtract}
+          setUploadedFiles={setUploadedFiles}
+          analysisResults={analysisResults}
+          setAnalysisResults={setAnalysisResults}
+          postResumeToBackend={postResumeToBackend}
+          setSelectedResume={setSelectedResume}
+          setActiveTab={setActiveTab}
+          setPreviewModalOpen={setPreviewModalOpen}
+          handlePreviewClick={handlePreviewClick}
+        />
+      )}
+
+      {activeSection === "analysis" && (
+        <AnalysisSection
+          scoreData={[
+            { range: "90-100%", count: 1 },
+            { range: "80-89%", count: 1 },
+            { range: "70-79%", count: 1 },
+          ]}
+          issuesData={[
+            { issue: "Broken LinkedIn links", count: 1 },
+            { issue: "Missing skills", count: 2 },
+            { issue: "Format inconsistency", count: 1 },
+          ]}
+        />
+      )}
+
+      {activeSection === "job-description" && (
+        <div className="project-main-content">
+          <h2>Job Description Editor</h2>
+        </div>
+      )}
+
+      {activeSection === "settings" && (
+        <div className="project-main-content">
+          <h2>Settings</h2>
+          <p>Settings options will go here.</p>
+        </div>
+      )}
 
       <PreviewModal
         previewModalOpen={previewModalOpen}
@@ -251,7 +285,6 @@ export default function ProjectDetailPage() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
       />
-
     </div>
   );
 }

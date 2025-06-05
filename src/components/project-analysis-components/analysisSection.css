@@ -1,0 +1,86 @@
+.analysis-wrapper {
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.analysis-top-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.analysis-description {
+  margin-top: 5px;
+  color: grey;
+}
+
+.analysis-subheading {
+  font-size: 16px;
+  color: #64748b;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.analysis-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 32px;
+  width: 100%;
+  max-width: 900px;
+}
+
+.analysis-overview-title {
+  font-size: 24px;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.analysis-overview-desc {
+  font-size: 16px;
+  color: #475569;
+  margin-bottom: 32px;
+}
+
+.analysis-main-content {
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.analysis-score-box,
+.analysis-issues-box {
+  flex: 1;
+  min-width: 280px;
+}
+
+.analysis-section-title {
+  font-size: 18px;
+  color: #1e293b;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.analysis-list-item {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f1f5f9;
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.analysis-label {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.analysis-value {
+  color: #475569;
+}

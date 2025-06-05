@@ -1,9 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import "./projectSidebar.css";
 
-export default function ProjectSidebar({ status, toggleStatus, loading }) {
+// projectSidebar.jsx
+export default function ProjectSidebar({
+  status,
+  toggleStatus,
+  loading,
+  setActiveSection,
+  activeSection,
+}) {
   const navigate = useNavigate();
-
   return (
     <div className="project-sidebar">
       <div className="sidebar-header">
@@ -20,32 +26,34 @@ export default function ProjectSidebar({ status, toggleStatus, loading }) {
 
       <nav className="sidebar-nav">
         <button
-          className="nav-btn"
-          onClick={() => navigate("/resumes")}
+          className={`nav-btn ${activeSection === "resumes" ? "active" : ""}`}
+          onClick={() => setActiveSection("resumes")}
           aria-label="Resumes"
         >
           <i className="fa-solid fa-file-lines"></i>
           <span>Resumes</span>
         </button>
         <button
-          className="nav-btn"
-          onClick={() => navigate("/analysis")}
+          className={`nav-btn ${activeSection === "analysis" ? "active" : ""}`}
+          onClick={() => setActiveSection("analysis")}
           aria-label="Analysis"
         >
           <i className="fa-solid fa-chart-line"></i>
           <span>Analysis</span>
         </button>
         <button
-          className="nav-btn"
-          onClick={() => navigate("/job-description")}
+          className={`nav-btn ${
+            activeSection === "job-description" ? "active" : ""
+          }`}
+          onClick={() => setActiveSection("job-description")}
           aria-label="Job Description"
         >
           <i className="fa-solid fa-briefcase"></i>
           <span>Job Description</span>
         </button>
         <button
-          className="nav-btn"
-          onClick={() => navigate("/settings")}
+          className={`nav-btn ${activeSection === "settings" ? "active" : ""}`}
+          onClick={() => setActiveSection("settings")}
           aria-label="Settings"
         >
           <i className="fa-solid fa-gear"></i>
@@ -54,7 +62,9 @@ export default function ProjectSidebar({ status, toggleStatus, loading }) {
       </nav>
 
       <div className="sidebar-footer">
-        <div className="footer-info"><p>Job Hiring status:</p></div>
+        <div className="footer-info">
+          <p>Job Hiring status:</p>
+        </div>
         <div className="status-toggle">
           <label className="switch">
             <input
