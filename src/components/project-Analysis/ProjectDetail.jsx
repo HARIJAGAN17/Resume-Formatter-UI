@@ -6,6 +6,7 @@ import { ResumeContext } from "../../context/ResumeContext";
 import { useResume } from "../../hooks/useResume";
 import ResumeDownload from "../ResumePreview/ResumeDownload";
 import ProjectSidebar from "../project-analysis-components/ProjectSidebar";
+import ProjectMainContent from "../project-analysis-components/ProjectMainContent";
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
@@ -223,202 +224,25 @@ export default function ProjectDetailPage() {
         loading={loading}
       />
 
-      <div className="main-content">
-        <h1 className="page-title">
-          <i className="fa-solid fa-file"></i> {project.name}
-        </h1>
-        <div className="proejct_description">
-          <h4>{project.project_description}</h4>
-        </div>
-        <div className="underline" />
-
-        <div className="stat-card-grid">
-          <div className="stat-card">
-            <div className="stat-card-title-row">
-              <h3>Total Resumes</h3>
-              <i className="fa-solid fa-user-plus"></i>
-            </div>
-            <p className="stat-value">{totalResumes}</p>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-card-title-row">
-              <h3>Approved</h3>
-              <i className="fa-solid fa-thumbs-up"></i>
-            </div>
-            <p className="stat-value">{approvedCount}</p>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-card-title-row">
-              <h3>Rejected</h3>
-              <i className="fa-solid fa-thumbs-down"></i>
-            </div>
-            <p className="stat-value">{rejectedCount}</p>
-          </div>
-        </div>
-
-        <h2 className="upload-header">Resume Management</h2>
-        <div className="uploading-section-container">
-          <div
-            className="upload-box"
-            onClick={() => document.getElementById("resume-upload").click()}
-          >
-            <input
-              type="file"
-              id="resume-upload"
-              multiple
-              style={{ display: "none" }}
-              onChange={handleFileChange}
-              accept=".pdf,.doc,.docx"
-            />
-            <i className="fa-solid fa-cloud-arrow-up fa-2x upload-icon"></i>
-            <p className="upload-title">
-              Drag & drop resume files here, or click to select
-            </p>
-            <p className="upload-subtitle">Supports PDF, DOC, and DOCX files</p>
-          </div>
-
-          {/* File List - Shown BELOW the upload box */}
-          {uploadedFiles.length > 0 && (
-            <div className="uploaded-files-list">
-              <h4 className="selected-title">Selected Files</h4>
-              {uploadedFiles.map((file, idx) => (
-                <div className="uploaded-file-row" key={idx}>
-                  <div className="file-info">
-                    <i
-                      className={`fa-solid ${getFileIconClass(
-                        file.name
-                      )} file-icon`}
-                    />
-                    <span className="file-name">{file.name}</span>
-                  </div>
-                  <div className="file-actions">
-                    <div className="analyze-wrapper">
-                      <button
-                        className="analyze-button"
-                        disabled={processingIndex === idx}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleExtract(file, idx);
-                        }}
-                      >
-                        Analyze
-                        {processingIndex === idx && (
-                          <span className="spinner-inline ml-8"></span>
-                        )}
-                      </button>
-                      {processingIndex === idx && (
-                        <div className="progress-bar-container below-button">
-                          <div className="progress-bar-fill animate"></div>
-                        </div>
-                      )}
-                    </div>
-                    <button
-                      className="remove-button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setUploadedFiles((prevFiles) =>
-                          prevFiles.filter((_, i) => i !== idx)
-                        );
-                      }}
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="resume-list">
-          {analysisResults.map((resume, idx) => {
-            const isApproved = resume.status === "approved";
-            const isRejected = resume.status === "rejected";
-            const isPending = resume.status == null;
-
-            return (
-              <div className="resume-card" key={idx}>
-                <div className="resume-left">
-                  <i className="fa-solid fa-file-lines resume-icon"></i>
-                  <div className="resume-details">
-                    <p className="resume-name">
-                      {resume.name}
-                      {isApproved && (
-                        <i
-                          className="fa-solid fa-circle-check"
-                          style={{ color: "#28a745", marginLeft: "10px" }}
-                        ></i>
-                      )}
-                      {isRejected && (
-                        <i
-                          className="fa-solid fa-circle-xmark"
-                          style={{ color: "#dc2626", marginLeft: "10px" }}
-                        ></i>
-                      )}
-                    </p>
-                    <div className="resume-meta-row">
-                      <span>{resume.size}</span>
-                      <span>Uploaded {resume.uploaded}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="resume-right">
-                  <div className="resume-score">{resume.score}</div>
-
-                  {isPending && (
-                    <>
-                      <button
-                        className="preview-button"
-                        onClick={async () => {
-                          const updated = { ...resume, status: "approved" };
-                          setAnalysisResults((prev) => {
-                            const copy = [...prev];
-                            copy[idx] = updated;
-                            return copy;
-                          });
-                          await postResumeToBackend(updated, "approved");
-                        }}
-                      >
-                        Approve
-                      </button>
-                      <button
-                        className="preview-button"
-                        style={{ backgroundColor: "#ef4444" }}
-                        onClick={async () => {
-                          const updated = { ...resume, status: "rejected" };
-                          setAnalysisResults((prev) => {
-                            const copy = [...prev];
-                            copy[idx] = updated;
-                            return copy;
-                          });
-                          await postResumeToBackend(updated, "rejected");
-                        }}
-                      >
-                        Reject
-                      </button>
-                    </>
-                  )}
-
-                  <button
-                    className="preview-button"
-                    onClick={() => {
-                      setSelectedResume(resume);
-                      setActiveTab("standard");
-                      setPreviewModalOpen(true);
-                      handlePreviewClick(resume);
-                    }}
-                  >
-                    <i className="fa-solid fa-eye"></i> Preview
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      <ProjectMainContent
+        project={project}
+        totalResumes={totalResumes}
+        approvedCount={approvedCount}
+        rejectedCount={rejectedCount}
+        uploadedFiles={uploadedFiles}
+        processingIndex={processingIndex}
+        handleFileChange={handleFileChange}
+        getFileIconClass={getFileIconClass}
+        handleExtract={handleExtract}
+        setUploadedFiles={setUploadedFiles}
+        analysisResults={analysisResults}
+        setAnalysisResults={setAnalysisResults}
+        postResumeToBackend={postResumeToBackend}
+        setSelectedResume={setSelectedResume}
+        setActiveTab={setActiveTab}
+        setPreviewModalOpen={setPreviewModalOpen}
+        handlePreviewClick={handlePreviewClick}
+      />
 
       {previewModalOpen && (
         <div className="preview-modal-overlay">

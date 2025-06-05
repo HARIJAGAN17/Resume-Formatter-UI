@@ -6,46 +6,6 @@
   font-family: "Segoe UI", sans-serif;
 }
 
-/* Sidebar */
-.project-sidebar {
-  width: 280px;
-  background-color: #fff;
-  border-right: 1px solid #dbe4f0;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  color: #0f172a;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  height: 100vh;
-  box-sizing: border-box;
-}
-
-.sidebar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
-.sidebar-backButton {
-  width: 45px;
-  height: 45px;
-  background-color: #334155;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #fff;
-  border: none;
-  transition: background-color 0.3s ease;
-  font-size: 20px;
-}
-
-.sidebar-backButton:hover {
-  background-color: #475569;
-}
-
 .user-avatar {
   background-color: #334155;
   padding: 12px;
