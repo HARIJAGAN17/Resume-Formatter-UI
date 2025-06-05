@@ -77,11 +77,11 @@ export default function ProjectDetailPage() {
   };
 
   const handleExtract = async (file, idx) => {
-    if (!file || !project?.description) return;
+    if (!file || !project?.job_description) return;
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("job_description", project.description);
+    formData.append("job_description", project.job_description);
 
     setProcessingIndex(idx);
 
@@ -188,6 +188,7 @@ export default function ProjectDetailPage() {
         <h1 className="page-title">
           <i className="fa-solid fa-file"></i> {project.name}
         </h1>
+        <div className="proejct_description"><h4>{project.project_description}</h4></div>
         <div className="underline" />
 
         <div className="stat-card-grid">

@@ -82,7 +82,8 @@ export default function Dashboard() {
       const res = await api.post("/projects", {
         user_id: user.user_id,
         name: data.name,
-        description: data.description,
+        project_description: data.description,
+        job_description: data.jobDescription,
         job_title: data.jobTitle,
         resume_count: 0,
         avg_score: 0,
