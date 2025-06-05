@@ -30,6 +30,37 @@ export default function ProjectDetailPage() {
     (r) => r.status === "rejected"
   ).length;
 
+  const [status, setStatus] = useState("Active"); // "Active" or "Completed"
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchProject() {
+      try {
+        const response = await api.get(`/projects/${id}`);
+        setStatus(response.data.status || "Active");
+      } catch (error) {
+        console.error("Failed to fetch project status", error);
+      }
+    }
+    if (id) fetchProject();
+  }, [id]);
+
+  const toggleStatus = async () => {
+    const newStatus =
+      status.toLowerCase() === "active" ? "Completed" : "Active";
+    setLoading(true);
+
+    try {
+      await api.put(`/projects/${project.id}/status`, { status: newStatus });
+      setStatus(newStatus);
+    } catch (error) {
+      console.error("Failed to update status", error);
+      alert("Failed to update status");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleFileChange = (e) => {
     const filesArray = Array.from(e.target.files);
     setUploadedFiles(filesArray);
@@ -186,16 +217,36 @@ export default function ProjectDetailPage() {
 
   return (
     <div className="app-container">
-      <div className={`project-sidebar`}>
+      <div className="project-sidebar">
         <div className="sidebar-header">
-          <div className="sidebar-backButton" onClick={() => navigate(-1)}>
-            <i className="fa-solid fa-arrow-left-long"></i>
-          </div>
-          <div className="user-avatar">
+          <button
+            className="back-button"
+            onClick={() => navigate(-1)}
+            aria-label="Go back"
+          >
+            ← Back
+          </button>
+          <div className="user-avatar" title="User">
             <i className="fa-solid fa-user"></i>
           </div>
         </div>
-        <div className="sidebar-body" />
+
+        <div className="sidebar-body">
+          <div className="status-toggle">
+            <label className="switch">
+              <input
+                type="checkbox"
+                checked={status === "Completed"}
+                onChange={toggleStatus}
+                disabled={loading}
+              />
+              <span className="slider"></span>
+            </label>
+            <span className={`status-label ${status.toLowerCase()}`}>
+              {loading ? "Updating..." : status}
+            </span>
+          </div>
+        </div>
       </div>
 
       <div className="main-content">
