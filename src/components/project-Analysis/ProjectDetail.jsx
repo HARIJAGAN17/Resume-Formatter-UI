@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import api from "../../Api/api";
 import "./projectDetail.css";
 import { ResumeContext } from "../../context/ResumeContext";
 import { useResume } from "../../hooks/useResume";
 import ResumeDownload from "../ResumePreview/ResumeDownload";
+import ProjectSidebar from "../project-analysis-components/ProjectSidebar";
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
   const [project, setProject] = useState(null);
-  const navigate = useNavigate();
   const { setTotalResumesPerProject } = useContext(ResumeContext);
   const { setResumeData } = useResume();
 
@@ -217,37 +217,11 @@ export default function ProjectDetailPage() {
 
   return (
     <div className="app-container">
-      <div className="project-sidebar">
-        <div className="sidebar-header">
-          <button
-            className="back-button"
-            onClick={() => navigate(-1)}
-            aria-label="Go back"
-          >
-            ← Back
-          </button>
-          <div className="user-avatar" title="User">
-            <i className="fa-solid fa-user"></i>
-          </div>
-        </div>
-
-        <div className="sidebar-body">
-          <div className="status-toggle">
-            <label className="switch">
-              <input
-                type="checkbox"
-                checked={status === "Completed"}
-                onChange={toggleStatus}
-                disabled={loading}
-              />
-              <span className="slider"></span>
-            </label>
-            <span className={`status-label ${status.toLowerCase()}`}>
-              {loading ? "Updating..." : status}
-            </span>
-          </div>
-        </div>
-      </div>
+      <ProjectSidebar
+        status={status}
+        toggleStatus={toggleStatus}
+        loading={loading}
+      />
 
       <div className="main-content">
         <h1 className="page-title">
