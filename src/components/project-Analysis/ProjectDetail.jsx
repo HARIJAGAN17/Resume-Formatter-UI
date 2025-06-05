@@ -382,12 +382,49 @@ export default function ProjectDetailPage() {
         <div className="preview-modal-overlay">
           <div className="preview-modal-box">
             <div className="modal-header">
-              <button
-                className="close-button"
-                onClick={() => setPreviewModalOpen(false)}
-              >
-                &times;
-              </button>
+              <div className="overlay-header-section">
+                <div className="name-status-class">
+                  <p>{selectedResume.name}</p>
+                  <div>
+                    {selectedResume.status == "approved" ? (
+                      <i
+                        className="fa-solid fa-circle-check"
+                        style={{ color: "#28a745", marginLeft: "10px" }}
+                      ></i>
+                    ) : (
+                      <i
+                        className="fa-solid fa-circle-xmark"
+                        style={{ color: "#dc2626", marginLeft: "10px" }}
+                      ></i>
+                    )}
+                  </div>
+                </div>
+
+                <div className="score-data-class">
+                  <p>Score:{selectedResume.score}</p>
+                  <p>.Uploaded {selectedResume.uploaded}</p>
+                </div>
+              </div>
+
+              <div className="overlay-header-right">
+                <p
+                  className={
+                    selectedResume.status == "approved"
+                      ? "approved"
+                      : "rejected"
+                  }
+                >
+                  {selectedResume.status}
+                </p>
+                <div>
+                  <button
+                    className="close-button"
+                    onClick={() => setPreviewModalOpen(false)}
+                  >
+                    &times;
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div className="tab-buttons">
@@ -395,13 +432,13 @@ export default function ProjectDetailPage() {
                 className={activeTab === "standard" ? "active" : ""}
                 onClick={() => setActiveTab("standard")}
               >
-                Standard
+                Original
               </button>
               <button
                 className={activeTab === "formatted" ? "active" : ""}
                 onClick={() => setActiveTab("formatted")}
               >
-                Formatted
+                Standardized
               </button>
               <button
                 className={activeTab === "analysis" ? "active" : ""}

@@ -399,7 +399,7 @@
   padding: 12px 16px;
   border-bottom: 1px solid #e5e7eb;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 
 .close-button {
@@ -453,4 +453,39 @@
   word-break: break-word;
   font-size: 14px;
   border-radius: 0 0 24px 24px;
+}
+
+.overlay-header-section {
+  color: #0f172a;
+  display: flex;
+  flex-direction: column;
+}
+
+.score-data-class {
+  margin: 4px;
+  display: flex;
+  gap: 15px;
+}
+.name-status-class {
+  margin-left: 3px;
+  display: flex;
+}
+.overlay-header-right {
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.approved {
+  padding: 5px;
+  color: white;
+  background-color: #22c55e;
+  border-radius: 5px;
+}
+.rejected {
+  padding: 5px;
+  color: white;
+  background-color: #ef4444;
+  border-radius: 5px;
 }
