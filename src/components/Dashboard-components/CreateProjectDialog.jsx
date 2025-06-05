@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
-import './createProjectDialog.css'
+import "./createProjectDialog.css";
+import api from "../../Api/api";
 
 export default function CreateProjectDialog({
   open,
   onOpenChange,
   onCreateProject,
 }) {
+  const [loadingJobDesc, setLoadingJobDesc] = React.useState(false);
   const [formData, setFormData] = React.useState({
     name: "",
     jobTitle: "",
@@ -17,6 +19,33 @@ export default function CreateProjectDialog({
   const handleOutsideClick = (e) => {
     if (e.target.classList.contains("dialog-overlay")) {
       onOpenChange(false);
+    }
+  };
+
+  const handleJobDescriptionUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setLoadingJobDesc(true); // show spinner
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await api.post("/job-description-extraction", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      const extractedText = response.data.job_description;
+      setFormData((prev) => ({
+        ...prev,
+        jobDescription: extractedText,
+      }));
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("Failed to read the uploaded file.");
+    } finally {
+      setLoadingJobDesc(false); // hide spinner
     }
   };
 
@@ -90,7 +119,21 @@ export default function CreateProjectDialog({
           </div>
 
           <div className="form-group">
-            <label>Job Description</label>
+            <label>
+              Job Description{" "}
+              <span className="upload-span">
+                <i className="fa-solid fa-upload"></i>
+                <span className="upload-text">Type or Upload</span>
+                {loadingJobDesc && <span className="spinner" />}
+                <input
+                  type="file"
+                  accept=".txt,.pdf,.docx"
+                  className="hidden-file-input"
+                  onChange={handleJobDescriptionUpload}
+                />
+              </span>
+            </label>
+
             <textarea
               value={formData.jobDescription}
               onChange={(e) =>

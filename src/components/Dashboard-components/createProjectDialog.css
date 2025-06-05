@@ -117,3 +117,51 @@ small {
     transform: scale(1);
   }
 }
+
+.upload-span {
+  margin-left: 10px;
+  color: black;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  background-color: rgba(245, 245, 245, 0.822);
+  border-radius: 5px;
+  padding: 2px;
+}
+
+.upload-span:hover {
+  text-decoration: underline;
+}
+
+.hidden-file-input {
+  display: none;
+  position: absolute;
+}
+
+.upload-span:hover .fa-upload {
+  color: #1d4ed8;
+}
+
+.spinner {
+  margin-left: 8px;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #ccc;
+  border-top: 2px solid #333;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
