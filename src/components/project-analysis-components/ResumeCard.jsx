@@ -83,7 +83,7 @@ export default function ResumeCard({
           className="preview-button"
           onClick={() => {
             setSelectedResume(resume);
-            setActiveTab("standard");
+            setActiveTab("Reasoning");
             setPreviewModalOpen(true);
             handlePreviewClick(resume);
           }}

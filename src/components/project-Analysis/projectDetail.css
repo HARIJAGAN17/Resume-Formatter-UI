@@ -536,3 +536,9 @@
   background-color: #28a745; /* green color */
   transition: width 0.3s ease;
 }
+
+
+/* Overlay modal added */
+.reasoning-container{
+  color: #0f172a;
+}

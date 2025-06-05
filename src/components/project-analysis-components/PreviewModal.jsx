@@ -9,6 +9,7 @@ export default function PreviewModal({
   setActiveTab,
 }) {
   if (!previewModalOpen) return null;
+  console.log(activeTab);
 
   return (
     <div className="preview-modal-overlay">
@@ -59,10 +60,10 @@ export default function PreviewModal({
 
         <div className="tab-buttons">
           <button
-            className={activeTab === "standard" ? "active" : ""}
-            onClick={() => setActiveTab("standard")}
+            className={activeTab === "Reasoning" ? "active" : ""}
+            onClick={() => setActiveTab("Reasoning")}
           >
-            Original
+            Reasoning
           </button>
           <button
             className={activeTab === "formatted" ? "active" : ""}
@@ -79,9 +80,61 @@ export default function PreviewModal({
         </div>
 
         <div className="tab-content">
-          {activeTab === "standard" && (
-            <pre>{JSON.stringify(selectedResume?.resume_details, null, 2)}</pre>
+          {activeTab === "Reasoning" && (
+            <div className="reasoning-container p-4 space-y-4">
+              {/* Score Reasoning Section */}
+              <div>
+                <h2 className="text-xl font-semibold mb-2">Score Reasoning:</h2>
+                <p className="bg-gray-100 p-3 rounded text-gray-800 shadow">
+                  {selectedResume.resume_details.job_score_reasoning}
+                </p>
+              </div>
+
+              {/* External Links and Contact Issues Card */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 bg-white p-4 rounded-xl shadow-md border">
+                {/* Left Column: External Links */}
+                <div>
+                  <h3 className="text-lg font-medium mb-2">External Links</h3>
+                  {selectedResume?.formatted_details?.externalLinks?.length >
+                  0 ? (
+                    <ul className="list-disc list-inside space-y-1">
+                      {selectedResume.formatted_details.externalLinks.map(
+                        (link, index) => (
+                          <li key={index}>
+                            <a
+                              href={link}
+                              className="text-blue-600 hover:underline"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {link}
+                            </a>
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  ) : (
+                    <p className="text-gray-500 italic">
+                      No external links provided.
+                    </p>
+                  )}
+                </div>
+
+                {/* Right Column: Contact Issues */}
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Contact Issues</h3>
+                  <ul className="list-disc list-inside space-y-1 text-red-600">
+                    {Object.entries(
+                      selectedResume.formatted_details.contact
+                    ).map(([key, value]) =>
+                      !value ? <li key={key}>{key} is missing</li> : null
+                    )}
+                  </ul>
+                </div>
+              </div>
+            </div>
           )}
+
           {activeTab === "formatted" && <ResumeDownload />}
 
           {activeTab === "analysis" && selectedResume?.resume_details && (

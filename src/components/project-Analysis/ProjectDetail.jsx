@@ -20,10 +20,9 @@ export default function ProjectDetailPage() {
 
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [selectedResume, setSelectedResume] = useState(null);
-  const [activeTab, setActiveTab] = useState("standard"); // default tab
+  const [activeTab, setActiveTab] = useState("formatted"); // default tab
   const [activeSection, setActiveSection] = useState("resumes"); // maincontent area changes
   const [isBulkUpload, setIsBulkUpload] = useState(false); // bulk upload check
-
 
   const totalResumes = analysisResults.length;
 
@@ -244,7 +243,7 @@ export default function ProjectDetailPage() {
           setActiveTab={setActiveTab}
           setPreviewModalOpen={setPreviewModalOpen}
           handlePreviewClick={handlePreviewClick}
-          isBulkUpload= {isBulkUpload}
+          isBulkUpload={isBulkUpload}
           setIsBulkUpload={setIsBulkUpload}
         />
       )}
