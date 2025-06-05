@@ -92,7 +92,21 @@ export default function ProjectDetailPage() {
       });
       const result = response.data;
       const score = parseFloat(result.job_score?.replace("%", "") || "0");
-      const status = score >= 80 ? "approved" : score < 60 ? "rejected" : null;
+      console.log(project.threshold);
+      console.log(score);
+      const threshold = project.threshold;
+      const percentage = (score / threshold) * 100;
+
+      let status = null;
+      if (percentage >= 80) {
+        status = "approved";
+      } else if (percentage < 60) {
+        status = "rejected";
+      } else {
+        status = null;
+      }
+
+      console.log("Approval Status:", status);
 
       // Get formatted details separately
       const uploadForm = new FormData();
@@ -188,7 +202,9 @@ export default function ProjectDetailPage() {
         <h1 className="page-title">
           <i className="fa-solid fa-file"></i> {project.name}
         </h1>
-        <div className="proejct_description"><h4>{project.project_description}</h4></div>
+        <div className="proejct_description">
+          <h4>{project.project_description}</h4>
+        </div>
         <div className="underline" />
 
         <div className="stat-card-grid">
