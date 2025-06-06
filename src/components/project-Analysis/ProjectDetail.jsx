@@ -8,6 +8,7 @@ import ProjectSidebar from "../project-analysis-components/ProjectSidebar";
 import ProjectMainContent from "../project-analysis-components/ProjectMainContent";
 import PreviewModal from "../project-analysis-components/PreviewModal";
 import AnalysisSection from "../project-analysis-components/AnalysisSection";
+import JobDescription from "../project-analysis-components/JobDescription";
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
@@ -274,9 +275,7 @@ export default function ProjectDetailPage() {
       )}
 
       {activeSection === "job-description" && (
-        <div className="project-main-content">
-          <h2>Job Description Editor</h2>
-        </div>
+        <JobDescription project={project} />
       )}
 
       {activeSection === "settings" && (

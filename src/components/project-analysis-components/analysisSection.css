@@ -5,26 +5,7 @@
   align-items: center;
 }
 
-.analysis-top-header h1,
-.page-title {
-  font-size: 32px;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 8px;
- 
-}
 
-.analysis-description {
-  margin-top: 5px;
-  color: grey;
-}
-
-.analysis-subheading {
-  font-size: 16px;
-  color: #64748b;
-  margin-bottom: 32px;
-  text-align: center;
-}
 
 .analysis-card {
   background: #ffffff;

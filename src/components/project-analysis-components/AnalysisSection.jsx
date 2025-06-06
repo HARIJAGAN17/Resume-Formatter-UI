@@ -50,7 +50,7 @@ export default function AnalysisSection({ scoreData, analysisResults }) {
       <h1 className="page-title">
         <i className="fa-solid fa-chart-line"></i> Analysis Results
       </h1>
-      <div className="analysis-description">
+      <div className="proejct_description">
         <h4>Detailed analysis of all resumes in this project</h4>
       </div>
       <div className="underline" />

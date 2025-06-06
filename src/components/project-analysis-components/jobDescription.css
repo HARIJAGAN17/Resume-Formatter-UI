@@ -1,0 +1,28 @@
+.analysis-description h4 {
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #555;
+}
+
+.job-description-box {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 18px;
+  background-color: #fafafa;
+  font-size: 15px;
+  line-height: 1.5;
+  max-height: 400px; /* fixed height to keep it neat */
+  overflow-y: auto;
+  white-space: pre-wrap; /* preserve newlines */
+  color: #333;
+}
+
+/* Optional scrollbar style for webkit browsers */
+.job-description-box::-webkit-scrollbar {
+  width: 4px;
+}
+
+.job-description-box::-webkit-scrollbar-thumb {
+  background-color: #0078d7;
+  border-radius: 4px;
+}
