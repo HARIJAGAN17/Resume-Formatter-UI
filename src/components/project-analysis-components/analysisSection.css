@@ -5,12 +5,13 @@
   align-items: center;
 }
 
-.analysis-top-header h1 {
+.analysis-top-header h1,
+.page-title {
   font-size: 32px;
   font-weight: 800;
   color: #1e293b;
   margin-bottom: 8px;
-  text-align: center;
+ 
 }
 
 .analysis-description {
@@ -34,36 +35,35 @@
   max-width: 900px;
 }
 
-.analysis-overview-title {
+.analysis-flex-container {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.analysis-score-box,
+.analysis-issues-box {
+  flex: 1 1 400px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.analysis-overview-title,
+.analysis-section-title {
   font-size: 24px;
   color: #0f172a;
   margin-bottom: 6px;
+  font-weight: 600;
 }
 
 .analysis-overview-desc {
   font-size: 16px;
   color: #475569;
-  margin-bottom: 32px;
-}
-
-.analysis-main-content {
-  display: flex;
-  gap: 48px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.analysis-score-box,
-.analysis-issues-box {
-  flex: 1;
-  min-width: 280px;
-}
-
-.analysis-section-title {
-  font-size: 18px;
-  color: #1e293b;
-  margin-bottom: 16px;
-  font-weight: 600;
+  margin-bottom: 24px;
 }
 
 .analysis-list-item {
@@ -83,4 +83,55 @@
 
 .analysis-value {
   color: #475569;
+}
+
+/* Resume name styling */
+.resume-name {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 16px;
+  color: #333;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navigation buttons container */
+.navigation {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* Buttons styling */
+.navigation button {
+  background-color: #007bff; /* Bootstrap primary blue */
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  flex: 1;
+  max-width: 120px;
+}
+
+.navigation button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.navigation button:not(:disabled):hover {
+  background-color: #0056b3;
+}
+
+/* Page number below buttons */
+.page-number {
+  margin-top: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #475569;
+  text-align: center;
 }

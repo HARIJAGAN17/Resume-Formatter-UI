@@ -215,6 +215,24 @@ export default function ProjectDetailPage() {
 
   if (!project) return <div>Loading...</div>;
 
+  const scoreBuckets = {
+    "0-50%": 0,
+    "50-80%": 0,
+    "80-100%": 0,
+  };
+
+  analysisResults.forEach((resume) => {
+    const score = parseFloat(resume.score?.replace("%", "") || "0");
+    if (score < 50) scoreBuckets["0-50%"]++;
+    else if (score < 80) scoreBuckets["50-80%"]++;
+    else scoreBuckets["80-100%"]++;
+  });
+
+  const scoreData = Object.entries(scoreBuckets).map(([range, count]) => ({
+    range,
+    count,
+  }));
+
   return (
     <div className="app-container">
       <ProjectSidebar
@@ -250,16 +268,8 @@ export default function ProjectDetailPage() {
 
       {activeSection === "analysis" && (
         <AnalysisSection
-          scoreData={[
-            { range: "90-100%", count: 1 },
-            { range: "80-89%", count: 1 },
-            { range: "70-79%", count: 1 },
-          ]}
-          issuesData={[
-            { issue: "Broken LinkedIn links", count: 1 },
-            { issue: "Missing skills", count: 2 },
-            { issue: "Format inconsistency", count: 1 },
-          ]}
+          scoreData={scoreData}
+          analysisResults={analysisResults}
         />
       )}
 
