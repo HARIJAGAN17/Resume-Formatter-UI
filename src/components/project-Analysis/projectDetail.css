@@ -98,7 +98,7 @@
 
 .upload-icon {
   margin-bottom: 12px;
-  color: #007bff;
+  color: #0f172a;
   transition: transform 0.3s ease;
 }
 
@@ -149,7 +149,7 @@
 
 .file-icon {
   font-size: 1.2rem;
-  color: #007bff;
+  color: #0f172a;
 }
 
 .file-name {
@@ -166,7 +166,7 @@
 /* Buttons */
 .analyze-button {
   padding: 6px 14px;
-  background-color: #007bff;
+  background-color: #0f172ae2;
   color: white;
   font-weight: 500;
   border: none;
@@ -178,7 +178,7 @@
 }
 
 .analyze-button:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: #0f172a;
 }
 
 .analyze-button:disabled {
@@ -281,7 +281,7 @@
 }
 .resume-icon {
   font-size: 1.8rem;
-  color: #007bff;
+  color: #0f172a;
 }
 
 .resume-details {
@@ -314,7 +314,7 @@
 
 .preview-button {
   padding: 6px 16px;
-  background-color: #007bff;
+  background-color: #0f172abc;
   color: #fff;
   font-weight: 500;
   border: none;
@@ -323,7 +323,7 @@
 }
 
 .preview-button:hover {
-  background-color: #0056b3;
+  background-color: #0f172a;
 }
 
 /* Responsive */

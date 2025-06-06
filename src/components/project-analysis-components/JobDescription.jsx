@@ -6,14 +6,13 @@ export default function JobDescription({ project }) {
     <div className="main-content">
       {/* Header */}
       <h1 className="page-title">
-        <i className="fa-solid fa-chart-line"></i> Job description
+        <i className="fa-solid fa-briefcase"></i> Job description
       </h1>
 
       <div className="proejct_description">
         <h4>Detailed Job description of this project</h4>
       </div>
       <div className="underline" />
-
 
       {/* Job Description Box */}
       <div className="job-description-box">
