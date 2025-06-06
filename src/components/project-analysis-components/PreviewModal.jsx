@@ -89,6 +89,11 @@ export default function PreviewModal({
                     {selectedResume?.resume_details?.job_score_reasoning
                       ?.overall || "No data available"}
                   </p>
+                  <p className="improvement">
+                    Improvement:{" "}
+                    {selectedResume?.resume_details?.job_score_reasoning
+                      ?.overall_improvement || "No data available"}
+                  </p>
                 </div>
 
                 <div className="skill-reasoning reasoning-section">
@@ -96,6 +101,11 @@ export default function PreviewModal({
                   <p>
                     {selectedResume?.resume_details?.job_score_reasoning
                       ?.technical_skills || "No data available"}
+                  </p>
+                  <p className="improvement">
+                    Improvement:{" "}
+                    {selectedResume?.resume_details?.job_score_reasoning
+                      ?.technical_skills_improvement || "No data available"}
                   </p>
                 </div>
 
@@ -105,6 +115,11 @@ export default function PreviewModal({
                     {selectedResume?.resume_details?.job_score_reasoning
                       ?.experience_level || "No data available"}
                   </p>
+                  <p className="improvement">
+                    Improvement:{" "}
+                    {selectedResume?.resume_details?.job_score_reasoning
+                      ?.experience_level_improvement || "No data available"}
+                  </p>
                 </div>
 
                 <div className="skill-reasoning reasoning-section">
@@ -113,6 +128,11 @@ export default function PreviewModal({
                     {selectedResume?.resume_details?.job_score_reasoning
                       ?.education || "No data available"}
                   </p>
+                  <p className="improvement">
+                    Improvement:{" "}
+                    {selectedResume?.resume_details?.job_score_reasoning
+                      ?.education_improvement || "No data available"}
+                  </p>
                 </div>
 
                 <div className="skill-reasoning reasoning-section">
@@ -120,6 +140,11 @@ export default function PreviewModal({
                   <p>
                     {selectedResume?.resume_details?.job_score_reasoning
                       ?.keywords_match || "No data available"}
+                  </p>
+                  <p className="improvement">
+                    Improvement:{" "}
+                    {selectedResume?.resume_details?.job_score_reasoning
+                      ?.keywords_match_improvement || "No data available"}
                   </p>
                 </div>
               </div>

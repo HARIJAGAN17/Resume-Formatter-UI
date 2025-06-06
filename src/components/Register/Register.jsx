@@ -25,14 +25,17 @@ function Register() {
   const validate = () => {
     const errs = {};
     if (!formData.username.trim()) errs.username = "Invalid Username";
-    if (!/\S+@\S+\.\S+/.test(formData.email)) errs.email = "Invalid Email";
+
+    if (!/^[^\s@]+@ust\.com$/i.test(formData.email)) {
+      errs.email = "Email must be a valid @ust.com address";
+    }
+
     return errs;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-
   };
 
   const handleSubmit = async (e) => {
