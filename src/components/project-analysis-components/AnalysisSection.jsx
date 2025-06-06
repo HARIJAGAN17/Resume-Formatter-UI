@@ -28,10 +28,12 @@ export default function AnalysisSection({ scoreData, analysisResults }) {
     else brokenLinks++;
   });
 
+  const sanitizedPhone = (contact.phone || "").replace(/\s+/g, "");
+
   const hasGoodContact =
-    contact.email?.includes("@") &&
-    contact.phone?.length >= 10 &&
-    /^\+?\d+$/.test(contact.phone);
+    typeof contact.email === "string" &&
+    contact.email.includes("@") &&
+    /^\+?\d{10,15}$/.test(sanitizedPhone);
 
   const issuesData = [
     { issue: "Broken external links", count: brokenLinks },
