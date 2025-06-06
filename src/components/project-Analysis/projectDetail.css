@@ -583,7 +583,7 @@
   font-weight: 700;
   margin-bottom: 1rem;
   color: #1e293b;
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid #0f172a;
   padding-left: 0.75rem;
 }
 
@@ -602,10 +602,10 @@
 
 /* Improvement label styling */
 .reasoning-section p.improvement {
-  background-color: #e0f2fe; /* light blue tint */
-  border-left: 4px solid #0284c7; /* blue accent */
+  background-color: rgba(128, 128, 128, 0.358); /* light blue tint */
+  border-left: 4px solid #0f172a; /* blue accent */
   font-style: italic;
-  color: #0369a1;
+  color: #0f172a;
   margin-top: -0.5rem; /* pulls it closer to reasoning */
   margin-bottom: 1rem;
   padding-left: 1rem;

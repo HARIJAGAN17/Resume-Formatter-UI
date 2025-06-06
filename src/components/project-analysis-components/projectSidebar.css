@@ -102,7 +102,7 @@
 }
 
 .status-label.completed {
-  color: #6366f1; /* indigo */
+  color: #0f172a; /* indigo */
 }
 
 /* Toggle Switch CSS */
@@ -144,7 +144,7 @@
 }
 
 input:checked + .slider {
-  background-color: #4f46e5;
+  background-color: #0f172a;
 }
 
 input:checked + .slider:before {
