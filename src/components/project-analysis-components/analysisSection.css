@@ -69,7 +69,7 @@
 /* Resume name styling */
 .resume-name {
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 14px;
   margin-top: 0.5rem;
   margin-bottom: 16px;
   color: #333;
@@ -81,7 +81,6 @@
   margin-top: 1rem;
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
 }
 
 /* Buttons styling */

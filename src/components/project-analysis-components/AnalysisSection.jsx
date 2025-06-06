@@ -100,6 +100,9 @@ export default function AnalysisSection({ scoreData, analysisResults }) {
               Previous
             </button>
 
+            <div className="page-number">
+              {currentIndex + 1} / {totalResumes}
+            </div>
             <button
               aria-label="Next resume"
               onClick={() =>
@@ -109,10 +112,6 @@ export default function AnalysisSection({ scoreData, analysisResults }) {
             >
               Next
             </button>
-          </div>
-
-          <div className="page-number">
-            {currentIndex + 1} / {totalResumes}
           </div>
         </div>
       </div>
