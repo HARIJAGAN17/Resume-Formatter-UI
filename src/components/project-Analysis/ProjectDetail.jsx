@@ -10,6 +10,7 @@ import PreviewModal from "../project-analysis-components/PreviewModal";
 import AnalysisSection from "../project-analysis-components/AnalysisSection";
 import JobDescription from "../project-analysis-components/JobDescription";
 import UploadFilesOnly from "../project-analysis-components/UploadFilesOnly";
+import ResumeAnalyze from "../project-analysis-components/ResumeAnalyze";
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
@@ -272,6 +273,18 @@ export default function ProjectDetailPage() {
         <AnalysisSection
           scoreData={scoreData}
           analysisResults={analysisResults}
+        />
+      )}
+
+      {activeSection === "Analyze" && (
+        <ResumeAnalyze
+          analysisResults={analysisResults}
+          setAnalysisResults={setAnalysisResults}
+          postResumeToBackend={postResumeToBackend}
+          setSelectedResume={setSelectedResume}
+          setActiveTab={setActiveTab}
+          setPreviewModalOpen={setPreviewModalOpen}
+          handlePreviewClick={handlePreviewClick}
         />
       )}
 

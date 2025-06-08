@@ -38,7 +38,7 @@ export default function ProjectSidebar({
           onClick={() => setActiveSection("Upload")}
           aria-label="Resumes"
         >
-          <i class="fa-solid fa-file-arrow-up"></i>
+          <i className="fa-solid fa-file-arrow-up"></i>
           <span>Upload</span>
         </button>
         <button
@@ -46,7 +46,7 @@ export default function ProjectSidebar({
           onClick={() => setActiveSection("Analyze")}
           aria-label="Resumes"
         >
-          <i class="fa-solid fa-magnifying-glass-chart"></i>
+          <i className="fa-solid fa-magnifying-glass-chart"></i>
           <span>Analyze</span>
         </button>
         <button

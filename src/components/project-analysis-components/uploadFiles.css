@@ -1,46 +1,27 @@
-/* Unique prefix: uf- for UploadFilesOnly */
-
-.upload-files-page {
+/* Page container */
+.uf-upload-files-page {
   flex: 1;
   background-color: white;
   min-height: 100vh;
   overflow-y: auto;
+  padding: 24px; /* Added padding for page content */
 }
 
+/* Upload container */
 .uf-upload-files-container {
   width: 100%;
-  padding: 24px;
   box-sizing: border-box;
-  overflow-y: auto;
-  min-height: 100vh;
   background-color: #ffffff;
 }
 
+/* Title */
 .uf-upload-files-title {
   font-size: 24px;
   margin-bottom: 20px;
   color: #0f172a;
 }
 
-.upload-file-description {
-  color: grey;
-  font-size: small;
-}
-.upload-file-underline {
-  width: 100%;
-  height: 1px;
-  background-color: grey;
-  margin-bottom: 20px;
-}
-
-.upload-outside-box {
-  width: 100%;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
+/* Upload box */
 .uf-upload-files-box-wrapper {
   align-items: center;
   width: 500px;
@@ -49,8 +30,13 @@
   margin-bottom: 24px;
   border-radius: 10px;
   background-color: #f9f9f9;
+  margin-left: 1px;
 }
-
+.uf-upload-outside-box{
+  display: flex;
+  justify-content: start;
+  align-items: center,
+}
 .uf-upload-files-box {
   display: flex;
   flex-direction: column;
@@ -86,6 +72,149 @@
   color: #475569;
 }
 
+/* Selected files preview panel */
+.uf-uploaded-list-preview {
+  border: 1px solid #ccc;
+  background: #f3f4f6;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 20px 0;
+}
+
+.uf-upload-ready-title {
+  margin-bottom: 12px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #1e293b;
+}
+
+/* Uploaded files list */
+.uf-uploaded-files-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.uf-uploaded-file-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.uf-uploaded-file-item:last-child {
+  border-bottom: none;
+}
+
+.uf-uploaded-file-item i,
+.uf-uploaded-file-icon {
+  font-size: 18px;
+  color: #0f172a;
+  margin-right: 10px;
+}
+
+.uf-file-name-text,
+.uf-uploaded-file-name {
+  flex: 1;
+  color: #0f172a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* Single file actions */
+.uf-single-file-actions,
+.uf-upload-actions-all {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Bulk actions container */
+.uf-upload-actions-all {
+  margin-top: 15px;
+  justify-content: start;
+  gap: 10px;
+  display: flex;
+}
+
+/* Buttons base */
+.uf-btn {
+  padding: 6px 12px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s;
+  user-select: none;
+}
+
+.uf-btn:focus {
+  outline: 2px solid #1e293b;
+  outline-offset: 2px;
+}
+
+/* Single-file buttons */
+.uf-upload-btn-single {
+  background-color: #3b82f6;
+  color: #fff;
+}
+
+.uf-upload-btn-single:hover {
+  background-color: #2563eb;
+}
+
+.uf-remove-btn-single {
+  background-color: #ef4444;
+  color: #fff;
+}
+
+.uf-remove-btn-single:hover {
+  background-color: #dc2626;
+}
+
+/* Bulk-file buttons */
+.uf-upload-all-btn {
+  background-color: #10b981;
+  color: #fff;
+}
+
+.uf-upload-all-btn:hover {
+  background-color: #059669;
+}
+
+.uf-remove-all-btn {
+  background-color: #f59e0b;
+  color: #fff;
+}
+
+.uf-remove-all-btn:hover {
+  background-color: #d97706;
+}
+
+/* Spinner inside button */
+.spinner-inline {
+  margin-left: 8px;
+  border: 2px solid #fff;
+  border-top: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Uploaded files grid container */
 .uf-uploaded-files-grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -95,7 +224,7 @@
   justify-content: start; /* prevent stretching */
 }
 
-/* Standard fixed size for cards */
+/* Uploaded file card */
 .uf-uploaded-file-card {
   background-color: #f8fafc;
   padding: 16px;
@@ -108,7 +237,7 @@
   gap: 15px;
   word-break: break-word;
   width: 320px; /* fixed width */
-  min-height: 180px; /* fixed height for consistent size */
+  min-height: 180px; /* fixed height */
   box-sizing: border-box;
 
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -117,27 +246,14 @@
 .uf-uploaded-file-card:hover {
   transform: translateY(0.5px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-  border-color: #0f172a; /* optional: change border color on hover */
+  border-color: #0f172a;
 }
 
-.uf-uploaded-file-icon {
-  font-size: 18px;
-  margin-right: 6px;
-  color: #0f172a;
-}
-
-.uf-uploaded-file-name {
-  font-weight: 600;
-  font-size: 13px;
-  color: #0f172a;
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
+/* Analysis status */
 .analysis-status p {
   color: #000;
 }
+
 .analysis-status span {
   font-weight: bold;
 }
@@ -150,6 +266,7 @@
   color: rgb(252, 164, 0);
 }
 
+/* Timestamp */
 .uf-uploaded-file-timestamp {
   font-size: 14px;
   color: #475569;
@@ -158,6 +275,7 @@
   gap: 20px;
 }
 
+/* Action buttons in file card */
 .uf-uploaded-file-actions {
   display: flex;
   gap: 10px;
@@ -181,7 +299,7 @@
   background-color: #1e293b;
 }
 
-/* Pagination */
+/* Pagination styles */
 .uf-upload-files-pagination {
   display: flex;
   justify-content: center;
@@ -203,7 +321,7 @@
   font-weight: 500;
   color: #0f172a;
   transition: background-color 0.2s;
-  min-width: 36px; /* make buttons bigger */
+  min-width: 36px;
   user-select: none;
 }
 
@@ -217,7 +335,7 @@
   border-color: #0f172a;
 }
 
-/* Increase clickable area for prev/next buttons */
+/* Prev/Next pagination buttons */
 .uf-upload-files-pagination .pagination-previous,
 .uf-upload-files-pagination .pagination-next {
   padding: 6px 16px;
@@ -302,7 +420,8 @@
     max-width: 100%;
   }
 
-  .uf-uploaded-file-name {
+  .uf-uploaded-file-name,
+  .uf-file-name-text {
     font-size: 14px;
   }
 
@@ -316,4 +435,8 @@
     padding: 6px 10px;
     min-width: 28px;
   }
+}
+
+.uf-upload-files-box input[type="file"] {
+  display: none; /* hide the default file input */
 }
