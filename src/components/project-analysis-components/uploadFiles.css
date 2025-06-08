@@ -2,10 +2,8 @@
 
 .upload-files-page {
   flex: 1;
-  padding: 24px;
   background-color: white;
   min-height: 100vh;
-  box-sizing: border-box;
   overflow-y: auto;
 }
 
