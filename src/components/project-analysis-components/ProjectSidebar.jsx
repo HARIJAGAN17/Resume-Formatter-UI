@@ -31,7 +31,23 @@ export default function ProjectSidebar({
           aria-label="Resumes"
         >
           <i className="fa-solid fa-file-lines"></i>
-          <span>Resumes</span>
+          <span>Overview</span>
+        </button>
+        <button
+          className={`nav-btn ${activeSection === "resumes" ? "active" : ""}`}
+          onClick={() => setActiveSection("Upload")}
+          aria-label="Resumes"
+        >
+          <i class="fa-solid fa-file-arrow-up"></i>
+          <span>Upload</span>
+        </button>
+        <button
+          className={`nav-btn ${activeSection === "resumes" ? "active" : ""}`}
+          onClick={() => setActiveSection("Analyze")}
+          aria-label="Resumes"
+        >
+          <i class="fa-solid fa-magnifying-glass-chart"></i>
+          <span>Analyze</span>
         </button>
         <button
           className={`nav-btn ${activeSection === "analysis" ? "active" : ""}`}

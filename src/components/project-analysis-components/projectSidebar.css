@@ -2,6 +2,7 @@
   padding: 0px !important;
   box-sizing: border-box;
   width: 240px;
+  height: 100vh;
   background: white;
   border-right: 1px solid #e5e7eb;
   display: flex;

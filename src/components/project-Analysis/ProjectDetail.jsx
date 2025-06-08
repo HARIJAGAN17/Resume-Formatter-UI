@@ -9,6 +9,7 @@ import ProjectMainContent from "../project-analysis-components/ProjectMainConten
 import PreviewModal from "../project-analysis-components/PreviewModal";
 import AnalysisSection from "../project-analysis-components/AnalysisSection";
 import JobDescription from "../project-analysis-components/JobDescription";
+import UploadFilesOnly from "../project-analysis-components/UploadFilesOnly";
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
@@ -277,6 +278,8 @@ export default function ProjectDetailPage() {
       {activeSection === "job-description" && (
         <JobDescription project={project} />
       )}
+
+      {activeSection === "Upload" && <UploadFilesOnly projectId={id} />}
 
       {activeSection === "settings" && (
         <div className="project-main-content">
