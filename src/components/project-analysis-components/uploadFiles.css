@@ -1,5 +1,14 @@
 /* Unique prefix: uf- for UploadFilesOnly */
 
+.upload-files-page {
+  flex: 1;
+  padding: 24px;
+  background-color: white;
+  min-height: 100vh;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
 .uf-upload-files-container {
   width: 100%;
   padding: 24px;
@@ -128,7 +137,7 @@
   margin-bottom: 10px;
 }
 
-.analysis-status p{
+.analysis-status p {
   color: #000;
 }
 .analysis-status span {
