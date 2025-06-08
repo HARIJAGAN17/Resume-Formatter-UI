@@ -15,18 +15,18 @@
   color: #0f172a;
 }
 
-.upload-file-description{
+.upload-file-description {
   color: grey;
   font-size: small;
 }
-.upload-file-underline{
+.upload-file-underline {
   width: 100%;
   height: 1px;
   background-color: grey;
   margin-bottom: 20px;
 }
 
-.upload-outside-box{
+.upload-outside-box {
   width: 100%;
   display: flex;
   justify-content: start;
@@ -97,7 +97,8 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: space-between;
+  gap: 15px;
   word-break: break-word;
   width: 320px; /* fixed width */
   min-height: 180px; /* fixed height for consistent size */
@@ -120,11 +121,26 @@
 
 .uf-uploaded-file-name {
   font-weight: 600;
-  font-size: 16px;
+  font-size: 13px;
   color: #0f172a;
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+}
+
+.analysis-status p{
+  color: #000;
+}
+.analysis-status span {
+  font-weight: bold;
+}
+
+.analysis-status .completed {
+  color: green;
+}
+
+.analysis-status .pending {
+  color: rgb(252, 164, 0);
 }
 
 .uf-uploaded-file-timestamp {

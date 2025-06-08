@@ -69,10 +69,10 @@ export default function UploadFilesOnly({ projectId }) {
       <h1 className="uf-upload-files-title">
         <i className="fa-solid fa-upload"></i> Upload Resumes
       </h1>
-      <h4 className="upload-file-description">Upload your files either in .pdf or .docx/.doc</h4>
-      <div className="upload-file-underline">
-
-      </div>
+      <h4 className="upload-file-description">
+        Upload your files either in .pdf or .docx/.doc
+      </h4>
+      <div className="upload-file-underline"></div>
 
       <div className="upload-outside-box">
         <div className="uf-upload-files-box-wrapper">
@@ -124,6 +124,21 @@ export default function UploadFilesOnly({ projectId }) {
               <p>
                 Time:{" "}
                 {new Date(file.file_uploaded_timestamp).toLocaleTimeString()}
+              </p>
+            </div>
+
+            <div className="analysis-status">
+              <p>
+                Analysis status:{" "}
+                <span
+                  className={
+                    file.analysis_status === "completed"
+                      ? "completed"
+                      : "pending"
+                  }
+                >
+                  {file.analysis_status}
+                </span>
               </p>
             </div>
 
