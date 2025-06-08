@@ -138,53 +138,53 @@ export default function UploadFilesOnly({ projectId }) {
                 <li key={idx} className="uf-uploaded-file-item">
                   <i className={`fa-solid ${getFileIconClass(file.name)}`} />
                   <span className="uf-file-name-text">{file.name}</span>
-                  <div className="uf-single-file-actions">
-                    {!isBulkUpload && (
-                      <>
-                        <button
-                          className="uf-btn uf-upload-btn-single"
-                          onClick={() => uploadSingle(file)}
-                          disabled={fileSpinners[file.name]}
-                        >
-                          Upload{" "}
-                          {fileSpinners[file.name] && (
-                            <span className="spinner-inline" />
-                          )}
-                        </button>
-                        <button
-                          className="uf-btn uf-remove-btn-single"
-                          onClick={() => setSelectedFiles([])}
-                        >
-                          Remove
-                        </button>
-                      </>
-                    )}
-                  </div>
                 </li>
               ))}
             </ul>
 
-            {isBulkUpload && (
-              <div className="uf-upload-actions-all">
-                <button
-                  className="uf-btn uf-upload-all-btn"
-                  onClick={uploadAll}
-                  disabled={uploading}
-                >
-                  Upload All {uploading && <span className="spinner-inline" />}
-                </button>
-                <button
-                  className="uf-btn uf-remove-all-btn"
-                  onClick={() => {
-                    setSelectedFiles([]);
-                    setIsBulkUpload(false);
-                  }}
-                  disabled={uploading}
-                >
-                  Remove All
-                </button>
-              </div>
-            )}
+            <div className="uf-upload-actions-all">
+              {isBulkUpload ? (
+                <>
+                  <button
+                    className="uf-btn uf-upload-all-btn"
+                    onClick={uploadAll}
+                    disabled={uploading}
+                  >
+                    Upload All{" "}
+                    {uploading && <span className="spinner-inline" />}
+                  </button>
+                  <button
+                    className="uf-btn uf-remove-all-btn"
+                    onClick={() => {
+                      setSelectedFiles([]);
+                      setIsBulkUpload(false);
+                    }}
+                    disabled={uploading}
+                  >
+                    Remove All
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    className="uf-btn uf-upload-btn-single"
+                    onClick={() => uploadSingle(selectedFiles[0])}
+                    disabled={fileSpinners[selectedFiles[0].name]}
+                  >
+                    Upload{" "}
+                    {fileSpinners[selectedFiles[0].name] && (
+                      <span className="spinner-inline" />
+                    )}
+                  </button>
+                  <button
+                    className="uf-btn uf-remove-btn-single"
+                    onClick={() => setSelectedFiles([])}
+                  >
+                    Remove
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         )}
 

@@ -161,16 +161,16 @@
 
 /* Single-file buttons */
 .uf-upload-btn-single {
-  background-color: #3b82f6;
+  background-color: #0f172ad0;
   color: #fff;
 }
 
 .uf-upload-btn-single:hover {
-  background-color: #2563eb;
+  background-color: #0f172a;
 }
 
 .uf-remove-btn-single {
-  background-color: #ef4444;
+  background-color: #ef4444e8;
   color: #fff;
 }
 
@@ -180,21 +180,21 @@
 
 /* Bulk-file buttons */
 .uf-upload-all-btn {
-  background-color: #10b981;
+  background-color: #0f172ad0;
   color: #fff;
 }
 
 .uf-upload-all-btn:hover {
-  background-color: #059669;
+  background-color: #0f172a;
 }
 
 .uf-remove-all-btn {
-  background-color: #f59e0b;
+  background-color: #ef4444e8;
   color: #fff;
 }
 
 .uf-remove-all-btn:hover {
-  background-color: #d97706;
+  background-color: #dc2626;
 }
 
 /* Spinner inside button */
