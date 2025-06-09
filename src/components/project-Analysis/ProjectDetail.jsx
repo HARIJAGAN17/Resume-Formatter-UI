@@ -80,7 +80,7 @@ export default function ProjectDetailPage() {
     try {
       const res = await api.get(`/parsed-history/${id}`);
       const mapped = res.data.map((resume) => ({
-        fileId: resume.file_id,
+        file_id: resume.file_id,
         name: resume.resume_name,
         size: `${resume.file_size} KB`,
         score: `${resume.resume_score}%`,
