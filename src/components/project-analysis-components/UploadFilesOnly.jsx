@@ -5,36 +5,75 @@ import ReactPaginate from "react-paginate";
 import Modal from "react-modal";
 import "./uploadFiles.css";
 
-export default function UploadFilesOnly({ projectId }) {
+export default function UploadFilesOnly({ projectId, handleExtract }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isBulkUpload, setIsBulkUpload] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [fileSpinners, setFileSpinners] = useState({});
-  const [analyzedFiles, setAnalyzedFiles] = useState([]);
+  const [uploadedAnalyzedFiles, setUploadedAnalyzedFiles] = useState([]);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const inputRef = useRef();
   const filesPerPage = 6;
 
   useEffect(() => {
-    fetchAnalyzedFiles();
+    fetchUploadedFiles();
   }, [projectId]);
 
-  const fetchAnalyzedFiles = async () => {
+  const updateFileAnalysisStatus = async (fileId, status) => {
+    try {
+      await api.patch(`/update-analysis-status/${fileId}`, status, {
+        headers: { "Content-Type": "application/json" },
+      });
+      console.log(
+        `Updated analysis status to '${status}' for file ID ${fileId}`
+      );
+    } catch (error) {
+      console.error(
+        "Failed to update analysis status:",
+        error?.response?.data || error.message
+      );
+    }
+  };
+
+  const fetchUploadedFiles = async () => {
     try {
       const res = await api.get(`/get-pdfs-by-project/${projectId}`);
+      const projectData = await api.get(`/parsed-history/${projectId}`);
+
       const analyzed = res.data.filter(
         (f) => f.analysis_status && f.analysis_status !== "not_analyzed"
       );
-      setAnalyzedFiles(analyzed);
+
+      // Create a map from file_id to parsed resume details
+      const analysisMap = {};
+      for (let entry of projectData.data) {
+        if (entry.file_id) {
+          analysisMap[entry.file_id] = {
+            score: entry.resume_score,
+            approval: entry.approval_status,
+            compatibility: entry.resume_details?.compatibility_score || {},
+          };
+        }
+      }
+
+      // Enrich the analyzed files
+      const enriched = analyzed.map((file) => ({
+        ...file,
+        resume_score: analysisMap[file.id]?.score ?? null,
+        approval_status: analysisMap[file.id]?.approval ?? "N/A",
+        compatibility_score: analysisMap[file.id]?.compatibility ?? {},
+      }));
+
+      setUploadedAnalyzedFiles(enriched);
     } catch (err) {
       console.error(err);
-      toast.error("Failed to fetch analyzed resumes");
+      toast.error("Failed to fetch uploaded resumes");
     }
   };
 
   const handlePageClick = ({ selected }) => setCurrentPage(selected);
-  const paginatedFiles = analyzedFiles.slice(
+  const paginatedFiles = uploadedAnalyzedFiles.slice(
     currentPage * filesPerPage,
     (currentPage + 1) * filesPerPage
   );
@@ -59,9 +98,14 @@ export default function UploadFilesOnly({ projectId }) {
     formData.append("project_id", projectId);
 
     try {
-      await api.post("/upload-pdf", formData);
+      const response = await api.post("/upload-pdf", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      const uploadedFile = response.data;
+      await handleExtract(file, uploadedFile.id);
+      await updateFileAnalysisStatus(uploadedFile.id, "completed");
       toast.success(`${file.name} uploaded successfully`);
-      fetchAnalyzedFiles();
+      fetchUploadedFiles();
     } catch (err) {
       console.error(err);
       toast.error(`Failed to upload ${file.name}`);
@@ -81,7 +125,12 @@ export default function UploadFilesOnly({ projectId }) {
       fd.append("project_id", projectId);
 
       try {
-        await api.post("/upload-pdf", fd);
+        const response = await api.post("/upload-pdf", fd, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        const uploadedFile = response.data;
+        await handleExtract(file, uploadedFile.id);
+        await updateFileAnalysisStatus(uploadedFile.id, "completed");
         toast.success(`${file.name} uploaded successfully`);
       } catch (err) {
         console.error(err);
@@ -89,7 +138,7 @@ export default function UploadFilesOnly({ projectId }) {
       }
       setFileSpinners((prev) => ({ ...prev, [file.name]: false }));
     }
-    fetchAnalyzedFiles();
+    fetchUploadedFiles();
     setUploading(false);
     setSelectedFiles([]);
     setIsBulkUpload(false);
@@ -188,7 +237,7 @@ export default function UploadFilesOnly({ projectId }) {
           </div>
         )}
 
-        {analyzedFiles.length > 0 && (
+        {uploadedAnalyzedFiles.length > 0 && (
           <>
             <div className="uf-uploaded-files-grid-container">
               {paginatedFiles.map((file) => (
@@ -245,15 +294,41 @@ export default function UploadFilesOnly({ projectId }) {
                     </button>
                     <button className="uf-delete-button">Delete</button>
                   </div>
+                  <div className="resume-score-display">
+                    <p>
+                      Score:{" "}
+                      <span className="score-text">
+                        {file.resume_score !== null
+                          ? `${file.resume_score}%`
+                          : "N/A"}
+                      </span>
+                    </p>
+                    <p>
+                      Status:{" "}
+                      <span
+                        className={
+                          file.approval_status === "approved"
+                            ? "status-approved"
+                            : file.approval_status === "rejected"
+                            ? "status-rejected"
+                            : "status-unknown"
+                        }
+                      >
+                        {file.approval_status}
+                      </span>
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
 
-            {analyzedFiles.length > filesPerPage && (
+            {uploadedAnalyzedFiles.length > filesPerPage && (
               <ReactPaginate
                 previousLabel="prev"
                 nextLabel="next"
-                pageCount={Math.ceil(analyzedFiles.length / filesPerPage)}
+                pageCount={Math.ceil(
+                  uploadedAnalyzedFiles.length / filesPerPage
+                )}
                 onPageChange={handlePageClick}
                 containerClassName="uf-upload-files-pagination"
                 activeClassName="active"

@@ -446,3 +446,32 @@
 .uf-upload-files-box input[type="file"] {
   display: none; /* hide the default file input */
 }
+
+.resume-score-display {
+  display: flex;
+  justify-content: space-between;
+  color: #0f172a;
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.score-text {
+  font-weight: bold;
+  color: #2a9d8f;
+}
+
+.status-approved {
+  font-weight: bold;
+  color: green;
+}
+
+.status-rejected {
+  font-weight: bold;
+  color: red;
+}
+
+.status-unknown {
+  font-style: italic;
+  color: #666;
+}

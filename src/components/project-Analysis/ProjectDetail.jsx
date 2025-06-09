@@ -114,7 +114,7 @@ export default function ProjectDetailPage() {
     setPreviewModalOpen(true);
   };
 
-  const handleExtract = async (file) => {
+  const handleExtract = async (file, fileId) => {
     if (!file || !project?.job_description) return;
 
     const formData = new FormData();
@@ -128,48 +128,35 @@ export default function ProjectDetailPage() {
       });
       const result = response.data;
       const score = parseFloat(result.job_score?.replace("%", "") || "0");
-      console.log(project.threshold);
-      console.log(score);
-      const threshold = project.threshold;
-      const percentage = (score / threshold) * 100;
 
+      const threshold = project.threshold;
+      
       let status = null;
-      if (percentage >= 80) {
+      if (score >= threshold) {
         status = "approved";
-      } else if (percentage < 60) {
+      } else if (score < threshold) {
         status = "rejected";
-      } else {
-        status = null;
       }
 
       console.log("Approval Status:", status);
 
-      // Get formatted details separately
-      const uploadForm = new FormData();
-      uploadForm.append("file", file);
-      const formattedRes = await api.post("/upload-resume", uploadForm, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      const formattedDetails = formattedRes.data;
-
+      // Skip formatted resume extraction for now
       const analyzedEntry = {
         name: file.name,
+        file_id: fileId,
         size: `${(file.size / 1024).toFixed(2)} KB`,
         score: result.job_score || "N/A",
         uploaded: new Date().toLocaleDateString("en-GB"),
         status,
         resume_details: result,
-        formatted_details: formattedDetails,
+        formatted_details: {},
         summary_analysis: result.summary || [],
         raw: result,
         last_analyzed_timestamp: new Date().toISOString(),
       };
 
       setAnalysisResults((prev) => [...prev, analyzedEntry]);
-
-      if (status) {
-        await postResumeToBackend(analyzedEntry, status);
-      }
+      await postResumeToBackend(analyzedEntry, status);
     } catch (error) {
       console.error(
         "Error analyzing or uploading resume:",
@@ -178,8 +165,28 @@ export default function ProjectDetailPage() {
     }
   };
 
+  // Separate function to upload resume (can be used later if needed)
+  const uploadResumeFile = async (file) => {
+    const uploadForm = new FormData();
+    uploadForm.append("file", file);
+    try {
+      const response = await api.post("/upload-resume", uploadForm, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return response.data;
+    } catch (err) {
+      console.error(
+        "Error uploading resume for formatting:",
+        err?.response?.data || err.message
+      );
+      return {};
+    }
+  };
+
   const postResumeToBackend = async (resume, status) => {
+    const user = JSON.parse(localStorage.getItem("user"));
     const payload = {
+      file_id: resume.file_id, 
       resume_name: resume.name,
       resume_details: resume.resume_details || {},
       formatted_details: resume.formatted_details || {},
@@ -189,7 +196,7 @@ export default function ProjectDetailPage() {
       last_analyzed_timestamp: resume.last_analyzed_timestamp,
       approval_status: status,
       project_id: parseInt(id),
-      user_id: 1, // Replace with real logged-in user ID if available
+      user_id: user.user_id, 
     };
 
     try {
@@ -292,7 +299,9 @@ export default function ProjectDetailPage() {
         <JobDescription project={project} />
       )}
 
-      {activeSection === "Upload" && <UploadFilesOnly projectId={id} />}
+      {activeSection === "Upload" && (
+        <UploadFilesOnly projectId={id} handleExtract={handleExtract} />
+      )}
 
       {activeSection === "settings" && (
         <div className="project-main-content">
