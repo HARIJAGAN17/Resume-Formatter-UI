@@ -3,12 +3,15 @@ import "./resumeAnalyze.css";
 import { toast } from "react-toastify";
 import api from "../../Api/api";
 
-export default function ResumeAnalyze({ analysisResults }) {
+export default function ResumeAnalyze({
+  analysisResults,
+  setAnalysisResults,
+  handlePreviewClick,
+}) {
   const resumesPerPage = 4;
   const [currentPage, setCurrentPage] = React.useState(1);
   const [selectedResumes, setSelectedResumes] = React.useState([]);
   const [formattedStatus, setFormattedStatus] = React.useState({});
-  const [previewResume, setPreviewResume] = React.useState(null);
 
   const totalPages = Math.ceil(analysisResults.length / resumesPerPage);
 
@@ -58,7 +61,6 @@ export default function ResumeAnalyze({ analysisResults }) {
       await api.put(`/parsed-history/file/${fileId}`, {
         formatted_details: formattedDetails,
       });
-
       return true;
     } catch (error) {
       console.error("Error updating formatted details:", error);
@@ -117,6 +119,15 @@ export default function ResumeAnalyze({ analysisResults }) {
         if (success) {
           toast.success(`Successfully converted "${resume.name}".`);
           setFormattedStatus((prev) => ({ ...prev, [resume.fileId]: true }));
+
+          // ✅ Update analysisResults state in parent
+          setAnalysisResults((prevResults) =>
+            prevResults.map((r) =>
+              r.fileId === resume.fileId
+                ? { ...r, formatted_details: formattedDetails }
+                : r
+            )
+          );
         } else {
           toast.error(
             `Failed to update formatted details for "${resume.name}".`
@@ -128,16 +139,6 @@ export default function ResumeAnalyze({ analysisResults }) {
       }
     }
   };
-
-  const handlePreviewClick = (resume) => {
-    if (!formattedStatus[resume.fileId]) {
-      toast.error("Please convert the resume first before previewing.");
-      return;
-    }
-    setPreviewResume(resume);
-  };
-
-  const closePreview = () => setPreviewResume(null);
 
   return (
     <div className="resume-analyze-container">
@@ -251,21 +252,6 @@ export default function ResumeAnalyze({ analysisResults }) {
           </button>
         ))}
       </div>
-
-      {previewResume && (
-        <div className="ra-preview-modal-overlay" onClick={closePreview}>
-          <div
-            className="ra-preview-modal"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3>Preview: {previewResume.name}</h3>
-            <pre className="ra-preview-content">
-              {JSON.stringify(previewResume.formatted_details, null, 2)}
-            </pre>
-            <button onClick={closePreview}>Close</button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

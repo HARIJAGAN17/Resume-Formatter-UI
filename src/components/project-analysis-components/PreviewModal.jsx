@@ -1,5 +1,6 @@
 import React from "react";
 import ResumeDownload from "../ResumePreview/ResumeDownload";
+import "./previewModal.css";
 
 export default function PreviewModal({
   previewModalOpen,
@@ -45,7 +46,7 @@ export default function PreviewModal({
                 selectedResume.status === "approved" ? "approved" : "rejected"
               }
             >
-              {selectedResume.status}
+              {selectedResume.status === "approved" ? "Passed" : "Failed"}
             </p>
             <div>
               <button

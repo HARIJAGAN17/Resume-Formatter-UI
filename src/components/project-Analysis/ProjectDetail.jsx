@@ -11,6 +11,7 @@ import AnalysisSection from "../project-analysis-components/AnalysisSection";
 import JobDescription from "../project-analysis-components/JobDescription";
 import UploadFilesOnly from "../project-analysis-components/UploadFilesOnly";
 import ResumeAnalyze from "../project-analysis-components/ResumeAnalyze";
+import { toast } from "react-toastify";
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
@@ -20,11 +21,12 @@ export default function ProjectDetailPage() {
   const [analysisResults, setAnalysisResults] = useState([]);
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [selectedResume, setSelectedResume] = useState(null);
-  const [activeTab, setActiveTab] = useState("formatted"); // default tab
-  const [activeSection, setActiveSection] = useState("resumes"); // maincontent area changes
+  const [activeTab, setActiveTab] = useState("formatted");
+  const [activeSection, setActiveSection] = useState("resumes");
+  const [status, setStatus] = useState("Active");
+  const [loading, setLoading] = useState(false);
 
   const totalResumes = analysisResults.length;
-
   const approvedCount = analysisResults.filter(
     (r) => r.status === "approved"
   ).length;
@@ -32,8 +34,19 @@ export default function ProjectDetailPage() {
     (r) => r.status === "rejected"
   ).length;
 
-  const [status, setStatus] = useState("Active"); // "Active" or "Completed"
-  const [loading, setLoading] = useState(false);
+  const handlePreviewClick = (resume) => {
+    if (
+      !resume.formatted_details ||
+      Object.keys(resume.formatted_details).length === 0
+    ) {
+      toast.error("Please convert the resume first before previewing.");
+      return;
+    }
+
+    setSelectedResume(resume);
+    setResumeData(resume.formatted_details);
+    setPreviewModalOpen(true);
+  };
 
   useEffect(() => {
     async function fetchProject() {
@@ -63,7 +76,6 @@ export default function ProjectDetailPage() {
     }
   };
 
-
   const fetchParsedResumes = async () => {
     try {
       const res = await api.get(`/parsed-history/${id}`);
@@ -80,7 +92,7 @@ export default function ProjectDetailPage() {
         formatted_details: resume.formatted_details,
         summary_analysis: resume.summary_analysis,
         last_analyzed_timestamp: resume.last_analyzed_timestamp,
-        raw: resume.resume_details, // to preserve for posting if needed again
+        raw: resume.resume_details,
       }));
       setAnalysisResults(mapped);
       setTotalResumesPerProject((prev) => ({
@@ -92,14 +104,6 @@ export default function ProjectDetailPage() {
     }
   };
 
-
-  const handlePreviewClick = (resume) => {
-    setSelectedResume(resume);
-    console.log(resume.formattedDetails);
-    setResumeData(resume.formatted_details); // ✅ Set resume data for context
-    setPreviewModalOpen(true);
-  };
-
   const handleExtract = async (file, fileId) => {
     if (!file || !project?.job_description) return;
 
@@ -108,25 +112,16 @@ export default function ProjectDetailPage() {
     formData.append("job_description", project.job_description);
 
     try {
-      // Analyze the resume
       const response = await api.post("/analyze-resume", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       const result = response.data;
       const score = parseFloat(result.job_score?.replace("%", "") || "0");
-
       const threshold = project.threshold;
-
       let status = null;
-      if (score >= threshold) {
-        status = "approved";
-      } else if (score < threshold) {
-        status = "rejected";
-      }
+      if (score >= threshold) status = "approved";
+      else if (score < threshold) status = "rejected";
 
-      console.log("Approval Status:", status);
-
-      // Skip formatted resume extraction for now
       const analyzedEntry = {
         name: file.name,
         file_id: fileId,
@@ -151,12 +146,10 @@ export default function ProjectDetailPage() {
     }
   };
 
- 
-
   const postResumeToBackend = async (resume, status) => {
     const user = JSON.parse(localStorage.getItem("user"));
     const payload = {
-      file_id: resume.file_id, 
+      file_id: resume.file_id,
       resume_name: resume.name,
       resume_details: resume.resume_details || {},
       formatted_details: resume.formatted_details || {},
@@ -166,11 +159,10 @@ export default function ProjectDetailPage() {
       last_analyzed_timestamp: resume.last_analyzed_timestamp,
       approval_status: status,
       project_id: parseInt(id),
-      user_id: user.user_id, 
+      user_id: user.user_id,
     };
 
     try {
-      console.log("Sending payload:", payload);
       await api.post("/parsed-history", payload);
     } catch (err) {
       console.error(
@@ -185,7 +177,7 @@ export default function ProjectDetailPage() {
       try {
         const [projectRes] = await Promise.all([api.get(`/projects/${id}`)]);
         setProject(projectRes.data);
-        await fetchParsedResumes(); // Fetch previously analyzed resumes
+        await fetchParsedResumes();
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
@@ -244,6 +236,7 @@ export default function ProjectDetailPage() {
           analysisResults={analysisResults}
           setAnalysisResults={setAnalysisResults}
           setSelectedResume={setSelectedResume}
+          handlePreviewClick={handlePreviewClick} // ✅ important
         />
       )}
 
