@@ -151,23 +151,7 @@ export default function ProjectDetailPage() {
     }
   };
 
-  // Separate function to upload resume (can be used later if needed)
-  const uploadResumeFile = async (file) => {
-    const uploadForm = new FormData();
-    uploadForm.append("file", file);
-    try {
-      const response = await api.post("/upload-resume", uploadForm, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      return response.data;
-    } catch (err) {
-      console.error(
-        "Error uploading resume for formatting:",
-        err?.response?.data || err.message
-      );
-      return {};
-    }
-  };
+ 
 
   const postResumeToBackend = async (resume, status) => {
     const user = JSON.parse(localStorage.getItem("user"));

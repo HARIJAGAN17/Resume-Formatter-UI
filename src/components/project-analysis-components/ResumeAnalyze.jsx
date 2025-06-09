@@ -1,10 +1,14 @@
 import React from "react";
 import "./resumeAnalyze.css";
+import { toast } from "react-toastify";
+import api from "../../Api/api";
 
 export default function ResumeAnalyze({ analysisResults }) {
   const resumesPerPage = 4;
   const [currentPage, setCurrentPage] = React.useState(1);
   const [selectedResumes, setSelectedResumes] = React.useState([]);
+  const [formattedStatus, setFormattedStatus] = React.useState({});
+  const [previewResume, setPreviewResume] = React.useState(null);
 
   const totalPages = Math.ceil(analysisResults.length / resumesPerPage);
 
@@ -12,6 +16,15 @@ export default function ResumeAnalyze({ analysisResults }) {
     (currentPage - 1) * resumesPerPage,
     currentPage * resumesPerPage
   );
+
+  React.useEffect(() => {
+    const status = {};
+    analysisResults.forEach((r) => {
+      status[r.fileId] =
+        !!r.formatted_details && Object.keys(r.formatted_details).length > 0;
+    });
+    setFormattedStatus(status);
+  }, [analysisResults]);
 
   const handleCheckboxChange = (resume) => {
     if (selectedResumes.includes(resume)) {
@@ -40,6 +53,92 @@ export default function ResumeAnalyze({ analysisResults }) {
 
   const isResumeSelected = (resume) => selectedResumes.includes(resume);
 
+  const updateFormattedDetails = async (fileId, formattedDetails) => {
+    try {
+      await api.put(`/parsed-history/file/${fileId}`, {
+        formatted_details: formattedDetails,
+      });
+
+      return true;
+    } catch (error) {
+      console.error("Error updating formatted details:", error);
+      return false;
+    }
+  };
+
+  const handleConvertSelected = async () => {
+    if (selectedResumes.length === 0) {
+      toast.warning("No resumes selected for conversion.");
+      return;
+    }
+
+    for (const resume of selectedResumes) {
+      try {
+        let fileData = resume.file_data;
+
+        if (!fileData) {
+          const fileRes = await api.get(`/get-pdf/${resume.fileId}`);
+          fileData = fileRes.data.file_data;
+        }
+
+        if (!fileData || !resume.name || !resume.fileId) {
+          toast.error(`Missing data for resume "${resume.name || "Unknown"}".`);
+          continue;
+        }
+
+        toast.info(`Converting "${resume.name}"...`);
+
+        const byteCharacters = atob(fileData);
+        const byteArrays = [];
+
+        for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+          const slice = byteCharacters.slice(offset, offset + 512);
+          const byteNumbers = Array.from(slice, (char) => char.charCodeAt(0));
+          byteArrays.push(new Uint8Array(byteNumbers));
+        }
+
+        const blob = new Blob(byteArrays, { type: "application/pdf" });
+        const file = new File([blob], resume.name, { type: "application/pdf" });
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const response = await api.post("/upload-resume", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        const formattedDetails = response.data;
+
+        const success = await updateFormattedDetails(
+          resume.fileId,
+          formattedDetails
+        );
+
+        if (success) {
+          toast.success(`Successfully converted "${resume.name}".`);
+          setFormattedStatus((prev) => ({ ...prev, [resume.fileId]: true }));
+        } else {
+          toast.error(
+            `Failed to update formatted details for "${resume.name}".`
+          );
+        }
+      } catch (error) {
+        console.error("Error processing resume:", error);
+        toast.error(`Conversion failed for "${resume.name}".`);
+      }
+    }
+  };
+
+  const handlePreviewClick = (resume) => {
+    if (!formattedStatus[resume.fileId]) {
+      toast.error("Please convert the resume first before previewing.");
+      return;
+    }
+    setPreviewResume(resume);
+  };
+
+  const closePreview = () => setPreviewResume(null);
+
   return (
     <div className="resume-analyze-container">
       <h2 className="ra-analyze-header">
@@ -58,10 +157,7 @@ export default function ResumeAnalyze({ analysisResults }) {
           <p>Select All</p>
         </div>
         {selectedResumes.length > 0 && (
-          <button
-            className="ra-convert-button"
-            onClick={() => console.log("Selected Resumes:", selectedResumes)}
-          >
+          <button className="ra-convert-button" onClick={handleConvertSelected}>
             Convert ({selectedResumes.length})
           </button>
         )}
@@ -100,14 +196,13 @@ export default function ResumeAnalyze({ analysisResults }) {
                 <div className="ra-resume-meta">
                   <span className="ra-meta-item">
                     <i className="fa-solid fa-calendar-days"></i>
-                    {new Date(resume.last_analyzed_timestamp).toLocaleDateString(
-                      "en-US",
-                      {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      }
-                    )}
+                    {new Date(
+                      resume.last_analyzed_timestamp
+                    ).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </span>
                   <span className="ra-meta-item">
                     <i className="fa-solid fa-chart-column"></i>
@@ -128,6 +223,18 @@ export default function ResumeAnalyze({ analysisResults }) {
                 {resume.status === "approved" ? "Passed" : "Failed"}
               </span>
               <div className="ra-analyze-score">{resume.score}</div>
+
+              {formattedStatus[resume.fileId] && (
+                <button
+                  className="ra-preview-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePreviewClick(resume);
+                  }}
+                >
+                  Preview
+                </button>
+              )}
             </div>
           </div>
         ))}
@@ -144,6 +251,21 @@ export default function ResumeAnalyze({ analysisResults }) {
           </button>
         ))}
       </div>
+
+      {previewResume && (
+        <div className="ra-preview-modal-overlay" onClick={closePreview}>
+          <div
+            className="ra-preview-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3>Preview: {previewResume.name}</h3>
+            <pre className="ra-preview-content">
+              {JSON.stringify(previewResume.formatted_details, null, 2)}
+            </pre>
+            <button onClick={closePreview}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
