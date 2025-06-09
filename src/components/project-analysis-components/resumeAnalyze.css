@@ -37,13 +37,12 @@
   align-items: center;
   margin-bottom: 20px;
 }
-.ra-left-topbar{
+.ra-left-topbar {
   display: flex;
   gap: 10px;
   margin-left: 14px;
   border-radius: 5px;
   padding: 4px;
-
 }
 .ra-convert-button {
   background-color: #0f172a;
@@ -191,4 +190,41 @@
 .ra-page-btn.active {
   background-color: #0f172a;
   color: white;
+}
+
+.ra-preview-button {
+  background-color: #2563eb;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ra-preview-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Spinner styles */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 3px solid rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s ease-in-out infinite;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

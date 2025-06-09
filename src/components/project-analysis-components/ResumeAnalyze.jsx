@@ -12,8 +12,20 @@ export default function ResumeAnalyze({
   const [currentPage, setCurrentPage] = React.useState(1);
   const [selectedResumes, setSelectedResumes] = React.useState([]);
   const [formattedStatus, setFormattedStatus] = React.useState({});
+  const [previewLoading, setPreviewLoading] = React.useState({});
 
   const totalPages = Math.ceil(analysisResults.length / resumesPerPage);
+
+  const handlePreviewClickWithSpinner = async (resume) => {
+    setPreviewLoading((prev) => ({ ...prev, [resume.file_id]: true }));
+    try {
+      await handlePreviewClick(resume);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setPreviewLoading((prev) => ({ ...prev, [resume.file_id]: false }));
+    }
+  };
 
   const currentResumes = analysisResults.slice(
     (currentPage - 1) * resumesPerPage,
@@ -23,13 +35,14 @@ export default function ResumeAnalyze({
   React.useEffect(() => {
     const status = {};
     analysisResults.forEach((r) => {
-      status[r.fileId] =
+      status[r.file_id] =
         !!r.formatted_details && Object.keys(r.formatted_details).length > 0;
     });
     setFormattedStatus(status);
   }, [analysisResults]);
 
   const handleCheckboxChange = (resume) => {
+    console.log("Checkbox toggled for resume:", resume);
     if (selectedResumes.includes(resume)) {
       setSelectedResumes(selectedResumes.filter((r) => r !== resume));
     } else {
@@ -56,9 +69,9 @@ export default function ResumeAnalyze({
 
   const isResumeSelected = (resume) => selectedResumes.includes(resume);
 
-  const updateFormattedDetails = async (fileId, formattedDetails) => {
+  const updateFormattedDetails = async (file_id, formattedDetails) => {
     try {
-      await api.put(`/parsed-history/file/${fileId}`, {
+      await api.put(`/parsed-history/file/${file_id}`, {
         formatted_details: formattedDetails,
       });
       return true;
@@ -73,22 +86,20 @@ export default function ResumeAnalyze({
       toast.warning("No resumes selected for conversion.");
       return;
     }
+    let successCount = 0;
 
     for (const resume of selectedResumes) {
       try {
-        let fileData = resume.file_data;
+        const fileRes = await api.get(`/get-pdf/${resume.file_id}`);
+        const fileData = fileRes.data.file_data;
+        console.log(fileData);
+        console.log(resume.name);
+        console.log(resume.file_id);
 
-        if (!fileData) {
-          const fileRes = await api.get(`/get-pdf/${resume.fileId}`);
-          fileData = fileRes.data.file_data;
-        }
-
-        if (!fileData || !resume.name || !resume.fileId) {
+        if (!fileData || !resume.name || !resume.file_id) {
           toast.error(`Missing data for resume "${resume.name || "Unknown"}".`);
           continue;
         }
-
-        toast.info(`Converting "${resume.name}"...`);
 
         const byteCharacters = atob(fileData);
         const byteArrays = [];
@@ -112,18 +123,17 @@ export default function ResumeAnalyze({
         const formattedDetails = response.data;
 
         const success = await updateFormattedDetails(
-          resume.fileId,
+          resume.file_id,
           formattedDetails
         );
 
         if (success) {
-          toast.success(`Successfully converted "${resume.name}".`);
-          setFormattedStatus((prev) => ({ ...prev, [resume.fileId]: true }));
+          successCount++;
+          setFormattedStatus((prev) => ({ ...prev, [resume.file_id]: true }));
 
-          // ✅ Update analysisResults state in parent
           setAnalysisResults((prevResults) =>
             prevResults.map((r) =>
-              r.fileId === resume.fileId
+              r.file_id === resume.file_id
                 ? { ...r, formatted_details: formattedDetails }
                 : r
             )
@@ -138,6 +148,14 @@ export default function ResumeAnalyze({
         toast.error(`Conversion failed for "${resume.name}".`);
       }
     }
+
+    if (successCount === 1) {
+      toast.success("Resume converted successfully.");
+    } else if (successCount > 1) {
+      toast.success("All resumes converted successfully.");
+    }
+
+    setSelectedResumes([]);
   };
 
   return (
@@ -169,7 +187,7 @@ export default function ResumeAnalyze({
           <div
             className="ra-resume-card"
             key={idx}
-            onClick={() => console.log("fileId:", resume.fileId)}
+            onClick={() => console.log("file_id:", resume.file_id)}
           >
             <div className="ra-resume-left">
               <input
@@ -225,15 +243,20 @@ export default function ResumeAnalyze({
               </span>
               <div className="ra-analyze-score">{resume.score}</div>
 
-              {formattedStatus[resume.fileId] && (
+              {formattedStatus[resume.file_id] && (
                 <button
                   className="ra-preview-button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handlePreviewClick(resume);
+                    handlePreviewClickWithSpinner(resume);
                   }}
+                  disabled={previewLoading[resume.file_id]}
                 >
-                  Preview
+                  {previewLoading[resume.file_id] ? (
+                    <span className="spinner"></span>
+                  ) : (
+                    "Preview"
+                  )}
                 </button>
               )}
             </div>

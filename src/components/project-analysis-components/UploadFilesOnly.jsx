@@ -5,7 +5,10 @@ import ReactPaginate from "react-paginate";
 import Modal from "react-modal";
 import "./uploadFiles.css";
 
-export default function UploadFilesOnly({ projectId, handleExtract }) {
+export default function UploadFilesOnly({
+  projectId,
+  handleExtract,
+}) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isBulkUpload, setIsBulkUpload] = useState(false);
   const [uploading, setUploading] = useState(false);

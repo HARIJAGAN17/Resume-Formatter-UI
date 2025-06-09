@@ -236,7 +236,8 @@ export default function ProjectDetailPage() {
           analysisResults={analysisResults}
           setAnalysisResults={setAnalysisResults}
           setSelectedResume={setSelectedResume}
-          handlePreviewClick={handlePreviewClick} // ✅ important
+          handlePreviewClick={handlePreviewClick}
+          projectId={id}
         />
       )}
 
@@ -245,7 +246,10 @@ export default function ProjectDetailPage() {
       )}
 
       {activeSection === "Upload" && (
-        <UploadFilesOnly projectId={id} handleExtract={handleExtract} />
+        <UploadFilesOnly
+          projectId={id}
+          handleExtract={handleExtract}
+        />
       )}
 
       {activeSection === "settings" && (
