@@ -32,10 +32,10 @@
   background-color: #f9f9f9;
   margin-left: 1px;
 }
-.uf-upload-outside-box{
+.uf-upload-outside-box {
   display: flex;
   justify-content: start;
-  align-items: center,
+  align-items: center;
 }
 .uf-upload-files-box {
   display: flex;
@@ -152,6 +152,10 @@
   border: none;
   transition: background-color 0.2s;
   user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* ensures space between text and spinner */
 }
 
 .uf-btn:focus {
@@ -199,12 +203,14 @@
 
 /* Spinner inside button */
 .spinner-inline {
+  display: inline-block;
+  vertical-align: middle;
   margin-left: 8px;
   border: 2px solid #fff;
   border-top: 2px solid rgba(255, 255, 255, 0.6);
   border-radius: 50%;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   animation: spin 0.6s linear infinite;
 }
 

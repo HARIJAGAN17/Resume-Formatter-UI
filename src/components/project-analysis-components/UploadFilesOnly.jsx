@@ -171,7 +171,7 @@ export default function UploadFilesOnly({ projectId }) {
                     onClick={() => uploadSingle(selectedFiles[0])}
                     disabled={fileSpinners[selectedFiles[0].name]}
                   >
-                    Upload{" "}
+                    <span className="btn-text">Upload</span>
                     {fileSpinners[selectedFiles[0].name] && (
                       <span className="spinner-inline" />
                     )}
