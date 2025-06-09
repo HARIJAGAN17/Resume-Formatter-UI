@@ -17,15 +17,11 @@ export default function ProjectDetailPage() {
   const [project, setProject] = useState(null);
   const { setTotalResumesPerProject } = useContext(ResumeContext);
   const { setResumeData } = useResume();
-
-  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [analysisResults, setAnalysisResults] = useState([]);
-
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [selectedResume, setSelectedResume] = useState(null);
   const [activeTab, setActiveTab] = useState("formatted"); // default tab
   const [activeSection, setActiveSection] = useState("resumes"); // maincontent area changes
-  const [isBulkUpload, setIsBulkUpload] = useState(false); // bulk upload check
 
   const totalResumes = analysisResults.length;
 
@@ -67,16 +63,12 @@ export default function ProjectDetailPage() {
     }
   };
 
-  const handleFileChange = (e) => {
-    const files = Array.from(e.target.files);
-    setUploadedFiles(files);
-    setIsBulkUpload(files.length > 1);
-  };
 
   const fetchParsedResumes = async () => {
     try {
       const res = await api.get(`/parsed-history/${id}`);
       const mapped = res.data.map((resume) => ({
+        fileId: resume.file_id,
         name: resume.resume_name,
         size: `${resume.file_size} KB`,
         score: `${resume.resume_score}%`,
@@ -100,12 +92,6 @@ export default function ProjectDetailPage() {
     }
   };
 
-  const getFileIconClass = (fileName) => {
-    const ext = fileName.split(".").pop().toLowerCase();
-    if (ext === "pdf") return "fa-file-pdf";
-    if (ext === "docx" || ext === "doc") return "fa-file-word";
-    return "fa-file"; // fallback icon
-  };
 
   const handlePreviewClick = (resume) => {
     setSelectedResume(resume);
@@ -130,7 +116,7 @@ export default function ProjectDetailPage() {
       const score = parseFloat(result.job_score?.replace("%", "") || "0");
 
       const threshold = project.threshold;
-      
+
       let status = null;
       if (score >= threshold) {
         status = "approved";
@@ -259,20 +245,6 @@ export default function ProjectDetailPage() {
           totalResumes={totalResumes}
           approvedCount={approvedCount}
           rejectedCount={rejectedCount}
-          uploadedFiles={uploadedFiles}
-          handleFileChange={handleFileChange}
-          getFileIconClass={getFileIconClass}
-          handleExtract={handleExtract}
-          setUploadedFiles={setUploadedFiles}
-          analysisResults={analysisResults}
-          setAnalysisResults={setAnalysisResults}
-          postResumeToBackend={postResumeToBackend}
-          setSelectedResume={setSelectedResume}
-          setActiveTab={setActiveTab}
-          setPreviewModalOpen={setPreviewModalOpen}
-          handlePreviewClick={handlePreviewClick}
-          isBulkUpload={isBulkUpload}
-          setIsBulkUpload={setIsBulkUpload}
         />
       )}
 
@@ -287,11 +259,7 @@ export default function ProjectDetailPage() {
         <ResumeAnalyze
           analysisResults={analysisResults}
           setAnalysisResults={setAnalysisResults}
-          postResumeToBackend={postResumeToBackend}
           setSelectedResume={setSelectedResume}
-          setActiveTab={setActiveTab}
-          setPreviewModalOpen={setPreviewModalOpen}
-          handlePreviewClick={handlePreviewClick}
         />
       )}
 

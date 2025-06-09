@@ -281,19 +281,6 @@ export default function UploadFilesOnly({ projectId, handleExtract }) {
                       </span>
                     </p>
                   </div>
-                  <div className="uf-uploaded-file-actions">
-                    <button
-                      className="uf-preview-button"
-                      onClick={() =>
-                        setPreviewUrl(
-                          `data:application/pdf;base64,${file.file_data}#toolbar=0`
-                        )
-                      }
-                    >
-                      Preview
-                    </button>
-                    <button className="uf-delete-button">Delete</button>
-                  </div>
                   <div className="resume-score-display">
                     <p>
                       Score:{" "}
@@ -317,6 +304,18 @@ export default function UploadFilesOnly({ projectId, handleExtract }) {
                         {file.approval_status}
                       </span>
                     </p>
+                  </div>
+                  <div className="uf-uploaded-file-actions">
+                    <button
+                      className="uf-preview-button"
+                      onClick={() =>
+                        setPreviewUrl(
+                          `data:application/pdf;base64,${file.file_data}#toolbar=0`
+                        )
+                      }
+                    >
+                      Preview
+                    </button>
                   </div>
                 </div>
               ))}

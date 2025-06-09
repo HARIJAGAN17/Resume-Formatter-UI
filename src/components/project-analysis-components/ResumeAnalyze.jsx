@@ -1,48 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import "./resumeAnalyze.css";
 
-export default function ResumeAnalyze() {
-  const mockResumes = [
-    {
-      resume_name: "John_Doe_Resume.pdf",
-      approval_status: "approved",
-      resume_score: 87,
-      uploaded_at: "2025-06-06 10:30 AM",
-    },
-    {
-      resume_name: "Jane_Smith_CV.pdf",
-      approval_status: "rejected",
-      resume_score: 62,
-      uploaded_at: "2025-06-06 09:45 AM",
-    },
-    {
-      resume_name: "Alice_Junior_Dev.pdf",
-      approval_status: "approved",
-      resume_score: 91,
-      uploaded_at: "2025-06-05 05:15 PM",
-    },
-    {
-      resume_name: "Bob_Project_Manager.pdf",
-      approval_status: "rejected",
-      resume_score: 69,
-      uploaded_at: "2025-06-04 02:00 PM",
-    },
-    {
-      resume_name: "Charlie_TechLead.pdf",
-      approval_status: "approved",
-      resume_score: 95,
-      uploaded_at: "2025-06-03 11:00 AM",
-    },
-  ];
-
-  const [analysisResults] = useState(mockResumes);
-  const [selectedResumes, setSelectedResumes] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [analyzedResumes, setAnalyzedResumes] = useState([]);
-  const [loadingIndex, setLoadingIndex] = useState(null);
-
+export default function ResumeAnalyze({ analysisResults }) {
   const resumesPerPage = 4;
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [selectedResumes, setSelectedResumes] = React.useState([]);
+
   const totalPages = Math.ceil(analysisResults.length / resumesPerPage);
+
   const currentResumes = analysisResults.slice(
     (currentPage - 1) * resumesPerPage,
     currentPage * resumesPerPage
@@ -74,22 +39,13 @@ export default function ResumeAnalyze() {
   };
 
   const isResumeSelected = (resume) => selectedResumes.includes(resume);
-  const isAnalyzed = (resume) => analyzedResumes.includes(resume);
-
-  const handleAnalyze = (index, resume) => {
-    setLoadingIndex(index);
-    setTimeout(() => {
-      setLoadingIndex(null);
-      setAnalyzedResumes([...analyzedResumes, resume]);
-    }, 1000);
-  };
 
   return (
     <div className="resume-analyze-container">
       <h2 className="ra-analyze-header">
         <i className="fa-solid fa-magnifying-glass-chart"></i> Analyze Resumes
       </h2>
-      <p className="ra-analyze-subtext">Analyze your resume here</p>
+      <p className="ra-analyze-subtext">Review analyzed resumes</p>
       <div className="ra-divider" />
 
       <div className="ra-topbar">
@@ -99,7 +55,7 @@ export default function ResumeAnalyze() {
             checked={currentResumes.every((r) => selectedResumes.includes(r))}
             onChange={handleSelectAll}
           />
-          <label>Select All</label>
+          <p>Select All</p>
         </div>
         {selectedResumes.length > 0 && (
           <button
@@ -113,42 +69,65 @@ export default function ResumeAnalyze() {
 
       <div className="ra-resume-list">
         {currentResumes.map((resume, idx) => (
-          <div className="ra-resume-card" key={idx}>
+          <div
+            className="ra-resume-card"
+            key={idx}
+            onClick={() => console.log("fileId:", resume.fileId)}
+          >
             <div className="ra-resume-left">
               <input
                 type="checkbox"
                 checked={isResumeSelected(resume)}
-                onChange={() => handleCheckboxChange(resume)}
+                onChange={(e) => {
+                  e.stopPropagation();
+                  handleCheckboxChange(resume);
+                }}
               />
               <div className="ra-resume-icon">📄</div>
-              <div className="ra-resume-name">
-                {resume.resume_name}
-                {resume.approval_status === "approved" ? (
-                  <span className="ra-status-icon ra-status-approved">✔</span>
-                ) : (
-                  <span className="ra-status-icon ra-status-rejected">✖</span>
-                )}
-              </div>
-              <div className="ra-uploaded-time">
-                Uploaded: {resume.uploaded_at}
+
+              <div className="ra-resume-info">
+                <div className="ra-resume-name">
+                  {resume.name}{" "}
+                  <i
+                    className={`fa-solid ${
+                      resume.status === "approved"
+                        ? "fa-circle-check ra-icon-approved"
+                        : "fa-circle-xmark ra-icon-rejected"
+                    }`}
+                  />
+                </div>
+
+                <div className="ra-resume-meta">
+                  <span className="ra-meta-item">
+                    <i className="fa-solid fa-calendar-days"></i>
+                    {new Date(resume.last_analyzed_timestamp).toLocaleDateString(
+                      "en-US",
+                      {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      }
+                    )}
+                  </span>
+                  <span className="ra-meta-item">
+                    <i className="fa-solid fa-chart-column"></i>
+                    {parseFloat(resume.score).toFixed(0)}/100
+                  </span>
+                </div>
               </div>
             </div>
+
             <div className="ra-resume-right">
-              {!isAnalyzed(resume) ? (
-                <button
-                  className="ra-analyze-button"
-                  onClick={() => handleAnalyze(idx, resume)}
-                  disabled={loadingIndex === idx}
-                >
-                  {loadingIndex === idx ? (
-                    <div className="ra-spinner"></div>
-                  ) : (
-                    "Analyze"
-                  )}
-                </button>
-              ) : (
-                <div className="ra-analyze-score">{resume.resume_score}</div>
-              )}
+              <span
+                className={`ra-status-pill ${
+                  resume.status === "approved"
+                    ? "ra-pill-approved"
+                    : "ra-pill-rejected"
+                }`}
+              >
+                {resume.status === "approved" ? "Passed" : "Failed"}
+              </span>
+              <div className="ra-analyze-score">{resume.score}</div>
             </div>
           </div>
         ))}

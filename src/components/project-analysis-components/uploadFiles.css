@@ -258,6 +258,8 @@
 /* Analysis status */
 .analysis-status p {
   color: #000;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .analysis-status span {
@@ -428,7 +430,8 @@
 
   .uf-uploaded-file-name,
   .uf-file-name-text {
-    font-size: 14px;
+    font-size: 12px;
+    padding: 2px;
   }
 
   .uf-preview-button,
@@ -449,7 +452,7 @@
 
 .resume-score-display {
   display: flex;
-  justify-content: space-between;
+  gap: 10px;
   color: #0f172a;
   margin-top: 8px;
   font-size: 14px;
@@ -458,7 +461,7 @@
 
 .score-text {
   font-weight: bold;
-  color: #2a9d8f;
+  color: #0f172a;
 }
 
 .status-approved {
@@ -468,7 +471,7 @@
 
 .status-rejected {
   font-weight: bold;
-  color: red;
+  color: rgb(232, 40, 40);
 }
 
 .status-unknown {
