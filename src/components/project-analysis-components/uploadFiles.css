@@ -21,6 +21,19 @@
   color: #0f172a;
 }
 
+.uf-upload-file-description {
+  margin-top: 20px;
+  color: grey;
+  font-size: 14px;
+}
+
+.uf-upload-file-underline {
+  width: 100%;
+  height: 1px;
+  background-color: #d1d5db;
+  margin-bottom: 20px;
+}
+
 /* Upload box */
 .uf-upload-files-box-wrapper {
   align-items: center;
