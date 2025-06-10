@@ -50,14 +50,6 @@ export default function ProjectSidebar({
           <span>Analyze</span>
         </button>
         <button
-          className={`nav-btn ${activeSection === "analysis" ? "active" : ""}`}
-          onClick={() => setActiveSection("analysis")}
-          aria-label="Analysis"
-        >
-          <i className="fa-solid fa-chart-line"></i>
-          <span>Analysis</span>
-        </button>
-        <button
           className={`nav-btn ${
             activeSection === "job-description" ? "active" : ""
           }`}
