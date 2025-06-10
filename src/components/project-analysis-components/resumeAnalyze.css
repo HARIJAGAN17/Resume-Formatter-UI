@@ -211,6 +211,10 @@
 }
 
 /* Spinner styles */
+.ra-conversion-container{
+  display: flex;
+  gap: 5px;
+}
 .ra-conversion-spinner {
   display: flex;
   gap: 5px;
@@ -238,6 +242,7 @@
 .ra-progress-bar {
   width: 160px;
   height: 8px;
+  margin-top: 5px;
   background-color: #e5e7eb;
   border-radius: 4px;
   overflow: hidden;
