@@ -211,20 +211,63 @@
 }
 
 /* Spinner styles */
-.spinner {
-  display: inline-block;
+.ra-conversion-spinner {
+  display: flex;
+  gap: 5px;
+  padding: 8px 12px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.ra-inline-spinner {
   width: 16px;
   height: 16px;
-  border: 3px solid rgba(0, 0, 0, 0.3);
+  border: 3px solid rgba(0, 0, 0, 0.2);
+  border-top-color: #0f172a;
   border-radius: 50%;
-  border-top-color: #000;
-  animation: spin 1s ease-in-out infinite;
-  vertical-align: middle;
-  margin-left: 5px;
+  animation: spin 1s linear infinite;
+}
+
+.ra-conversion-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.ra-progress-bar {
+  width: 160px;
+  height: 8px;
+  background-color: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.ra-progress-bar-fill {
+  height: 100%;
+  background-color: #0f172a;
+  transition: width 0.3s ease;
+}
+
+.ra-progress-bar-fill.animated {
+  width: 100%;
+  animation: progress-pulse 1.2s ease-in-out infinite;
 }
 
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes progress-pulse {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
   }
 }

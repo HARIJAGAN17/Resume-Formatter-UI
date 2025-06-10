@@ -12,18 +12,14 @@ export default function ResumeAnalyze({
   const [currentPage, setCurrentPage] = React.useState(1);
   const [selectedResumes, setSelectedResumes] = React.useState([]);
   const [formattedStatus, setFormattedStatus] = React.useState({});
-  const [previewLoading, setPreviewLoading] = React.useState({});
 
   const totalPages = Math.ceil(analysisResults.length / resumesPerPage);
 
   const handlePreviewClickWithSpinner = async (resume) => {
-    setPreviewLoading((prev) => ({ ...prev, [resume.file_id]: true }));
     try {
       await handlePreviewClick(resume);
     } catch (error) {
       console.error(error);
-    } finally {
-      setPreviewLoading((prev) => ({ ...prev, [resume.file_id]: false }));
     }
   };
 
@@ -82,81 +78,107 @@ export default function ResumeAnalyze({
   };
 
   const handleConvertSelected = async () => {
-    if (selectedResumes.length === 0) {
-      toast.warning("No resumes selected for conversion.");
-      return;
-    }
-    let successCount = 0;
+    {
+      setConversionProgress({
+        active: true,
+        current: 0,
+        total: selectedResumes.length,
+        isSingle: selectedResumes.length === 1,
+      });
 
-    for (const resume of selectedResumes) {
-      try {
-        const fileRes = await api.get(`/get-pdf/${resume.file_id}`);
-        const fileData = fileRes.data.file_data;
-        console.log(fileData);
-        console.log(resume.name);
-        console.log(resume.file_id);
+      let successCount = 0;
 
-        if (!fileData || !resume.name || !resume.file_id) {
-          toast.error(`Missing data for resume "${resume.name || "Unknown"}".`);
-          continue;
-        }
+      for (let i = 0; i < selectedResumes.length; i++) {
+        const resume = selectedResumes[i];
+        setConversionProgress((prev) => ({
+          ...prev,
+          current: i + 1,
+        }));
 
-        const byteCharacters = atob(fileData);
-        const byteArrays = [];
+        try {
+          const fileRes = await api.get(`/get-pdf/${resume.file_id}`);
+          const fileData = fileRes.data.file_data;
 
-        for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-          const slice = byteCharacters.slice(offset, offset + 512);
-          const byteNumbers = Array.from(slice, (char) => char.charCodeAt(0));
-          byteArrays.push(new Uint8Array(byteNumbers));
-        }
+          if (!fileData || !resume.name || !resume.file_id) {
+            toast.error(
+              `Missing data for resume "${resume.name || "Unknown"}".`
+            );
+            continue;
+          }
 
-        const blob = new Blob(byteArrays, { type: "application/pdf" });
-        const file = new File([blob], resume.name, { type: "application/pdf" });
+          const byteCharacters = atob(fileData);
+          const byteArrays = [];
 
-        const formData = new FormData();
-        formData.append("file", file);
+          for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+            const slice = byteCharacters.slice(offset, offset + 512);
+            const byteNumbers = Array.from(slice, (char) => char.charCodeAt(0));
+            byteArrays.push(new Uint8Array(byteNumbers));
+          }
 
-        const response = await api.post("/upload-resume", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+          const blob = new Blob(byteArrays, { type: "application/pdf" });
+          const file = new File([blob], resume.name, {
+            type: "application/pdf",
+          });
 
-        const formattedDetails = response.data;
+          const formData = new FormData();
+          formData.append("file", file);
 
-        const success = await updateFormattedDetails(
-          resume.file_id,
-          formattedDetails
-        );
+          const response = await api.post("/upload-resume", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
 
-        if (success) {
-          successCount++;
-          setFormattedStatus((prev) => ({ ...prev, [resume.file_id]: true }));
+          const formattedDetails = response.data;
 
-          setAnalysisResults((prevResults) =>
-            prevResults.map((r) =>
-              r.file_id === resume.file_id
-                ? { ...r, formatted_details: formattedDetails }
-                : r
-            )
+          const success = await updateFormattedDetails(
+            resume.file_id,
+            formattedDetails
           );
-        } else {
-          toast.error(
-            `Failed to update formatted details for "${resume.name}".`
-          );
+
+          if (success) {
+            successCount++;
+            setFormattedStatus((prev) => ({ ...prev, [resume.file_id]: true }));
+            setAnalysisResults((prevResults) =>
+              prevResults.map((r) =>
+                r.file_id === resume.file_id
+                  ? { ...r, formatted_details: formattedDetails }
+                  : r
+              )
+            );
+          } else {
+            toast.error(
+              `Failed to update formatted details for "${resume.name}".`
+            );
+          }
+        } catch (error) {
+          console.error("Error processing resume:", error);
+          toast.error(`Conversion failed for "${resume.name}".`);
         }
-      } catch (error) {
-        console.error("Error processing resume:", error);
-        toast.error(`Conversion failed for "${resume.name}".`);
       }
-    }
 
-    if (successCount === 1) {
-      toast.success("Resume converted successfully.");
-    } else if (successCount > 1) {
-      toast.success("All resumes converted successfully.");
-    }
+      setSelectedResumes([]);
 
-    setSelectedResumes([]);
+      if (successCount === 1) {
+        toast.success("Resume converted successfully.");
+      } else if (successCount > 1) {
+        toast.success("All resumes converted successfully.");
+      }
+
+      // Immediately hide the conversion progress
+      setConversionProgress({
+        active: false,
+        current: 0,
+        total: 0,
+        isSingle: false,
+      });
+    }
   };
+
+  const [conversionProgress, setConversionProgress] = React.useState({
+    active: false,
+    current: 0,
+    total: 0,
+    isSingle: false,
+  });
 
   return (
     <div className="resume-analyze-container">
@@ -175,11 +197,51 @@ export default function ResumeAnalyze({
           />
           <p>Select All</p>
         </div>
-        {selectedResumes.length > 0 && (
-          <button className="ra-convert-button" onClick={handleConvertSelected}>
-            Convert ({selectedResumes.length})
-          </button>
-        )}
+
+        <div className="ra-conversion-container">
+          {conversionProgress.active && (
+            <div className="ra-conversion-spinner">
+              <div className="ra-inline-spinner" />
+
+              {conversionProgress.isSingle ? (
+                <>
+                  <span className="ra-conversion-text">Converting</span>
+                  <div className="ra-progress-bar">
+                    <div className="ra-progress-bar-fill animated" />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <span className="ra-conversion-text">
+                    Converting {conversionProgress.current}/
+                    {conversionProgress.total}
+                  </span>
+                  <div className="ra-progress-bar">
+                    <div
+                      className="ra-progress-bar-fill"
+                      style={{
+                        width: `${
+                          (conversionProgress.current /
+                            conversionProgress.total) *
+                          100
+                        }%`,
+                      }}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
+          {selectedResumes.length > 0 && (
+            <button
+              className="ra-convert-button"
+              onClick={handleConvertSelected}
+            >
+              Convert ({selectedResumes.length})
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="ra-resume-list">
@@ -241,24 +303,21 @@ export default function ResumeAnalyze({
               >
                 {resume.status === "approved" ? "Passed" : "Failed"}
               </span>
-              <div className="ra-analyze-score">{resume.score}</div>
+              <div className="ra-analyze-score">
+                {parseFloat(resume.score).toFixed(0)}%
+              </div>
 
-              {formattedStatus[resume.file_id] && (
+              {formattedStatus[resume.file_id] ? (
                 <button
                   className="ra-preview-button"
                   onClick={(e) => {
                     e.stopPropagation();
                     handlePreviewClickWithSpinner(resume);
                   }}
-                  disabled={previewLoading[resume.file_id]}
                 >
-                  {previewLoading[resume.file_id] ? (
-                    <span className="spinner"></span>
-                  ) : (
-                    "Preview"
-                  )}
+                  Preview
                 </button>
-              )}
+              ) : null}
             </div>
           </div>
         ))}
