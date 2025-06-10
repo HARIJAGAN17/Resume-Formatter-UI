@@ -93,94 +93,90 @@ export default function PreviewModal({
           </button>
         </div>
 
-        <div className="tab-content">
-          <div className="tab-content">
-            {activeTab === "Reasoning" && (
-              <div className="reasoning-container">
-                <div className="overall-reasoning reasoning-section">
-                  <h3>Overall Score Reasoning</h3>
-                  <p>
-                    {selectedResume?.resume_details?.job_score_reasoning
-                      ?.overall || "No data available"}
-                  </p>
-                  <p className="improvement">
-                    Improvement:{" "}
-                    {selectedResume?.resume_details?.job_score_reasoning
-                      ?.overall_improvement || "No data available"}
-                  </p>
-                </div>
-
-                <div className="skill-reasoning reasoning-section">
-                  <h3>Technical Skills</h3>
-                  <p>
-                    {selectedResume?.resume_details?.job_score_reasoning
-                      ?.technical_skills || "No data available"}
-                  </p>
-                  <p className="improvement">
-                    Improvement:{" "}
-                    {selectedResume?.resume_details?.job_score_reasoning
-                      ?.technical_skills_improvement || "No data available"}
-                  </p>
-                </div>
-
-                <div className="skill-reasoning reasoning-section">
-                  <h3>Experience Level</h3>
-                  <p>
-                    {selectedResume?.resume_details?.job_score_reasoning
-                      ?.experience_level || "No data available"}
-                  </p>
-                  <p className="improvement">
-                    Improvement:{" "}
-                    {selectedResume?.resume_details?.job_score_reasoning
-                      ?.experience_level_improvement || "No data available"}
-                  </p>
-                </div>
-
-                <div className="skill-reasoning reasoning-section">
-                  <h3>Education</h3>
-                  <p>
-                    {selectedResume?.resume_details?.job_score_reasoning
-                      ?.education || "No data available"}
-                  </p>
-                  <p className="improvement">
-                    Improvement:{" "}
-                    {selectedResume?.resume_details?.job_score_reasoning
-                      ?.education_improvement || "No data available"}
-                  </p>
-                </div>
-
-                <div className="skill-reasoning reasoning-section">
-                  <h3>Keywords Match</h3>
-                  <p>
-                    {selectedResume?.resume_details?.job_score_reasoning
-                      ?.keywords_match || "No data available"}
-                  </p>
-                  <p className="improvement">
-                    Improvement:{" "}
-                    {selectedResume?.resume_details?.job_score_reasoning
-                      ?.keywords_match_improvement || "No data available"}
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {activeTab === "formatted" && (
-            <div className="formatted-tab-section">
-              <div className="download-button-bar">
-                <div
-                  style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}
-                >
-                  <button onClick={handlePdfDownload}>Download as PDF</button>
-                  <button onClick={handleDocxDownload}>Download as DOCX</button>
-                </div>
+        {activeTab === "Reasoning" && (
+          <div className="reasoning-container-outside">
+            <div className="reasoning-container">
+              <div className="overall-reasoning reasoning-section">
+                <h3>Overall Score Reasoning</h3>
+                <p>
+                  {selectedResume?.resume_details?.job_score_reasoning
+                    ?.overall || "No data available"}
+                </p>
+                <p className="improvement">
+                  Improvement:{" "}
+                  {selectedResume?.resume_details?.job_score_reasoning
+                    ?.overall_improvement || "No data available"}
+                </p>
               </div>
 
-              <ResumeDownload resumeData={selectedResume} />
+              <div className="skill-reasoning reasoning-section">
+                <h3>Technical Skills</h3>
+                <p>
+                  {selectedResume?.resume_details?.job_score_reasoning
+                    ?.technical_skills || "No data available"}
+                </p>
+                <p className="improvement">
+                  Improvement:{" "}
+                  {selectedResume?.resume_details?.job_score_reasoning
+                    ?.technical_skills_improvement || "No data available"}
+                </p>
+              </div>
+
+              <div className="skill-reasoning reasoning-section">
+                <h3>Experience Level</h3>
+                <p>
+                  {selectedResume?.resume_details?.job_score_reasoning
+                    ?.experience_level || "No data available"}
+                </p>
+                <p className="improvement">
+                  Improvement:{" "}
+                  {selectedResume?.resume_details?.job_score_reasoning
+                    ?.experience_level_improvement || "No data available"}
+                </p>
+              </div>
+
+              <div className="skill-reasoning reasoning-section">
+                <h3>Education</h3>
+                <p>
+                  {selectedResume?.resume_details?.job_score_reasoning
+                    ?.education || "No data available"}
+                </p>
+                <p className="improvement">
+                  Improvement:{" "}
+                  {selectedResume?.resume_details?.job_score_reasoning
+                    ?.education_improvement || "No data available"}
+                </p>
+              </div>
+
+              <div className="skill-reasoning reasoning-section">
+                <h3>Keywords Match</h3>
+                <p>
+                  {selectedResume?.resume_details?.job_score_reasoning
+                    ?.keywords_match || "No data available"}
+                </p>
+                <p className="improvement">
+                  Improvement:{" "}
+                  {selectedResume?.resume_details?.job_score_reasoning
+                    ?.keywords_match_improvement || "No data available"}
+                </p>
+              </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {activeTab === "analysis" && selectedResume?.resume_details && (
+        {activeTab === "formatted" && (
+          <div className="formatted-container-outside">
+            <div className="download-button-bar">
+              <button onClick={handlePdfDownload}>Download as PDF</button>
+              <button onClick={handleDocxDownload}>Download as DOCX</button>
+            </div>
+
+            <ResumeDownload resumeData={selectedResume} />
+          </div>
+        )}
+
+        {activeTab === "analysis" && selectedResume?.resume_details && (
+          <div className="analysis-container-outside">
             <div className="analysis-section">
               <h3>Compatibility Score:</h3>
               <div className="score-list">
@@ -221,8 +217,8 @@ export default function PreviewModal({
                 ))}
               </ul>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

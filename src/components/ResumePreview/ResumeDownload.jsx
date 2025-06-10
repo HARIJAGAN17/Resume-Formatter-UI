@@ -12,7 +12,7 @@ const ResumeDownload = () => {
 
   return (
     <div style={{ height: "100vh" }}>
-      <PDFViewer width="100%" height="100%">
+      <PDFViewer width="100%" height="100%" showToolbar={false}>
         <ResumeDocument data={resumeData} />
       </PDFViewer>
     </div>

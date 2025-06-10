@@ -114,10 +114,6 @@
   font-weight: 600;
 }
 
-.tab-content {
-  padding: 10px 24px;
-}
-
 .reasoning-container {
   display: flex;
   flex-direction: column;
@@ -231,4 +227,37 @@
   font-style: italic;
   font-size: 14px;
   margin-top: 4px;
+}
+
+.download-button-bar {
+  gap: 7px;
+  display: flex;
+  justify-content: end;
+  margin-bottom: 4px;
+}
+
+.download-button-bar button {
+  border: none;
+  background-color: rgb(2, 117, 117);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 300;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.download-button-bar button:hover {
+  background-color: teal; /* Darker blue on hover */
+  transform: translateY(-2px); /* Slight lift effect on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+}
+
+.reasoning-container-outside {
+  padding: 10px 24px;
+}
+.analysis-container-outside {
+  padding: 10px 24px;
 }
