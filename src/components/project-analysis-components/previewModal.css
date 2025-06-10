@@ -88,7 +88,7 @@
   display: flex;
   justify-content: center;
   gap: 16px;
-  margin: 16px 0;
+  margin: 12px 0;
   border-bottom: 1px solid #e5e7eb;
   padding-bottom: 8px;
 }
@@ -115,7 +115,7 @@
 }
 
 .tab-content {
-  padding: 20px 24px;
+  padding: 10px 24px;
 }
 
 .reasoning-container {
@@ -136,7 +136,11 @@
   font-size: 14px;
 }
 
-
+.analysis-section h3 {
+  font-size: 16px;
+  margin-bottom: 4px;
+  color: #111827;
+}
 .analysis-section {
   display: flex;
   flex-direction: column;

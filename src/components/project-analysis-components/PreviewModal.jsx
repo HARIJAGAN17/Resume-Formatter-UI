@@ -1,6 +1,9 @@
 import React from "react";
 import ResumeDownload from "../ResumePreview/ResumeDownload";
 import "./previewModal.css";
+import { downloadResumeAsDocx } from "../../utility/docxDownload";
+import { downloadResumeAsPdf } from "../../utility/pdfDownload";
+import { useResume } from "../../hooks/useResume";
 
 export default function PreviewModal({
   previewModalOpen,
@@ -9,8 +12,18 @@ export default function PreviewModal({
   activeTab,
   setActiveTab,
 }) {
+  const { resumeData } = useResume();
+
   if (!previewModalOpen) return null;
   console.log(activeTab);
+
+  const handleDocxDownload = async () => {
+    await downloadResumeAsDocx(resumeData);
+  };
+
+  const handlePdfDownload = async () => {
+    await downloadResumeAsPdf(resumeData);
+  };
 
   return (
     <div className="preview-modal-overlay">
@@ -152,7 +165,20 @@ export default function PreviewModal({
             )}
           </div>
 
-          {activeTab === "formatted" && <ResumeDownload />}
+          {activeTab === "formatted" && (
+            <div className="formatted-tab-section">
+              <div className="download-button-bar">
+                <div
+                  style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}
+                >
+                  <button onClick={handlePdfDownload}>Download as PDF</button>
+                  <button onClick={handleDocxDownload}>Download as DOCX</button>
+                </div>
+              </div>
+
+              <ResumeDownload resumeData={selectedResume} />
+            </div>
+          )}
 
           {activeTab === "analysis" && selectedResume?.resume_details && (
             <div className="analysis-section">
