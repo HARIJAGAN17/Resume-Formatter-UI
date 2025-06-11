@@ -5,10 +5,7 @@ import ReactPaginate from "react-paginate";
 import Modal from "react-modal";
 import "./uploadFiles.css";
 
-export default function UploadFilesOnly({
-  projectId,
-  handleExtract,
-}) {
+export default function UploadFilesOnly({ projectId, handleExtract }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isBulkUpload, setIsBulkUpload] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -243,16 +240,18 @@ export default function UploadFilesOnly({
         {uploadedAnalyzedFiles.length > 0 && (
           <>
             <div className="uf-uploaded-files-grid-container">
-              {paginatedFiles.map((file) => (
-                <div key={file.id} className="uf-uploaded-file-card">
-                  <div className="uf-uploaded-file-name">
-                    <i
+              {paginatedFiles.map((file, index) => (
+                <div className="uf-uploaded-file-row" key={file.id || index}>
+                  <div className="uf-uploaded-file-info">
+                    <div className="uf-uploaded-file-name"> <i
                       className={`fa-solid ${getFileIconClass(
                         file.file_name
                       )} uf-uploaded-file-icon`}
                     />
                     {file.file_name}
+                    </div>
                   </div>
+
                   <div className="uf-uploaded-file-timestamp">
                     <p>
                       Date:{" "}
@@ -270,44 +269,7 @@ export default function UploadFilesOnly({
                       })}
                     </p>
                   </div>
-                  <div className="analysis-status">
-                    <p>
-                      Analysis status:{" "}
-                      <span
-                        className={
-                          file.analysis_status === "completed"
-                            ? "completed"
-                            : "pending"
-                        }
-                      >
-                        {file.analysis_status}
-                      </span>
-                    </p>
-                  </div>
-                  <div className="resume-score-display">
-                    <p>
-                      Score:{" "}
-                      <span className="score-text">
-                        {file.resume_score !== null
-                          ? `${file.resume_score}%`
-                          : "N/A"}
-                      </span>
-                    </p>
-                    <p>
-                      Status:{" "}
-                      <span
-                        className={
-                          file.approval_status === "approved"
-                            ? "status-approved"
-                            : file.approval_status === "rejected"
-                            ? "status-rejected"
-                            : "status-unknown"
-                        }
-                      >
-                        {file.approval_status}
-                      </span>
-                    </p>
-                  </div>
+
                   <div className="uf-uploaded-file-actions">
                     <button
                       className="uf-preview-button"
