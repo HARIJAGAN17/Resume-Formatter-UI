@@ -12,6 +12,7 @@ import JobDescription from "../project-analysis-components/JobDescription";
 import UploadFilesOnly from "../project-analysis-components/UploadFilesOnly";
 import ResumeAnalyze from "../project-analysis-components/ResumeAnalyze";
 import { toast } from "react-toastify";
+import InsightsModal from "../project-analysis-components/InsightsModal";
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
@@ -21,7 +22,6 @@ export default function ProjectDetailPage() {
   const [analysisResults, setAnalysisResults] = useState([]);
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [selectedResume, setSelectedResume] = useState(null);
-  const [activeTab, setActiveTab] = useState("formatted");
   const [activeSection, setActiveSection] = useState("resumes");
   const [status, setStatus] = useState("Active");
   const [loading, setLoading] = useState(false);
@@ -246,10 +246,7 @@ export default function ProjectDetailPage() {
       )}
 
       {activeSection === "Upload" && (
-        <UploadFilesOnly
-          projectId={id}
-          handleExtract={handleExtract}
-        />
+        <UploadFilesOnly projectId={id} handleExtract={handleExtract} />
       )}
 
       {activeSection === "settings" && (
@@ -263,8 +260,6 @@ export default function ProjectDetailPage() {
         previewModalOpen={previewModalOpen}
         setPreviewModalOpen={setPreviewModalOpen}
         selectedResume={selectedResume}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
       />
     </div>
   );

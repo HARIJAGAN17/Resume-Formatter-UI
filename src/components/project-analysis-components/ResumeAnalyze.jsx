@@ -2,6 +2,7 @@ import React from "react";
 import "./resumeAnalyze.css";
 import { toast } from "react-toastify";
 import api from "../../Api/api";
+import InsightsModal from "./InsightsModal";
 
 export default function ResumeAnalyze({
   analysisResults,
@@ -12,6 +13,9 @@ export default function ResumeAnalyze({
   const [currentPage, setCurrentPage] = React.useState(1);
   const [selectedResumes, setSelectedResumes] = React.useState([]);
   const [formattedStatus, setFormattedStatus] = React.useState({});
+  const [showInsightsModal, setShowInsightsModal] = React.useState(false);
+  const [insightsTab, setInsightsTab] = React.useState("Reasoning");
+  const [insightsResume, setInsightsResume] = React.useState(null);
 
   const totalPages = Math.ceil(analysisResults.length / resumesPerPage);
 
@@ -306,6 +310,17 @@ export default function ResumeAnalyze({
               <div className="ra-analyze-score">
                 {parseFloat(resume.score).toFixed(0)}%
               </div>
+              <button
+                className="ra-analysis-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setInsightsResume(resume);
+                  setInsightsTab("Reasoning");
+                  setShowInsightsModal(true);
+                }}
+              >
+                Analysis
+              </button>
 
               {formattedStatus[resume.file_id] ? (
                 <button
@@ -334,6 +349,14 @@ export default function ResumeAnalyze({
           </button>
         ))}
       </div>
+
+      <InsightsModal
+        show={showInsightsModal}
+        onClose={() => setShowInsightsModal(false)}
+        selectedResume={insightsResume}
+        activeTab={insightsTab}
+        setActiveTab={setInsightsTab}
+      />
     </div>
   );
 }

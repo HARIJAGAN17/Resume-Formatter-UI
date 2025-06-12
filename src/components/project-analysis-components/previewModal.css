@@ -34,6 +34,7 @@
 }
 
 .overlay-header-section {
+  color: #000;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -260,4 +261,8 @@
 }
 .analysis-container-outside {
   padding: 10px 24px;
+}
+
+.formatted-container-outside {
+  padding-top: 15px;
 }
