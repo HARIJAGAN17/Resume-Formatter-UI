@@ -1,6 +1,5 @@
-// InsightsModal.jsx
-import React from "react";
-import "./previewModal.css"; // reuse existing styles
+import React, { useState, useEffect } from "react";
+import "./previewModal.css";
 
 export default function InsightsModal({
   show,
@@ -9,11 +8,30 @@ export default function InsightsModal({
   activeTab,
   setActiveTab,
 }) {
+  const [linksData, setLinksData] = useState([]);
+
+  useEffect(() => {
+    if (!selectedResume?.resume_details?.links) return;
+
+    const links = selectedResume.resume_details.links;
+    const combinedLinks = [
+      ...links.validLinks.map((link) => ({ ...link, isValid: true })),
+      ...links.invalidLinks.map((link) => ({ ...link, isValid: false })),
+    ];
+    setLinksData(combinedLinks);
+  }, [selectedResume]);
+
   if (!show) return null;
 
   const reasoning = selectedResume?.resume_details?.job_score_reasoning || {};
   const scores = selectedResume?.resume_details?.compatibility_score || {};
   const summary = selectedResume?.resume_details?.summary || [];
+
+  const toggleLinkValidity = (index) => {
+    const updated = [...linksData];
+    updated[index].isValid = !updated[index].isValid;
+    setLinksData(updated);
+  };
 
   return (
     <div className="preview-modal-overlay">
@@ -55,6 +73,7 @@ export default function InsightsModal({
           </div>
         </div>
 
+        {/* Tab Buttons */}
         <div className="tab-buttons">
           <button
             className={activeTab === "Reasoning" ? "active" : ""}
@@ -68,8 +87,17 @@ export default function InsightsModal({
           >
             Analysis
           </button>
+          <button
+            className={activeTab === "links" ? "active" : ""}
+            onClick={() => {
+              setActiveTab("links");
+            }}
+          >
+            Links
+          </button>
         </div>
 
+        {/* Reasoning Tab */}
         {activeTab === "Reasoning" && (
           <div className="reasoning-container-outside">
             <div className="reasoning-container">
@@ -98,6 +126,7 @@ export default function InsightsModal({
           </div>
         )}
 
+        {/* Analysis Tab */}
         {activeTab === "analysis" && (
           <div className="analysis-container-outside">
             <div className="analysis-section">
@@ -126,6 +155,45 @@ export default function InsightsModal({
                   <li key={i}>{point}</li>
                 ))}
               </ul>
+            </div>
+          </div>
+        )}
+
+        {/* Links Tab */}
+        {activeTab === "links" && (
+          <div className="links-container-outside">
+            <div className="links-section">
+              <h3>Hyperlinks</h3>
+              {linksData.length === 0 ? (
+                <p>No links found.</p>
+              ) : (
+                <ul className="links-list">
+                  {linksData.map((link, index) => (
+                    <li
+                      key={index}
+                      className={`link-row ${
+                        link.isValid ? "valid-link" : "invalid-link"
+                      }`}
+                    >
+                      <a
+                        href={link.uri}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {link.text || link.uri}
+                      </a>
+                      <button
+                        className={`toggle-btn ${
+                          link.isValid ? "valid" : "invalid"
+                        }`}
+                        onClick={() => toggleLinkValidity(index)}
+                      >
+                        {link.isValid ? "Valid" : "Invalid"}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         )}
